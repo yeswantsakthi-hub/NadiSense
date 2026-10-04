@@ -117,14 +117,21 @@ Use the second derivative of the PPG to locate the notch and diastolic peak.
 - All data stays on the device. Settings has "Export my data" and "Delete all data".
 
 ## Design direction
-Clinical precision with an Indian, Ayurvedic warmth. Avoid generic health-app styling
-(blue gradients, identical rounded cards everywhere).
-- Colors: ink `#14213D` (text), cool white `#F5F7F8` (background), signal teal `#0F7B6C`
-  (waveforms, primary), turmeric `#D99A00` (Nadi insights accent), alert `#B3261E` (elevated risk only).
-- Type: Figtree for UI; tabular numerals for all vitals.
-- The live pulse waveform is the signature element: large, edge to edge on the Dashboard.
-  Keep everything around it quiet.
-- Mobile first (≈390 px), visible focus states, respects reduced motion, works in dark mode.
+A dark **instrument console** (mission-control monitoring look) with an Indian, Ayurvedic warmth.
+Avoid generic health-app styling (blue gradients, big rounded cards, pastel fills).
+- Dark only. Tokens live in `src/index.css`: bg `#05080F`, panels `#0C1220` with hairline
+  borders `#1D273D`, 3 px corners. Text `#E6EAF0`, muted `#8892A6`.
+- Small uppercase **khaki labels** (`.label`, `#B3A374`) head every panel.
+- Signal teal `#2DBE9F` (waveforms, live, primary), turmeric `#E0A31A` (Nadi accent only),
+  amber `#F2A23A` (movement / data-quality flags), alert `#F0524A` (elevated risk only),
+  select blue `#5B8DEF` (focus).
+- Console building blocks in `src/components/`: `StatusBanner` (one big status word + what to do
+  + key figures), `Panel` + `Tag`, `VitalCard`, `EventLog`, `SessionPanel`.
+- Type: Figtree for UI; IBM Plex Mono with tabular numerals for vitals, timestamps and figures.
+- The live pulse waveform is the signature element: large, edge to edge on phones.
+  Motion-flagged stretches are shaded amber and excluded from scaling.
+- Mobile first (≈390 px, waveform above the fold); on desktop (≥1024 px) a two-column console
+  with event log and session panels on the right. Visible focus states, respects reduced motion.
 
 ## Build phases
 1. **Scaffold + mock data:** Vite app, routing, `SensorSource`, `MockSource`, live `WaveformCanvas`

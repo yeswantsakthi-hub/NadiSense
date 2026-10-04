@@ -270,9 +270,9 @@ export class MockSignalModel {
     }
 
     // More blood absorbs more light, so the pulse appears as a dip in detected light.
-    const ir = irDc * (1 - acFrac * pulse) + artifact * irDc * acFrac * 3 + gaussian(this.ppgRng) * 12;
+    const ir = irDc * (1 - acFrac * pulse) + artifact * irDc * acFrac * 3 + gaussian(this.ppgRng) * 6;
     const red =
-      redDc * (1 - ratio * acFrac * pulse) + artifact * redDc * acFrac * 2.7 + gaussian(this.ppgRng) * 12;
+      redDc * (1 - ratio * acFrac * pulse) + artifact * redDc * acFrac * 2.7 + gaussian(this.ppgRng) * 6;
     return { t, red: Math.round(red), ir: Math.round(ir) };
   }
 

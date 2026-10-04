@@ -1,101 +1,182 @@
-import { useEffect, useMemo, useState } from 'react';
+import { EventLog } from '../components/EventLog';
+import { Panel } from '../components/Panel';
+import { NadiPanel, SessionPanel } from '../components/SessionPanel';
+import { StatusBanner } from '../components/StatusBanner';
+import { VitalCard } from '../components/VitalCard';
 import { WaveformCanvas } from '../components/WaveformCanvas';
 import { PPG_RATE_HZ } from '../data/SensorSource';
-import { RingBuffer } from '../lib/RingBuffer';
+import { ago } from '../lib/format';
+import { useNow } from '../lib/useNow';
+import { imuBuffer, ppgBuffer, useLiveStore } from '../store/liveStore';
 import { SCENARIO_LABELS, useSensorStore } from '../store/sensorStore';
 
 const WINDOW_MS = 5000;
+const getMotionBands = () => useLiveStore.getState().motionSegments;
+
+const PENDING = { text: 'pending', tone: 'muted' } as const;
 
 export function Dashboard() {
-  const { source, kind, scenario, disconnect } = useSensorStore();
-  const buffer = useMemo(() => new RingBuffer(PPG_RATE_HZ * 8), []);
-  const [temp, setTemp] = useState<number | null>(null);
-  const [battery, setBattery] = useState<number | null>(null);
+  const now = useNow();
+  const kind = useSensorStore((s) => s.kind);
+  const scenario = useSensorStore((s) => s.scenario);
+  const { connectedAt, moving, movingSince, streams, temp, battery } = useLiveStore();
 
-  useEffect(() => {
-    if (!source) return;
-    buffer.clear();
-    const offPpg = source.onPpg((samples) => {
-      for (const s of samples) buffer.push(s.t, s.ir);
-    });
-    const offTemp = source.onTemp((s) => setTemp(s.celsius));
-    const readBattery = () => source.battery().then(setBattery, () => setBattery(null));
-    readBattery();
-    const batteryTimer = setInterval(readBattery, 60000);
-    return () => {
-      offPpg();
-      offTemp();
-      clearInterval(batteryTimer);
-    };
-  }, [source, buffer]);
-
-  const sourceLabel = kind === 'mock' ? `Demo · ${SCENARIO_LABELS[scenario]}` : 'Ring';
+  const sourceName = kind === 'mock' ? 'Demo ring' : 'NadiSense ring';
+  const liveCount = Object.values(streams).filter(Boolean).length;
+  const kpis = [
+    { label: 'Streams', value: `${liveCount}/4` },
+    {
+      label: 'Battery',
+      value: battery === null ? '––' : `${battery}%`,
+      tone: battery !== null && battery < 20 ? ('amber' as const) : ('signal' as const),
+    },
+  ];
 
   return (
-    <div className="pt-5">
-      <header className="flex items-start justify-between gap-4 px-4">
-        <div>
-          <h1 className="text-xs font-semibold tracking-[0.08em] text-muted uppercase">Live pulse</h1>
-          <p className="mt-1 flex items-center gap-2 text-sm">
-            <span aria-hidden className="size-2 rounded-full bg-signal" />
-            {sourceLabel}
+    <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="lg:col-span-2">
+        {moving ? (
+          <StatusBanner
+            status="MOVEMENT"
+            tone="amber"
+            title="Pulse signal disturbed by movement"
+            subtitle={`Flagged ${movingSince ? ago(movingSince, now) : 'just now'} · rule: accelerometer variance`}
+            lead="Hold your hand still for a few seconds."
+            points={[
+              'Flagged stretches are shaded on the waveform.',
+              'Nothing is measured from a flagged stretch.',
+              'Readings resume on their own once you are still.',
+            ]}
+            kpis={kpis}
+          />
+        ) : (
+          <StatusBanner
+            status="LIVE"
+            tone="signal"
+            title={`${sourceName} — streaming`}
+            subtitle={`Connected ${connectedAt ? ago(connectedAt, now) : 'just now'}${
+              kind === 'mock' ? ` · ${SCENARIO_LABELS[scenario].toLowerCase()} scenario` : ''
+            }`}
+            lead="Keep the ring snug and your hand relaxed."
+            points={[
+              `Pulse waveform streaming at ${PPG_RATE_HZ} Hz from the infrared sensor.`,
+              'Movement is caught by the accelerometer and flagged.',
+              'Vitals appear here once signal processing is switched on.',
+            ]}
+            kpis={kpis}
+          />
+        )}
+      </div>
+
+      <div className="min-w-0 space-y-3">
+        <Panel
+          flush
+          label="Live pulse — infrared PPG"
+          className="-mx-3 rounded-none border-x-0 sm:mx-0 sm:rounded-[3px] sm:border-x"
+          aside={
+            <>
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden className="size-2 rounded-full bg-signal" />
+                clean
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden className="size-2 rounded-[1px] border border-amber bg-amber/20" />
+                motion
+              </span>
+            </>
+          }
+        >
+          <WaveformCanvas
+            buffer={ppgBuffer}
+            windowMs={WINDOW_MS}
+            invert
+            getBands={getMotionBands}
+            excludeBandsFromScale
+            label="Live pulse waveform from the ring's infrared sensor. Shaded areas are flagged for movement."
+            className="h-60 sm:h-72 lg:h-80"
+          />
+          <div className="flex items-center justify-between border-t border-line px-3 pt-2">
+            <span className="label">Accelerometer · |a|</span>
+            <span className={`font-mono text-[11px] ${moving ? 'text-amber' : 'text-muted'}`}>
+              {moving ? 'MOVING' : 'STILL'}
+            </span>
+          </div>
+          <WaveformCanvas
+            buffer={imuBuffer}
+            windowMs={WINDOW_MS}
+            colorVar="--label"
+            minSpan={0.25}
+            grid={false}
+            getBands={getMotionBands}
+            label="Accelerometer magnitude, used to detect hand movement"
+            className="h-14"
+          />
+          <p className="flex justify-between px-3 py-1.5 font-mono text-[11px] text-muted">
+            <span>−{WINDOW_MS / 1000} s</span>
+            <span>now</span>
           </p>
-        </div>
-        <div className="flex items-center gap-3 text-sm text-muted">
-          {battery !== null && <span className="tabular-nums">{battery}%</span>}
-          <button
-            type="button"
-            onClick={disconnect}
-            className="rounded-md px-2 py-1 font-medium text-ink underline decoration-line underline-offset-4 hover:decoration-ink"
-          >
-            Disconnect
-          </button>
-        </div>
-      </header>
+        </Panel>
 
-      <figure className="mt-4">
-        <WaveformCanvas
-          buffer={buffer}
-          windowMs={WINDOW_MS}
-          invert
-          label="Live pulse waveform from the ring's infrared sensor"
-          className="h-60"
-        />
-        <figcaption className="flex justify-between px-4 pt-1 text-xs text-muted">
-          <span>Infrared PPG</span>
-          <span className="tabular-nums">{WINDOW_MS / 1000} s</span>
-        </figcaption>
-      </figure>
+        <section aria-label="Vitals" className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+          <VitalCard
+            label="Heart rate"
+            unit="bpm"
+            tag={PENDING}
+            detail="baseline ––"
+            footer="from PPG peaks"
+            footerAside="beat-to-beat"
+          />
+          <VitalCard
+            label="SpO₂"
+            unit="%"
+            tag={PENDING}
+            detail="baseline ––"
+            footer="red / IR ratio"
+            footerAside="per 10 s"
+          />
+          <VitalCard
+            label="HRV"
+            unit="ms"
+            tag={PENDING}
+            detail="RMSSD · baseline ––"
+            footer="needs 60 s still"
+            footerAside="RMSSD"
+          />
+          <VitalCard
+            label="Respiration"
+            unit="/min"
+            tag={PENDING}
+            detail="baseline ––"
+            footer="from pulse rhythm"
+            footerAside="per 30 s"
+          />
+          <VitalCard
+            label="Skin temp"
+            value={temp ? temp.celsius.toFixed(1) : undefined}
+            unit="°C"
+            tag={temp ? { text: 'live', tone: 'signal' } : PENDING}
+            tone={temp ? 'signal' : 'default'}
+            detail={temp ? 'baseline ––' : 'waiting for first reading'}
+            footer="ring thermistor"
+            footerAside="every 60 s"
+          />
+          <VitalCard
+            label="Signal"
+            value={moving ? 'Motion' : streams.ppg ? 'Clean' : undefined}
+            unit=""
+            tag={moving ? { text: 'flagged', tone: 'amber' } : { text: 'ok', tone: 'signal' }}
+            detail={moving ? 'segment excluded from vitals' : 'usable for measurement'}
+            footer="data quality"
+            footerAside="IMU check"
+          />
+        </section>
+      </div>
 
-      <section aria-label="Today's vitals" className="mt-8 px-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-7xl leading-none font-semibold tabular-nums">—</span>
-          <span className="text-lg text-muted">bpm</span>
-        </div>
-        <p className="mt-1 text-sm text-muted">Heart rate</p>
-
-        <dl className="mt-6 divide-y divide-line border-y border-line">
-          <Vital label="SpO₂" unit="%" />
-          <Vital label="HRV (RMSSD)" unit="ms" />
-          <Vital label="Respiration" unit="/min" />
-          <Vital label="Skin temperature" unit="°C" value={temp?.toFixed(1)} />
-        </dl>
-        <p className="mt-3 text-xs text-muted">
-          Heart rate, SpO₂, HRV and respiration appear once signal processing is switched on.
-        </p>
-      </section>
-    </div>
-  );
-}
-
-function Vital({ label, unit, value }: { label: string; unit: string; value?: string }) {
-  return (
-    <div className="flex items-baseline justify-between py-3">
-      <dt className="text-sm text-muted">{label}</dt>
-      <dd className="text-xl font-semibold tabular-nums">
-        {value ?? '—'}
-        <span className="ml-1 text-sm font-normal text-muted">{unit}</span>
-      </dd>
+      <div className="min-w-0 space-y-3">
+        <EventLog />
+        <SessionPanel sourceName={kind === 'mock' ? 'demo' : 'ring'} />
+        <NadiPanel />
+      </div>
     </div>
   );
 }

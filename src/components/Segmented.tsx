@@ -12,26 +12,29 @@ export function Segmented<T extends string>({ legend, value, options, onChange }
   const name = useId();
   return (
     <fieldset>
-      <legend className="mb-2 text-xs font-semibold tracking-[0.08em] text-muted uppercase">{legend}</legend>
-      <div className="flex rounded-lg border border-line bg-surface p-1">
-        {options.map((o) => (
-          <label
-            key={o.value}
-            className={`flex-1 cursor-pointer rounded-md px-2 py-2 text-center text-sm font-medium has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-signal ${
-              o.value === value ? 'bg-ink text-paper' : 'text-muted hover:text-ink'
-            }`}
-          >
-            <input
-              type="radio"
-              name={name}
-              value={o.value}
-              checked={o.value === value}
-              onChange={() => onChange(o.value)}
-              className="sr-only"
-            />
-            {o.label}
-          </label>
-        ))}
+      <legend className="label mb-2">{legend}</legend>
+      <div className="flex gap-1 rounded-[3px] border border-line bg-bg p-1">
+        {options.map((o) => {
+          const selected = o.value === value;
+          return (
+            <label
+              key={o.value}
+              className={`flex-1 cursor-pointer rounded-[2px] border px-2 py-2 text-center text-[13px] font-medium transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-select ${
+                selected ? 'border-signal/50 bg-signal/10 text-signal' : 'border-transparent text-muted hover:text-fg'
+              }`}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={o.value}
+                checked={selected}
+                onChange={() => onChange(o.value)}
+                className="sr-only"
+              />
+              {o.label}
+            </label>
+          );
+        })}
       </div>
     </fieldset>
   );

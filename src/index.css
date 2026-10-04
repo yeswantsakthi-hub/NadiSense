@@ -1,54 +1,48 @@
 @import "tailwindcss";
 
+/* Instrument-console theme: deep ink panels, hairline borders, khaki labels, teal signal. */
 :root {
-  --ink: #14213d;
-  --paper: #f5f7f8;
-  --surface: #ffffff;
-  --muted: #5b6578;
-  --line: #dce1e5;
-  --signal: #0f7b6c;
-  --signal-ink: #ffffff;
-  --turmeric: #d99a00;
-  --alert: #b3261e;
-  --grid: rgba(15, 123, 108, 0.07);
-  --grid-strong: rgba(15, 123, 108, 0.16);
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #e6ebef;
-    --paper: #0b1220;
-    --surface: #121b2c;
-    --muted: #93a0b4;
-    --line: #24304a;
-    --signal: #3cc0a8;
-    --signal-ink: #06231e;
-    --turmeric: #f2b53a;
-    --alert: #f2827a;
-    --grid: rgba(60, 192, 168, 0.08);
-    --grid-strong: rgba(60, 192, 168, 0.18);
-    color-scheme: dark;
-  }
+  --bg: #05080f;
+  --panel: #0c1220;
+  --panel-2: #121a2c;
+  --line: #1d273d;
+  --line-strong: #2b3754;
+  --fg: #e6eaf0;
+  --muted: #8892a6;
+  --label: #b3a374;
+  --signal: #2dbe9f;
+  --turmeric: #e0a31a;
+  --amber: #f2a23a;
+  --alert: #f0524a;
+  --select: #5b8def;
+  --grid: rgba(45, 190, 159, 0.06);
+  --grid-strong: rgba(45, 190, 159, 0.15);
+  --band: rgba(242, 162, 58, 0.13);
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
-  --color-surface: var(--surface);
-  --color-muted: var(--muted);
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-label: var(--label);
   --color-signal: var(--signal);
-  --color-signal-ink: var(--signal-ink);
   --color-turmeric: var(--turmeric);
+  --color-amber: var(--amber);
   --color-alert: var(--alert);
+  --color-select: var(--select);
   --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
 
 html,
 body {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--fg);
 }
 
 body {
@@ -58,9 +52,27 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--signal);
+  outline: 2px solid var(--select);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 2px;
+}
+
+/* Small uppercase section label used across the console. */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.live-dot {
+  animation: live-pulse 1.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

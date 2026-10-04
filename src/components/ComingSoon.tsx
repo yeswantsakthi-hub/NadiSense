@@ -1,17 +1,25 @@
+import { Panel } from './Panel';
+
 interface Props {
   title: string;
+  /** Console-style empty state, e.g. "no session registered". */
+  empty: string;
   children: string;
   accent?: 'signal' | 'turmeric';
 }
 
-/** Holding page for screens that land in later build phases. */
-export function ComingSoon({ title, children, accent = 'signal' }: Props) {
+/** Holding panel for screens that land in later build phases. */
+export function ComingSoon({ title, empty, children, accent = 'signal' }: Props) {
   return (
-    <div className="px-4 pt-5">
-      <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-      <div className={`mt-6 border-l-2 pl-4 ${accent === 'turmeric' ? 'border-turmeric' : 'border-signal'}`}>
-        <p className="text-muted">{children}</p>
-      </div>
+    <div className="mx-auto max-w-3xl pt-2">
+      <Panel
+        label={title}
+        labelClassName={accent === 'turmeric' ? '!text-turmeric' : ''}
+        className={accent === 'turmeric' ? 'border-turmeric/25' : ''}
+      >
+        <p className="font-mono text-sm text-muted">{empty}</p>
+        <p className="mt-2 max-w-prose text-sm text-label">{children}</p>
+      </Panel>
     </div>
   );
 }
