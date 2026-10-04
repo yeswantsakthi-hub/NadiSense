@@ -3,7 +3,7 @@ import { useAuthStore } from './auth/authStore';
 import { SessionMonitor } from './components/SessionMonitor';
 import { useDocumentLang, useI18n, type MessageKey } from './i18n';
 import { clockTime } from './lib/format';
-import type { Route } from './lib/route';
+import { readShareToken, type Route } from './lib/route';
 import { useNow } from './lib/useNow';
 import { Connect } from './screens/Connect';
 import { Dashboard } from './screens/Dashboard';
@@ -12,6 +12,7 @@ import { History } from './screens/History';
 import { NadiInsights } from './screens/NadiInsights';
 import { Report } from './screens/Report';
 import { Settings } from './screens/Settings';
+import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
 import { scenarioKey, useSensorStore } from './store/sensorStore';
 
@@ -67,9 +68,25 @@ function isActive(navRoute: Route, route: Route): boolean {
   return navRoute === route || (navRoute === '/history' && route === '/report');
 }
 
+/** Doctor links (#/share/<token>) are public pages outside the sign-in gate. */
+function useShareToken(): string | null {
+  const [token, setToken] = useState(readShareToken);
+  useEffect(() => {
+    const onChange = () => setToken(readShareToken());
+    window.addEventListener('hashchange', onChange);
+    return () => window.removeEventListener('hashchange', onChange);
+  }, []);
+  return token;
+}
+
 export default function App() {
-  const route = useRoute();
+  const shareToken = useShareToken();
   useDocumentLang();
+  return shareToken ? <ShareView token={shareToken} /> : <MainApp />;
+}
+
+function MainApp() {
+  const route = useRoute();
 
   useEffect(() => {
     if (window.location.hash.slice(1) !== route) window.history.replaceState(null, '', `#${route}`);

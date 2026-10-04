@@ -1,5 +1,6 @@
 import { EventLog } from '../components/EventLog';
 import { Panel } from '../components/Panel';
+import { RecordButton } from '../components/RecordButton';
 import { NadiPanel, SessionPanel } from '../components/SessionPanel';
 import { StatusBanner } from '../components/StatusBanner';
 import { VitalCard } from '../components/VitalCard';
@@ -110,6 +111,7 @@ export function Dashboard() {
             <span>−{WINDOW_MS / 1000} s</span>
             <span>{t('pulse.now')}</span>
           </p>
+          <RecordButton />
         </Panel>
 
         <section aria-label={t('vitals.aria')} className="grid grid-cols-2 gap-3 xl:grid-cols-3">

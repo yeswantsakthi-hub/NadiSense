@@ -118,8 +118,22 @@ Use the second derivative of the PPG to locate the notch and diastolic peak.
 - BP is shown only as a **trend relative to the user's calibration**, never an absolute reading,
   until the user enters a cuff reading in Settings.
 - Show a data-quality indicator; do not compute metrics on segments flagged by `motion.ts`.
-- All health data stays on the device. Only the account (name, email) lives in Firebase.
-  Settings has "Export my data" and "Delete all data".
+- Health data leaves the device **only with explicit consent**, per type: "Back up session
+  summaries" and "Save raw recordings" (asked once after first sign-in, changeable in Settings).
+  Firestore rules enforce the same switches server-side. Settings has "Export my data",
+  "Delete cloud data" and "Delete account".
+
+## Backend (Firebase, no server code)
+- Firestore + Auth on the free plan; rules in `firestore.rules`, deployed with
+  `npx firebase-tools deploy --only firestore:rules`. Code in `src/cloud/`:
+  `model.ts` (pure types/helpers, tested), `SessionStats.ts` (per-session summary, tested),
+  `api.ts` (all Firestore calls), `cloudStore.ts` (live profile + consent).
+- Data: `users/{uid}` (profile incl. BP cuff calibration, consent),
+  `users/{uid}/sessions/{id}` (one summary per ring session, saved every 5 min and on disconnect),
+  `users/{uid}/recordings/{id}` (30 s raw PPG/IMU, base64 little-endian, < 700 KB),
+  `shares/{token}` (doctor link: read-only 7-day snapshot, 128-bit token, expires in 7 days,
+  public `#/share/<token>` page, revocable).
+- No Cloud Functions (they need the paid plan); daily totals are computed on the client.
 - Sign-in is required when Firebase is configured. Without config the sign-in page offers
   "Continue without account" so the app stays usable during setup.
 

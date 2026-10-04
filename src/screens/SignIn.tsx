@@ -1,6 +1,7 @@
-import { useId, useState, type FormEvent, type InputHTMLAttributes } from 'react';
+import { useState, type FormEvent } from 'react';
 import { MIN_PASSWORD, validateSignUp } from '../auth/authErrors';
 import { useAuthStore } from '../auth/authStore';
+import { Field } from '../components/Field';
 import { LanguagePicker } from '../components/LanguagePicker';
 import { Masthead } from '../components/Masthead';
 import { Panel } from '../components/Panel';
@@ -154,36 +155,6 @@ export function SignIn() {
   );
 }
 
-interface FieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
-  label: string;
-  value: string;
-  onChange(value: string): void;
-  hint?: string;
-}
-
-function Field({ label, value, onChange, hint, ...input }: FieldProps) {
-  const id = useId();
-  return (
-    <div>
-      <label htmlFor={id} className="label mb-1 block">
-        {label}
-      </label>
-      <input
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-describedby={hint ? `${id}-hint` : undefined}
-        className="h-11 w-full rounded-[3px] border border-line bg-bg px-3 text-[15px] text-fg placeholder:text-muted focus:border-signal focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-1"
-        {...input}
-      />
-      {hint && (
-        <p id={`${id}-hint`} className="mt-1 text-[11px] text-muted">
-          {hint}
-        </p>
-      )}
-    </div>
-  );
-}
 
 function LinkButton({ onClick, children }: { onClick(): void; children: string }) {
   return (

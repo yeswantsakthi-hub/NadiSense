@@ -8,6 +8,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { create } from 'zustand';
+import { resetCloudStore, watchUserDoc } from '../cloud/cloudStore';
 import { useI18nStore, type MessageKey } from '../i18n';
 import { useSensorStore } from '../store/sensorStore';
 import { authErrorKey } from './authErrors';
@@ -97,8 +98,13 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 const auth = firebaseAuth();
+let stopUserDoc: (() => void) | null = null;
 if (auth) {
   onAuthStateChanged(auth, (user) => {
+    stopUserDoc?.();
+    stopUserDoc = null;
+    resetCloudStore();
+    if (user) stopUserDoc = watchUserDoc(user.uid);
     useAuthStore.setState(user ? { status: 'signedIn', account: toAccount(user) } : { status: 'signedOut', account: null });
   });
 }

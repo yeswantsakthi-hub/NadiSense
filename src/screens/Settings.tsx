@@ -1,4 +1,5 @@
 import { useAuthStore } from '../auth/authStore';
+import { ConsentPanel, DataPanel, ProfilePanel } from '../components/CloudPanels';
 import { LanguagePicker } from '../components/LanguagePicker';
 import { Panel, Tag, type Tone } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
@@ -42,9 +43,21 @@ export function Settings() {
         <Panel label={t('lang.label')}>
           <LanguagePicker compact />
         </Panel>
+
+        {account ? (
+          <>
+            <ConsentPanel />
+            <DataPanel />
+          </>
+        ) : (
+          <Panel label={t('cloud.title')}>
+            <p className="text-sm text-muted">{t('cloud.guest')}</p>
+          </Panel>
+        )}
       </div>
 
       <div className="space-y-3">
+        {account && <ProfilePanel />}
         <Panel label={t('settings.dataSource')} aside={<Tag tone={STATUS[status].tone}>{t(STATUS[status].key)}</Tag>}>
           <div className="space-y-4">
             <Segmented<SourceKind>
@@ -84,13 +97,6 @@ export function Settings() {
           </div>
         </Panel>
 
-        <Panel label={t('settings.bp')} aside={<Tag>{t('tag.laterBuild')}</Tag>}>
-          <p className="font-mono text-sm text-muted">{t('settings.noCuff')}</p>
-          <p className="mt-1 text-xs text-label">{t('settings.bpBody')}</p>
-        </Panel>
-        <Panel label={t('settings.data')} aside={<Tag>{t('tag.laterBuild')}</Tag>}>
-          <p className="text-xs text-label">{t('settings.dataBody')}</p>
-        </Panel>
       </div>
     </div>
   );

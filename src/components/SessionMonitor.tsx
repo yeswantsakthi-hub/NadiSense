@@ -1,4 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useAuthStore } from '../auth/authStore';
+import { saveSession } from '../cloud/api';
+import { useCloudStore } from '../cloud/cloudStore';
+import { SessionStats } from '../cloud/SessionStats';
 import type { ImuSample } from '../data/SensorSource';
 import { accelMagnitude, motionScore, nextMotionState } from '../dsp/motion';
 import { ecgBuffer, imuBuffer, ppgBuffer, useLiveStore, type StreamId } from '../store/liveStore';
@@ -9,6 +13,17 @@ const MOTION_LEAD_MS = 500;
 /** A stream counts as live if a packet arrived this recently (temperature only reports once a minute). */
 const STALE_MS: Record<StreamId, number> = { ppg: 2000, imu: 2000, ecg: 2000, temp: 90000 };
 const announced = new WeakSet<object>();
+/** One stats object per source, so StrictMode's effect re-run keeps counting the same session. */
+const sessionStats = new WeakMap<object, SessionStats>();
+const SAVE_EVERY_MS = 5 * 60_000;
+
+/** Upload the session summary if the person is signed in and has turned on cloud backup. */
+function persist(stats: SessionStats): void {
+  if (useAuthStore.getState().status !== 'signedIn' || !useCloudStore.getState().consent.summaries) return;
+  saveSession(stats.summary(Date.now())).catch(() => {
+    // Offline writes are queued by Firestore; anything else is retried at the next save.
+  });
+}
 
 /**
  * Renders nothing. While a source is connected it feeds the display buffers and keeps the
@@ -29,6 +44,12 @@ export function SessionMonitor() {
       if (kind === 'mock') live.log('SYSTEM', 'live', 'ev.connectedDemo', { scenario: scenarioRef.current });
       else live.log('SYSTEM', 'live', 'ev.connectedRing');
     }
+    let stats = sessionStats.get(source);
+    if (!stats) {
+      stats = new SessionStats(kind, kind === 'mock' ? scenarioRef.current : null, Date.now());
+      sessionStats.set(source, stats);
+    }
+    const session = stats;
     ppgBuffer.clear();
     imuBuffer.clear();
     ecgBuffer.clear();
@@ -63,6 +84,7 @@ export function SessionMonitor() {
           movingSince: Date.now(),
           motionSegments: [...state.motionSegments.filter((g) => g.to === null || g.to > from - 10000), { from, to: null }],
         });
+        session.motionStart(Date.now());
         state.log('IMU', 'motion', 'ev.movement');
       } else {
         const secs = state.movingSince ? Math.max(1, Math.round((Date.now() - state.movingSince) / 1000)) : 0;
@@ -71,6 +93,7 @@ export function SessionMonitor() {
           movingSince: null,
           motionSegments: state.motionSegments.map((g) => (g.to === null ? { ...g, to: last.t } : g)),
         });
+        session.motionEnd(Date.now());
         state.log('IMU', 'info', 'ev.still', { secs });
       }
     });
@@ -79,6 +102,7 @@ export function SessionMonitor() {
       seen.temp = Date.now();
       const previous = useLiveStore.getState().temp;
       useLiveStore.setState({ temp: s });
+      if (previous?.t !== s.t) session.temperature(s.celsius);
       // onTemp replays the latest reading to new subscribers; log each reading once.
       if (previous?.t !== s.t) useLiveStore.getState().log('TEMP', 'info', 'ev.temp', { celsius: s.celsius.toFixed(2) });
     });
@@ -95,7 +119,10 @@ export function SessionMonitor() {
 
     const readBattery = () =>
       source.battery().then(
-        (battery) => useLiveStore.setState({ battery }),
+        (battery) => {
+          useLiveStore.setState({ battery });
+          session.battery(battery);
+        },
         () => useLiveStore.setState({ battery: null }),
       );
     readBattery();
@@ -116,8 +143,10 @@ export function SessionMonitor() {
       }
       if (changed) useLiveStore.setState({ streams: next });
     }, 1000);
+    const saveTimer = setInterval(() => persist(session), SAVE_EVERY_MS);
 
     return () => {
+      clearInterval(saveTimer);
       offPpg();
       offImu();
       offTemp();
@@ -130,7 +159,11 @@ export function SessionMonitor() {
         streams: { ppg: false, imu: false, temp: false, ecg: false },
       });
       // React StrictMode re-runs effects in development; only log a real disconnect.
-      if (useSensorStore.getState().source !== source) useLiveStore.getState().log('SYSTEM', 'info', 'ev.disconnected');
+      if (useSensorStore.getState().source !== source) {
+        session.motionEnd(Date.now());
+        persist(session);
+        useLiveStore.getState().log('SYSTEM', 'info', 'ev.disconnected');
+      }
     };
   }, [source, kind]);
 

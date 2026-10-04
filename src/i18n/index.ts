@@ -78,12 +78,24 @@ export const useI18nStore = create<I18nState>((set) => ({
   },
 }));
 
-export function useI18n(): { lang: Lang; t: Translate; ago: (thenMs: number, nowMs?: number) => string } {
+/** "4 Oct 2026" style date in the chosen language. Accepts ms or a YYYY-MM-DD day. */
+export function formatDate(lang: Lang, value: number | string): string {
+  const date = typeof value === 'string' ? new Date(`${value}T12:00:00`) : new Date(value);
+  return new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+}
+
+export function useI18n(): {
+  lang: Lang;
+  t: Translate;
+  ago: (thenMs: number, nowMs?: number) => string;
+  date: (value: number | string) => string;
+} {
   const lang = useI18nStore((s) => s.lang);
   return {
     lang,
     t: (key, vars) => translate(lang, key, vars),
     ago: (thenMs, nowMs) => relativeAgo(lang, thenMs, nowMs),
+    date: (value) => formatDate(lang, value),
   };
 }
 

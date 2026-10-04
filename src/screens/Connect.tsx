@@ -1,4 +1,6 @@
 import { useAuthStore } from '../auth/authStore';
+import { useCloudStore } from '../cloud/cloudStore';
+import { ConsentPanel } from '../components/CloudPanels';
 import { Masthead } from '../components/Masthead';
 import { Panel, Tag } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
@@ -13,6 +15,8 @@ export function Connect() {
   const { status, error, kind, scenario, connect, setScenario } = useSensorStore();
   const account = useAuthStore((s) => s.account);
   const signOut = useAuthStore((s) => s.signOut);
+  // Ask once, right after the first sign-in, what may be stored in the cloud.
+  const askConsent = useCloudStore((s) => s.loaded && s.consent.decidedAt === null) && account !== null;
   const connecting = status === 'connecting';
   const bluetooth = isWebBluetoothAvailable();
 
@@ -23,6 +27,12 @@ export function Connect() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pt-10 pb-8">
       <Masthead caption={t('connect.awaiting')} />
+
+      {askConsent && (
+        <div className="mt-3">
+          <ConsentPanel firstTime />
+        </div>
+      )}
 
       <Panel
         label={t('connect.selectSource')}
