@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { ImuSample } from '../data/SensorSource';
 import { accelMagnitude, motionScore, nextMotionState } from '../dsp/motion';
 import { ecgBuffer, imuBuffer, ppgBuffer, useLiveStore, type StreamId } from '../store/liveStore';
-import { SCENARIO_LABELS, useSensorStore } from '../store/sensorStore';
+import { useSensorStore } from '../store/sensorStore';
 
 const MOTION_WINDOW_MS = 500;
 const MOTION_LEAD_MS = 500;
@@ -26,13 +26,8 @@ export function SessionMonitor() {
       announced.add(source);
       const live = useLiveStore.getState();
       live.reset();
-      live.log(
-        'SYSTEM',
-        'live',
-        kind === 'mock'
-          ? `Connected to demo ring · ${SCENARIO_LABELS[scenarioRef.current].toLowerCase()} scenario`
-          : 'Connected to NadiSense ring',
-      );
+      if (kind === 'mock') live.log('SYSTEM', 'live', 'ev.connectedDemo', { scenario: scenarioRef.current });
+      else live.log('SYSTEM', 'live', 'ev.connectedRing');
     }
     ppgBuffer.clear();
     imuBuffer.clear();
@@ -68,7 +63,7 @@ export function SessionMonitor() {
           movingSince: Date.now(),
           motionSegments: [...state.motionSegments.filter((g) => g.to === null || g.to > from - 10000), { from, to: null }],
         });
-        state.log('IMU', 'motion', 'Movement detected · pulse segment flagged');
+        state.log('IMU', 'motion', 'ev.movement');
       } else {
         const secs = state.movingSince ? Math.max(1, Math.round((Date.now() - state.movingSince) / 1000)) : 0;
         useLiveStore.setState({
@@ -76,7 +71,7 @@ export function SessionMonitor() {
           movingSince: null,
           motionSegments: state.motionSegments.map((g) => (g.to === null ? { ...g, to: last.t } : g)),
         });
-        state.log('IMU', 'info', `Hand still again · ${secs} s of signal flagged`);
+        state.log('IMU', 'info', 'ev.still', { secs });
       }
     });
 
@@ -85,7 +80,7 @@ export function SessionMonitor() {
       const previous = useLiveStore.getState().temp;
       useLiveStore.setState({ temp: s });
       // onTemp replays the latest reading to new subscribers; log each reading once.
-      if (previous?.t !== s.t) useLiveStore.getState().log('TEMP', 'info', `Skin temperature ${s.celsius.toFixed(2)} °C`);
+      if (previous?.t !== s.t) useLiveStore.getState().log('TEMP', 'info', 'ev.temp', { celsius: s.celsius.toFixed(2) });
     });
 
     const offEcg = source.onEcg((batch) => {
@@ -93,7 +88,7 @@ export function SessionMonitor() {
       if (!ecgActive) {
         ecgActive = true;
         ecgBuffer.clear();
-        useLiveStore.getState().log('ECG', 'live', 'ECG recording started');
+        useLiveStore.getState().log('ECG', 'live', 'ev.ecgStart');
       }
       for (const s of batch) ecgBuffer.push(s.t, s.v);
     });
@@ -117,7 +112,7 @@ export function SessionMonitor() {
       }
       if (ecgActive && !next.ecg) {
         ecgActive = false;
-        useLiveStore.getState().log('ECG', 'info', 'ECG recording finished');
+        useLiveStore.getState().log('ECG', 'info', 'ev.ecgEnd');
       }
       if (changed) useLiveStore.setState({ streams: next });
     }, 1000);
@@ -135,7 +130,7 @@ export function SessionMonitor() {
         streams: { ppg: false, imu: false, temp: false, ecg: false },
       });
       // React StrictMode re-runs effects in development; only log a real disconnect.
-      if (useSensorStore.getState().source !== source) useLiveStore.getState().log('SYSTEM', 'info', 'Disconnected');
+      if (useSensorStore.getState().source !== source) useLiveStore.getState().log('SYSTEM', 'info', 'ev.disconnected');
     };
   }, [source, kind]);
 
@@ -143,7 +138,7 @@ export function SessionMonitor() {
     if (scenarioRef.current === scenario) return;
     scenarioRef.current = scenario;
     if (useSensorStore.getState().status === 'connected' && kind === 'mock') {
-      useLiveStore.getState().log('SYSTEM', 'info', `Demo scenario switched to ${SCENARIO_LABELS[scenario].toLowerCase()}`);
+      useLiveStore.getState().log('SYSTEM', 'info', 'ev.scenario', { scenario });
     }
   }, [scenario, kind]);
 

@@ -18,6 +18,10 @@ work end to end with **mock data first** and switch to real BLE data with no UI 
 - vite-plugin-pwa so it installs on a phone like an app
 - jsPDF for the clinician report
 - Vitest for unit tests
+- Firebase Authentication (email + password) for accounts; config in `.env.local` (see `.env.example`)
+- Own tiny i18n in `src/i18n/` (no library): English source in `en.ts`, plus Hindi, Tamil, Telugu,
+  Kannada, Malayalam, Bengali, Marathi. Every UI string goes through `t()`; tests enforce that every
+  language has every key with the same `{placeholders}`. Translations need native-speaker review.
 
 ## Architecture
 
@@ -114,20 +118,28 @@ Use the second derivative of the PPG to locate the notch and diastolic peak.
 - BP is shown only as a **trend relative to the user's calibration**, never an absolute reading,
   until the user enters a cuff reading in Settings.
 - Show a data-quality indicator; do not compute metrics on segments flagged by `motion.ts`.
-- All data stays on the device. Settings has "Export my data" and "Delete all data".
+- All health data stays on the device. Only the account (name, email) lives in Firebase.
+  Settings has "Export my data" and "Delete all data".
+- Sign-in is required when Firebase is configured. Without config the sign-in page offers
+  "Continue without account" so the app stays usable during setup.
 
 ## Design direction
-A dark **instrument console** (mission-control monitoring look) with an Indian, Ayurvedic warmth.
+A **red and black instrument console** (mission-control monitoring look).
 Avoid generic health-app styling (blue gradients, big rounded cards, pastel fills).
-- Dark only. Tokens live in `src/index.css`: bg `#05080F`, panels `#0C1220` with hairline
-  borders `#1D273D`, 3 px corners. Text `#E6EAF0`, muted `#8892A6`.
-- Small uppercase **khaki labels** (`.label`, `#B3A374`) head every panel.
-- Signal teal `#2DBE9F` (waveforms, live, primary), turmeric `#E0A31A` (Nadi accent only),
-  amber `#F2A23A` (movement / data-quality flags), alert `#F0524A` (elevated risk only),
-  select blue `#5B8DEF` (focus).
+- Dark only. Tokens live in `src/index.css`: bg `#050505`, panels `#0E0E10` with hairline
+  borders `#242428`, 3 px corners. Text `#F3F3F4`, muted `#9D9DA5`.
+- Small uppercase **rose labels** (`.label`, `#CF8A88`) head every panel.
+- Brand red `#EF3B36` (`signal` token: waveforms, live, buttons, logo), turmeric `#E0A31A`
+  (Nadi accent only), amber `#F2A23A` (movement / data-quality flags), white focus ring.
+- Because red is the brand colour, **elevated-risk warnings must never rely on colour alone**:
+  use `<Tag tone="alert">` (filled red badge with ⚠) plus the "Elevated risk" wording.
+- No decorative non-English words; language names appear in their own script only in the picker.
+- Letter-spacing is switched off for non-English text (it breaks Indic letter joins); use
+  `.keep-tracking` for the wordmark.
 - Console building blocks in `src/components/`: `StatusBanner` (one big status word + what to do
   + key figures), `Panel` + `Tag`, `VitalCard`, `EventLog`, `SessionPanel`.
-- Type: Figtree for UI; IBM Plex Mono with tabular numerals for vitals, timestamps and figures.
+- Type: Figtree for UI with Noto Sans (Devanagari, Tamil, Telugu, Kannada, Malayalam, Bengali)
+  fallbacks; IBM Plex Mono with tabular numerals for vitals, timestamps and figures.
 - The live pulse waveform is the signature element: large, edge to edge on phones.
   Motion-flagged stretches are shaded amber and excluded from scaling.
 - Mobile first (≈390 px, waveform above the fold); on desktop (≥1024 px) a two-column console

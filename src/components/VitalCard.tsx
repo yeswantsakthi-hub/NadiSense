@@ -22,8 +22,8 @@ const BORDER = {
 /** One vital in the console grid: value, comparison line, and a status footer. */
 export function VitalCard({ label, value, unit, tag, detail, footer, footerAside, tone = 'default' }: Props) {
   return (
-    <article className={`flex flex-col rounded-[3px] border bg-panel p-3 ${BORDER[tone]}`}>
-      <header className="flex items-start justify-between gap-2">
+    <article className={`flex min-w-0 flex-col rounded-[3px] border bg-panel p-3 [overflow-wrap:anywhere] ${BORDER[tone]}`}>
+      <header className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
         <h3 className="text-[13px] font-semibold">{label}</h3>
         <Tag tone={tag.tone}>{tag.text}</Tag>
       </header>

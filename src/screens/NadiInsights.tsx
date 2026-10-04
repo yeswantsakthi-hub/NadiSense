@@ -1,10 +1,11 @@
 import { ComingSoon } from '../components/ComingSoon';
+import { useI18n } from '../i18n';
 
 export function NadiInsights() {
+  const { t } = useI18n();
   return (
-    <ComingSoon title="Nadi insights" empty="no pulse reading registered" accent="turmeric">
-      Your pulse shape and its morphology: gati (rise time), bala (strength), arterial stiffness and rhythm
-      regularity.
+    <ComingSoon title={t('nadiScreen.title')} empty={t('nadiScreen.empty')} accent="turmeric">
+      {t('nadiScreen.body')}
     </ComingSoon>
   );
 }

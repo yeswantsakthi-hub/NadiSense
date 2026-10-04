@@ -1,10 +1,11 @@
 import { ComingSoon } from '../components/ComingSoon';
+import { useI18n } from '../i18n';
 
 export function EcgCheck() {
+  const { t } = useI18n();
   return (
-    <ComingSoon title="ECG check" empty="no recording registered">
-      A guided 30-second recording with a rhythm result and blood-pressure trend. Rest a fingertip on the ring's
-      electrode when this screen is ready.
+    <ComingSoon title={t('ecg.title')} empty={t('ecg.empty')}>
+      {t('ecg.body')}
     </ComingSoon>
   );
 }

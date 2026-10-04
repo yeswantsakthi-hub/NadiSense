@@ -1,22 +1,23 @@
 @import "tailwindcss";
 
-/* Instrument-console theme: deep ink panels, hairline borders, khaki labels, teal signal. */
+/* Instrument-console theme: black panels, hairline borders, red signal and brand. */
 :root {
-  --bg: #05080f;
-  --panel: #0c1220;
-  --panel-2: #121a2c;
-  --line: #1d273d;
-  --line-strong: #2b3754;
-  --fg: #e6eaf0;
-  --muted: #8892a6;
-  --label: #b3a374;
-  --signal: #2dbe9f;
+  --bg: #050505;
+  --panel: #0e0e10;
+  --panel-2: #151518;
+  --line: #242428;
+  --line-strong: #38383e;
+  --fg: #f3f3f4;
+  --muted: #9d9da5;
+  --label: #cf8a88;
+  --signal: #ef3b36;
   --turmeric: #e0a31a;
   --amber: #f2a23a;
-  --alert: #f0524a;
-  --select: #5b8def;
-  --grid: rgba(45, 190, 159, 0.06);
-  --grid-strong: rgba(45, 190, 159, 0.15);
+  /* Elevated-risk warnings: same red family, but always shown as a filled badge with ⚠. */
+  --alert: #ff4d45;
+  --select: #f3f3f4;
+  --grid: rgba(239, 59, 54, 0.07);
+  --grid-strong: rgba(239, 59, 54, 0.17);
   --band: rgba(242, 162, 58, 0.13);
   color-scheme: dark;
 }
@@ -35,7 +36,8 @@
   --color-amber: var(--amber);
   --color-alert: var(--alert);
   --color-select: var(--select);
-  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
+    "Noto Sans Malayalam", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
 
@@ -64,6 +66,12 @@ body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--label);
+}
+
+/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
+html:not([lang="en"]) .label,
+html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
+  letter-spacing: normal;
 }
 
 @keyframes live-pulse {

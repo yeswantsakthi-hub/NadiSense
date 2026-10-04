@@ -1,9 +1,11 @@
 import { ComingSoon } from '../components/ComingSoon';
+import { useI18n } from '../i18n';
 
 export function Report() {
+  const { t } = useI18n();
   return (
-    <ComingSoon title="Clinician report" empty="no week recorded">
-      A weekly PDF summary you can share with your doctor.
+    <ComingSoon title={t('report.title')} empty={t('report.empty')}>
+      {t('report.body')}
     </ComingSoon>
   );
 }

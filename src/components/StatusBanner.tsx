@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useI18n } from '../i18n';
 import { TONE_TEXT, type Tone } from './Panel';
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
  * On phones it collapses to a compact strip so the live waveform stays above the fold.
  */
 export function StatusBanner({ status, tone, title, subtitle, lead, points, kpis }: Props) {
+  const { t } = useI18n();
   const figures = (className: string) => (
     <dl className={className}>
       {kpis.map((k) => (
@@ -32,11 +34,11 @@ export function StatusBanner({ status, tone, title, subtitle, lead, points, kpis
 
   return (
     <section
-      aria-label="Status"
+      aria-label={t('status.aria')}
       aria-live="polite"
       className="grid gap-x-8 gap-y-3 rounded-[3px] border border-line bg-panel p-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-y-4 sm:p-4 lg:grid-cols-[minmax(170px,auto)_minmax(0,1fr)_auto] lg:items-center lg:px-5"
     >
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <p className={`flex items-center gap-2.5 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl ${TONE_TEXT[tone]}`}>
           <span aria-hidden className="live-dot size-2.5 shrink-0 rounded-full bg-current" />
           {status}

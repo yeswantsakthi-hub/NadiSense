@@ -45,9 +45,9 @@ export function WaveformCanvas({
     if (!canvas || !ctx) return;
 
     const colors = {
-      trace: '#2DBE9F',
-      grid: 'rgba(45,190,159,0.06)',
-      gridStrong: 'rgba(45,190,159,0.15)',
+      trace: '#EF3B36',
+      grid: 'rgba(239,59,54,0.07)',
+      gridStrong: 'rgba(239,59,54,0.17)',
       band: 'rgba(242,162,58,0.13)',
       bandEdge: '#F2A23A',
     };

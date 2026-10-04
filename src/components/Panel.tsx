@@ -29,7 +29,11 @@ export function Panel({ label, aside, children, className = '', flush, labelClas
 /** Outlined status tag, like EMERGENCY / ADVISORY in an ops console. */
 export function Tag({ children, tone = 'muted' }: { children: ReactNode; tone?: Tone }) {
   return (
-    <span className={`rounded-[2px] border px-1.5 py-px text-[10px] font-semibold tracking-[0.08em] uppercase ${TONE_TAG[tone]}`}>
+    <span
+      className={`shrink-0 rounded-[2px] border px-1.5 py-px text-[10px] font-semibold tracking-[0.08em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
+    >
+      {/* Brand red is everywhere, so real warnings also carry a symbol, not just colour. */}
+      {tone === 'alert' && <span aria-hidden>⚠ </span>}
       {children}
     </span>
   );
@@ -49,7 +53,7 @@ export const TONE_TEXT: Record<Tone, string> = {
 const TONE_TAG: Record<Tone, string> = {
   signal: 'border-signal/50 text-signal bg-signal/10',
   amber: 'border-amber/50 text-amber bg-amber/10',
-  alert: 'border-alert/60 text-alert bg-alert/10',
+  alert: 'border-alert bg-alert text-black',
   muted: 'border-line-strong text-muted',
   label: 'border-label/40 text-label',
   turmeric: 'border-turmeric/50 text-turmeric bg-turmeric/10',

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { ECG_RATE_HZ, IMU_RATE_HZ, PPG_RATE_HZ, type TempSample } from '../data/SensorSource';
+import type { MessageKey, Vars } from '../i18n';
 import { RingBuffer } from '../lib/RingBuffer';
 
 export type StreamId = 'ppg' | 'imu' | 'temp' | 'ecg';
@@ -12,7 +13,9 @@ export interface LogEvent {
   at: number;
   source: EventSource;
   level: EventLevel;
-  text: string;
+  /** Stored untranslated so the log follows the current language. */
+  key: MessageKey;
+  vars?: Vars;
 }
 
 /** Time range on the ring clock (ms); `to` is null while the movement is still going on. */
@@ -30,7 +33,7 @@ interface LiveState {
   streams: Record<StreamId, boolean>;
   temp: TempSample | null;
   battery: number | null;
-  log(source: EventSource, level: EventLevel, text: string): void;
+  log(source: EventSource, level: EventLevel, key: MessageKey, vars?: Vars): void;
   reset(): void;
 }
 
@@ -48,8 +51,8 @@ export const useLiveStore = create<LiveState>((set) => ({
   temp: null,
   battery: null,
 
-  log(source, level, text) {
-    const event = { id: nextId++, at: Date.now(), source, level, text };
+  log(source, level, key, vars) {
+    const event = { id: nextId++, at: Date.now(), source, level, key, vars };
     set((s) => ({ events: [event, ...s.events].slice(0, MAX_EVENTS) }));
   },
 
@@ -72,9 +75,9 @@ export const ppgBuffer = new RingBuffer(PPG_RATE_HZ * 8);
 export const imuBuffer = new RingBuffer(IMU_RATE_HZ * 8);
 export const ecgBuffer = new RingBuffer(ECG_RATE_HZ * 8);
 
-export const STREAM_INFO: Record<StreamId, { name: string; detail: string }> = {
-  ppg: { name: 'PPG', detail: `red + infrared · ${PPG_RATE_HZ} Hz` },
-  imu: { name: 'IMU', detail: `accelerometer · ${IMU_RATE_HZ} Hz` },
-  temp: { name: 'TEMP', detail: 'skin · once a minute' },
-  ecg: { name: 'ECG', detail: `on demand · ${ECG_RATE_HZ} Hz` },
+export const STREAM_INFO: Record<StreamId, { name: string; detail: MessageKey; hz?: number }> = {
+  ppg: { name: 'PPG', detail: 'stream.ppg', hz: PPG_RATE_HZ },
+  imu: { name: 'IMU', detail: 'stream.imu', hz: IMU_RATE_HZ },
+  temp: { name: 'TEMP', detail: 'stream.temp' },
+  ecg: { name: 'ECG', detail: 'stream.ecg', hz: ECG_RATE_HZ },
 };

@@ -86,8 +86,5 @@ export const useSensorStore = create<SensorState>((set, get) => ({
   },
 }));
 
-export const SCENARIO_LABELS: Record<Scenario, string> = {
-  normal: 'Normal',
-  irregular: 'Irregular',
-  'apnea-night': 'Apnea night',
-};
+/** Message key for a scenario name. */
+export const scenarioKey = (s: Scenario) => `scenario.${s}` as const;

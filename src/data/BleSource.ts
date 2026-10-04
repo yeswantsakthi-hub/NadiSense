@@ -13,9 +13,8 @@ const noop: Unsubscribe = () => {};
 export class BleSource implements SensorSource {
   async connect(): Promise<void> {
     throw new Error(
-      isWebBluetoothAvailable()
-        ? 'Ring pairing is not built yet. Use demo data for now.'
-        : 'This browser cannot use Bluetooth. Use Chrome on Android, Windows or macOS.',
+      // Message keys; the UI translates them.
+      isWebBluetoothAvailable() ? 'err.bleNotBuilt' : 'err.bleUnavailable',
     );
   }
 
