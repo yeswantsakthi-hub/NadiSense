@@ -1,0 +1,48 @@
+{
+ "nominal": {
+  "night_uA": 98.0,
+  "day_uA": 11.7,
+  "avg_uA": 40.5,
+  "life_days": 9.9,
+  "night": {
+   "AFE red+IR, 25 sps": 22.0,
+   "LED drive (red+IR)": 59.52380952380952,
+   "MCU beat processing": 9.9
+  },
+  "day": {
+   "AFE IR spot check": 1.1,
+   "LED drive (IR)": 2.9761904761904763,
+   "MCU processing": 0.9900000000000001
+  },
+  "base": {
+   "nRF52840 idle + RTC": 3.0,
+   "Accelerometer": 1.0,
+   "Charger Iq": 1.0,
+   "BLE daily sync": 1.4,
+   "Temperature (1/min)": 0.2
+  }
+ },
+ "worst": {
+  "night_uA": 167.4,
+  "day_uA": 15.6,
+  "avg_uA": 66.2,
+  "life_days": 6.0,
+  "night": {
+   "AFE red+IR, 25 sps": 22.0,
+   "LED drive (red+IR)": 119.04761904761904,
+   "MCU beat processing": 19.8
+  },
+  "day": {
+   "AFE IR spot check": 1.1,
+   "LED drive (IR)": 5.9523809523809526,
+   "MCU processing": 1.9800000000000002
+  },
+  "base": {
+   "nRF52840 idle + RTC": 3.0,
+   "Accelerometer": 1.0,
+   "Charger Iq": 1.0,
+   "BLE daily sync": 1.4,
+   "Temperature (1/min)": 0.2
+  }
+ }
+}
