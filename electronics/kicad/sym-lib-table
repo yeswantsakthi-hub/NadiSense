@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "NadiSense")(type "KiCad")(uri "${KIPRJMOD}/NadiSense.kicad_sym")(options "")(descr "NadiSense project symbols"))
+)

@@ -1,6 +1,6 @@
 (kicad_sch (version 20230121) (generator eeschema)
 
-  (uuid ac44604d-7518-4482-9447-6a234a6ca777)
+  (uuid 0aaf721b-d94c-454b-b79b-32b21f374cd6)
 
   (paper "A3")
 
@@ -681,7 +681,7 @@
           (name "P0.07/CS" (effects (font (size 1.27 1.27))))
           (number "4" (effects (font (size 1.27 1.27))))
         )
-        (pin input line (at -20.32 -7.62 0) (length 5.08)
+        (pin bidirectional line (at -20.32 -7.62 0) (length 5.08)
           (name "P0.08/INT" (effects (font (size 1.27 1.27))))
           (number "5" (effects (font (size 1.27 1.27))))
         )
@@ -693,15 +693,15 @@
           (name "P0.27/SCL" (effects (font (size 1.27 1.27))))
           (number "7" (effects (font (size 1.27 1.27))))
         )
-        (pin input line (at 20.32 2.54 180) (length 5.08)
+        (pin bidirectional line (at 20.32 2.54 180) (length 5.08)
           (name "P0.11" (effects (font (size 1.27 1.27))))
           (number "8" (effects (font (size 1.27 1.27))))
         )
-        (pin input line (at 20.32 -2.54 180) (length 5.08)
+        (pin bidirectional line (at 20.32 -2.54 180) (length 5.08)
           (name "P0.12" (effects (font (size 1.27 1.27))))
           (number "9" (effects (font (size 1.27 1.27))))
         )
-        (pin input line (at 20.32 -7.62 180) (length 5.08)
+        (pin bidirectional line (at 20.32 -7.62 180) (length 5.08)
           (name "P0.13" (effects (font (size 1.27 1.27))))
           (number "10" (effects (font (size 1.27 1.27))))
         )
@@ -957,7 +957,7 @@
           (name "SW" (effects (font (size 1.27 1.27))))
           (number "6" (effects (font (size 1.27 1.27))))
         )
-        (pin power_in line (at 15.24 -5.08 180) (length 5.08)
+        (pin power_out line (at 15.24 -5.08 180) (length 5.08)
           (name "SYS" (effects (font (size 1.27 1.27))))
           (number "7" (effects (font (size 1.27 1.27))))
         )
@@ -1062,7 +1062,48 @@
       )
     )
 
-    (symbol "power:VBAT" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
+    (symbol "power:PWR_FLAG" (power) (pin_numbers hide) (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
+      (property "Reference" "#FLG" (at 0 1.905 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "Value" "PWR_FLAG" (at 0 3.81 0)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Footprint" "" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "Datasheet" "~" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_keywords" "flag power" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (property "ki_description" "Special symbol for telling ERC where power comes from" (at 0 0 0)
+        (effects (font (size 1.27 1.27)) hide)
+      )
+      (symbol "PWR_FLAG_0_0"
+        (pin power_out line (at 0 0 90) (length 0)
+          (name "pwr" (effects (font (size 1.27 1.27))))
+          (number "1" (effects (font (size 1.27 1.27))))
+        )
+      )
+      (symbol "PWR_FLAG_0_1"
+        (polyline
+          (pts
+            (xy 0 0)
+            (xy 0 1.27)
+            (xy -1.016 1.905)
+            (xy 0 2.54)
+            (xy 1.016 1.905)
+            (xy 0 1.27)
+          )
+          (stroke (width 0) (type default))
+          (fill (type none))
+        )
+      )
+    )
+
+    (symbol "NadiSense:VBAT" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
       (property "Reference" "#PWR" (at 0 -3.81 0)
         (effects (font (size 1.27 1.27)) hide)
       )
@@ -1115,7 +1156,7 @@
       )
     )
 
-    (symbol "power:VSYS" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
+    (symbol "NadiSense:VSYS" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
       (property "Reference" "#PWR" (at 0 -3.81 0)
         (effects (font (size 1.27 1.27)) hide)
       )
@@ -1170,427 +1211,437 @@
   )
 
   (junction (at 201.93 160.02) (diameter 0) (color 0 0 0 0)
-    (uuid 01c206ce-5ff2-49d3-a244-b6d99f4c63a9)
+    (uuid 6578223c-c0d1-448b-b355-fb5dd9774a89)
   )
   (junction (at 209.55 160.02) (diameter 0) (color 0 0 0 0)
-    (uuid bdc3fcdb-b7f9-4e0d-8e1c-e696fcb8e424)
+    (uuid 246a854e-6bd1-4de7-9ede-d543f80beab0)
   )
   (junction (at 360.68 127.0) (diameter 0) (color 0 0 0 0)
-    (uuid 891c7208-58ac-4a4f-ad60-718e8152e472)
+    (uuid e27cbda1-f7e3-413e-9a3a-55f9696211a4)
   )
   (junction (at 251.46 215.9) (diameter 0) (color 0 0 0 0)
-    (uuid 37ea68b9-a63b-41d1-8d7a-5dd01ec65374)
+    (uuid d32135e2-640d-4967-ae0a-b1e46a86daca)
   )
   (junction (at 236.22 231.14) (diameter 0) (color 0 0 0 0)
-    (uuid 0669c1f8-7863-42dc-89b4-53fdb62a34f5)
+    (uuid dd0dfb0b-804a-4008-a2f4-b9291000e4e3)
   )
   (junction (at 246.38 231.14) (diameter 0) (color 0 0 0 0)
-    (uuid d443e0b7-7843-4d25-aefc-77890d250d66)
+    (uuid 66b91732-90b2-4550-8edd-831fb404df59)
   )
   (junction (at 246.38 109.22) (diameter 0) (color 0 0 0 0)
-    (uuid 4fcfba8d-3043-4803-a462-e414cf9b7eca)
+    (uuid e57822d6-f2f5-487a-a1b8-0a6c58177ca2)
   )
   (junction (at 256.54 114.3) (diameter 0) (color 0 0 0 0)
-    (uuid cf08991e-31f9-4666-87b7-dda14f1624d1)
+    (uuid 65a61d3f-583b-46be-a631-370804ca302c)
+  )
+  (junction (at 233.68 215.9) (diameter 0) (color 0 0 0 0)
+    (uuid e644e448-521e-406b-99e6-af9bb2418762)
+  )
+  (junction (at 269.24 218.44) (diameter 0) (color 0 0 0 0)
+    (uuid 918a06ca-5ddf-4bd2-866c-3c3995519ae9)
   )
 
-  (no_connect (at 243.84 160.02) (uuid cbfb8cd1-3e94-4edb-808a-f42f17716e47))
-  (no_connect (at 365.76 142.24) (uuid d7cde831-3518-4c59-80ca-c9337d7cd5a5))
+  (no_connect (at 243.84 160.02) (uuid 0bfd3308-64b8-4254-992a-2c6d1ff10afb))
+  (no_connect (at 365.76 142.24) (uuid db6cc297-09a8-4dbb-93ba-01da2972b339))
 
   (wire (pts (xy 109.22 100.33) (xy 109.22 109.22))
     (stroke (width 0) (type default))
-    (uuid 23168c8f-3a84-478a-882d-e7a511ab44ad)
+    (uuid 25e91361-6886-435e-bdd5-b625c0b317a7)
   )
   (wire (pts (xy 109.22 109.22) (xy 119.38 109.22))
     (stroke (width 0) (type default))
-    (uuid 92f584d8-4541-4b78-bc74-5543ae2a8b40)
+    (uuid dc6afb69-b178-47e9-a750-81d36ea36932)
   )
   (wire (pts (xy 96.52 100.33) (xy 96.52 114.3))
     (stroke (width 0) (type default))
-    (uuid 3380b571-6fec-472d-b1f9-b0ffacf60800)
+    (uuid d9e9e34a-8f8c-4ea7-b200-0404596c2a51)
   )
   (wire (pts (xy 96.52 114.3) (xy 119.38 114.3))
     (stroke (width 0) (type default))
-    (uuid 68a74dd0-157e-4892-aa55-99f69b250c8e)
+    (uuid 2ec23984-ceb9-4427-ac06-c1bd0b95b999)
   )
   (wire (pts (xy 109.22 135.89) (xy 109.22 119.38))
     (stroke (width 0) (type default))
-    (uuid 2b8ccae1-26d6-40c1-94cb-dd8ec2e829f6)
+    (uuid fd1ecabb-529a-4439-8262-cf60e5282bd5)
   )
   (wire (pts (xy 109.22 119.38) (xy 119.38 119.38))
     (stroke (width 0) (type default))
-    (uuid 5149b717-0d2a-4366-9fd1-9728b1a3c623)
+    (uuid 77712231-0be0-4908-8bed-5c0983ef5f30)
   )
   (wire (pts (xy 119.38 124.46) (xy 114.3 124.46))
     (stroke (width 0) (type default))
-    (uuid 11ed2630-616d-4ad1-bda4-313173137d01)
+    (uuid df22aa58-006c-49e7-85de-46f0dd2def64)
   )
   (wire (pts (xy 114.3 124.46) (xy 114.3 127.0))
     (stroke (width 0) (type default))
-    (uuid a470386d-7898-4d53-89a9-e9cc7af2c415)
+    (uuid 4b00069d-5e6a-4651-bce1-3507ae50efd5)
   )
   (wire (pts (xy 149.86 109.22) (xy 198.12 109.22))
     (stroke (width 0) (type default))
-    (uuid 1d4df1db-b989-45a9-beba-95622a265fff)
+    (uuid fc768774-8eb5-4ee6-978f-519a8f56081d)
   )
   (wire (pts (xy 149.86 114.3) (xy 198.12 114.3))
     (stroke (width 0) (type default))
-    (uuid 29849943-9abf-4178-a5ae-083f91a100c9)
+    (uuid e12086cb-bdf7-4ef6-80c1-70b74f4e6f56)
   )
   (wire (pts (xy 149.86 119.38) (xy 198.12 119.38))
     (stroke (width 0) (type default))
-    (uuid 66728ebf-2660-4685-a282-405132ebb496)
+    (uuid fc9e1af9-53dd-4af2-bb0b-370357c49910)
   )
   (wire (pts (xy 149.86 124.46) (xy 198.12 124.46))
     (stroke (width 0) (type default))
-    (uuid 2523874b-ef8a-4bd3-b8b9-dab73592ea84)
+    (uuid 91c8ae5b-9769-4e35-9514-c492150784ec)
   )
   (wire (pts (xy 149.86 129.54) (xy 198.12 129.54))
     (stroke (width 0) (type default))
-    (uuid a6603428-5b3d-4eb5-b1ce-699a255d1894)
+    (uuid 479e759c-81b6-49e7-8320-dc3cd44c9309)
   )
   (wire (pts (xy 208.28 96.52) (xy 208.28 91.44))
     (stroke (width 0) (type default))
-    (uuid ecf115b1-b2a2-4584-89cd-1d08aebda613)
+    (uuid 8b1476b0-682d-469f-9783-10a91b15e7d5)
   )
   (wire (pts (xy 208.28 91.44) (xy 187.96 91.44))
     (stroke (width 0) (type default))
-    (uuid 108c038b-051b-4f37-884d-cf79a5273fd2)
+    (uuid 8596f543-9e44-4c5e-a004-8692195f52ea)
   )
   (wire (pts (xy 208.28 147.32) (xy 208.28 152.4))
     (stroke (width 0) (type default))
-    (uuid 1dc8650a-3ba5-41cc-8c72-ba94a1823771)
+    (uuid 85bcc1f1-9d6c-4eac-8d59-3f902a589b2e)
   )
   (wire (pts (xy 208.28 152.4) (xy 201.93 152.4))
     (stroke (width 0) (type default))
-    (uuid b3d30a49-ee9d-4455-9665-b10fb7b75b48)
+    (uuid 5f6065a0-fdbc-47f1-b4a1-dfaac81501a3)
   )
   (wire (pts (xy 201.93 152.4) (xy 201.93 160.02))
     (stroke (width 0) (type default))
-    (uuid a95f66b7-0008-4e24-b555-468af6e10cf4)
+    (uuid 5a28a084-04e5-4e10-b1a0-597fd01d4ae8)
   )
   (wire (pts (xy 213.36 147.32) (xy 213.36 154.94))
     (stroke (width 0) (type default))
-    (uuid 5943acfa-6c48-4f16-a94f-20ed29e08955)
+    (uuid 60bf3d5b-a4ad-4153-9b74-2c298315b68f)
   )
   (wire (pts (xy 213.36 154.94) (xy 209.55 154.94))
     (stroke (width 0) (type default))
-    (uuid 2a286f28-6f7c-4d84-a4cd-df3fbbd9a9b9)
+    (uuid 70d3a679-d7cd-4c60-a6be-8bf4e02edcf0)
   )
   (wire (pts (xy 209.55 154.94) (xy 209.55 160.02))
     (stroke (width 0) (type default))
-    (uuid b1ce8ba4-9b9f-4b27-887a-333ccfd700d7)
+    (uuid b1186964-832b-4df9-9e75-4756f06cdd77)
   )
   (wire (pts (xy 201.93 160.02) (xy 201.93 165.1))
     (stroke (width 0) (type default))
-    (uuid 3732b796-1f2e-4a1f-b2c2-d20905a90758)
+    (uuid 060582fe-e979-4981-911b-f43b31ab19ec)
   )
   (wire (pts (xy 209.55 160.02) (xy 209.55 165.1))
     (stroke (width 0) (type default))
-    (uuid 6fe4787a-eca1-464a-a191-4234f011ef5f)
+    (uuid 7abd60c0-b8ff-41dd-983e-e0953fa5e8d1)
   )
   (wire (pts (xy 223.52 147.32) (xy 223.52 165.1))
     (stroke (width 0) (type default))
-    (uuid 7444fc83-a5f7-435d-b27c-ebf7bc0f7437)
+    (uuid f5dc7331-22c5-49c9-ae80-086780c9cf9c)
   )
   (wire (pts (xy 223.52 165.1) (xy 238.76 165.1))
     (stroke (width 0) (type default))
-    (uuid ea490149-733b-4fdf-ae09-730823ff220a)
+    (uuid 8a8b6aeb-2130-450c-ba5b-f4c659fd1c20)
   )
   (wire (pts (xy 238.76 165.1) (xy 238.76 160.02))
     (stroke (width 0) (type default))
-    (uuid 4dcb9a84-609c-4561-9767-074a9fdb41da)
+    (uuid 8ea13da2-87af-4dfc-8934-c3fc3f0b1aa5)
   )
   (wire (pts (xy 238.76 109.22) (xy 246.38 109.22))
     (stroke (width 0) (type default))
-    (uuid 93900ebe-ec7b-4b69-8b52-4f7bd4ec22df)
+    (uuid 4a986888-349e-41d1-9231-d25e5ae059b3)
   )
   (wire (pts (xy 246.38 109.22) (xy 251.46 109.22))
     (stroke (width 0) (type default))
-    (uuid 4c7236a9-045b-42d5-8094-95ccb4f1d7e0)
+    (uuid e93e1f28-3c31-4612-939a-a30d58b88b47)
   )
   (wire (pts (xy 238.76 114.3) (xy 256.54 114.3))
     (stroke (width 0) (type default))
-    (uuid 8634847c-16ab-4520-89df-ba711214a1e1)
+    (uuid 8fb61283-e3c0-4602-8c0e-4c40154789d6)
   )
   (wire (pts (xy 256.54 114.3) (xy 259.08 114.3))
     (stroke (width 0) (type default))
-    (uuid 8e9f3ccc-46d9-4765-bfd6-88276a405fba)
+    (uuid 2bd9c1f9-4dbd-4bc0-922f-382f202526fb)
   )
   (wire (pts (xy 238.76 119.38) (xy 251.46 119.38))
     (stroke (width 0) (type default))
-    (uuid 12c39d63-886f-4ce7-adb8-33bf78fbbf04)
+    (uuid 782a858b-f088-4096-88b0-aa47f17fa70e)
   )
   (wire (pts (xy 238.76 124.46) (xy 251.46 124.46))
     (stroke (width 0) (type default))
-    (uuid 628d87eb-0906-4240-8a47-38cffc360158)
+    (uuid 8a764e4e-d05d-40db-8b06-dbe1cfd31dbc)
   )
   (wire (pts (xy 238.76 129.54) (xy 251.46 129.54))
     (stroke (width 0) (type default))
-    (uuid 1962b949-4f36-4f4e-a021-749cd5131bfa)
+    (uuid ed374c04-4b54-4de3-a45f-0b31f65efeb0)
   )
   (wire (pts (xy 246.38 106.68) (xy 246.38 109.22))
     (stroke (width 0) (type default))
-    (uuid ceb417a6-4257-408c-b1fd-c16a88e52326)
+    (uuid aaaa93b8-bf6f-4ea1-8716-469dc386f3f2)
   )
   (wire (pts (xy 256.54 111.76) (xy 256.54 114.3))
     (stroke (width 0) (type default))
-    (uuid 5b57561e-bea9-4ef5-b0fb-26a920d9b5e3)
+    (uuid 7efbf758-d35f-4a6f-a651-b3e8342082ae)
   )
   (wire (pts (xy 304.8 121.92) (xy 292.1 121.92))
     (stroke (width 0) (type default))
-    (uuid 51159481-0d0b-49a8-904f-e51dab4f3cf3)
+    (uuid 0068d6ba-a133-4387-bc7c-a0d8b6ed06ea)
   )
   (wire (pts (xy 304.8 127.0) (xy 292.1 127.0))
     (stroke (width 0) (type default))
-    (uuid f4a01a0c-28c9-41b1-abb7-0d3a4c0a31a3)
+    (uuid 10754c62-4754-4970-bfac-6672b928a289)
   )
   (wire (pts (xy 304.8 132.08) (xy 292.1 132.08))
     (stroke (width 0) (type default))
-    (uuid c59ad0b3-1547-48eb-afe2-cb0f0d458b3a)
+    (uuid 10bd2112-ee57-497a-ae57-5f48a7d53000)
   )
   (wire (pts (xy 304.8 137.16) (xy 299.72 137.16))
     (stroke (width 0) (type default))
-    (uuid 1181fa53-cb6c-4d3c-807c-b333b74338fe)
+    (uuid 35c426cb-ed2b-4211-85cd-e31fc295daef)
   )
   (wire (pts (xy 299.72 137.16) (xy 299.72 139.7))
     (stroke (width 0) (type default))
-    (uuid 0b5829d2-b82c-4a60-9196-b9b7146335b7)
+    (uuid 6b64371a-9b03-4249-b59d-30525ad80557)
   )
   (wire (pts (xy 365.76 116.84) (xy 353.06 116.84))
     (stroke (width 0) (type default))
-    (uuid 557c67ee-8991-46b8-84c0-e6c22f303f94)
+    (uuid 44f6c906-911e-479f-8cae-75df6061fae7)
   )
   (wire (pts (xy 365.76 121.92) (xy 353.06 121.92))
     (stroke (width 0) (type default))
-    (uuid d6d249c5-8f3b-43ac-8258-3b1e48868fe7)
+    (uuid 045c6016-89c0-4e1a-96ba-78bc667ffa81)
   )
   (wire (pts (xy 365.76 137.16) (xy 353.06 137.16))
     (stroke (width 0) (type default))
-    (uuid db241580-b3f1-4062-a343-e43b2c53bbf6)
+    (uuid ca5deff9-5710-4124-9aa1-130beaf4443b)
   )
   (wire (pts (xy 365.76 127.0) (xy 360.68 127.0))
     (stroke (width 0) (type default))
-    (uuid ec170e28-ca3d-49f3-8fea-982d8f0effc3)
+    (uuid a007c5da-e454-4ebb-8ab0-d75d13b40b5e)
   )
   (wire (pts (xy 365.76 132.08) (xy 360.68 132.08))
     (stroke (width 0) (type default))
-    (uuid 253cc974-3f10-4f83-a62a-b18ff28af8b1)
+    (uuid 62150378-75bb-45c4-bc94-2888090adec2)
   )
   (wire (pts (xy 360.68 127.0) (xy 360.68 132.08))
     (stroke (width 0) (type default))
-    (uuid 424701db-ebd8-4950-bbc6-d4be7e12cc18)
+    (uuid 9935bfc8-9a33-4ecd-84cd-ed3ddb6ca357)
   )
   (wire (pts (xy 190.5 215.9) (xy 177.8 215.9))
     (stroke (width 0) (type default))
-    (uuid 0faac252-7ef3-4515-86f4-af56885a0913)
+    (uuid 50d6f729-93e8-4105-bb24-d9cda71eb0da)
   )
   (wire (pts (xy 190.5 220.98) (xy 177.8 220.98))
     (stroke (width 0) (type default))
-    (uuid 90c9d1a2-ec44-478e-8aec-87d81138913b)
+    (uuid f8639331-8618-4dfd-8784-238bf227cc83)
   )
   (wire (pts (xy 190.5 226.06) (xy 177.8 226.06))
     (stroke (width 0) (type default))
-    (uuid 97ed6b40-1723-40ea-aa84-0b66ea307c49)
+    (uuid ccc5bf8e-b08c-44f5-bcce-93a794137fce)
   )
-  (wire (pts (xy 220.98 215.9) (xy 251.46 215.9))
+  (wire (pts (xy 220.98 215.9) (xy 233.68 215.9))
     (stroke (width 0) (type default))
-    (uuid c4cc069c-6c5a-4382-ad3f-a5d8c18ecb24)
+    (uuid a68562af-b874-4c88-bc10-c69c9b25c8e4)
+  )
+  (wire (pts (xy 233.68 215.9) (xy 251.46 215.9))
+    (stroke (width 0) (type default))
+    (uuid d982f9a4-98d7-4b93-9c6a-3c88debc1e2b)
   )
   (wire (pts (xy 251.46 215.9) (xy 274.32 215.9))
     (stroke (width 0) (type default))
-    (uuid ddb372df-e168-4f17-b78c-81a03e6f3a09)
+    (uuid afb49d28-83bd-4497-8954-1099518bfb26)
   )
   (wire (pts (xy 274.32 218.44) (xy 269.24 218.44))
     (stroke (width 0) (type default))
-    (uuid b8e23402-ef96-4b24-8a45-1242b84b3670)
+    (uuid 0c7e6074-6523-4126-9235-d1973e7b2f7b)
   )
   (wire (pts (xy 269.24 218.44) (xy 269.24 220.98))
     (stroke (width 0) (type default))
-    (uuid 22f151d6-fa5b-4979-a525-171b50796050)
+    (uuid 90ae3f87-cf0d-4a95-9357-176abe5ea63a)
   )
   (wire (pts (xy 220.98 220.98) (xy 226.06 220.98))
     (stroke (width 0) (type default))
-    (uuid 3dd5d55a-e587-4f04-9073-a42dfa0cd244)
+    (uuid 716c94bb-552a-4275-bf9a-9f374557149b)
   )
   (wire (pts (xy 220.98 226.06) (xy 226.06 226.06))
     (stroke (width 0) (type default))
-    (uuid f6dc6929-f5e3-45a1-a172-9a8eb4e507f6)
+    (uuid bb1ad9f8-b9d4-4028-8768-23e00fcaaef9)
   )
   (wire (pts (xy 233.68 226.06) (xy 236.22 226.06))
     (stroke (width 0) (type default))
-    (uuid 8607ec12-defe-4d98-9a3e-cd92e743a0df)
+    (uuid 874fc417-5cb4-4df5-a69a-59bf8b3575b5)
   )
   (wire (pts (xy 236.22 226.06) (xy 236.22 231.14))
     (stroke (width 0) (type default))
-    (uuid 582c92f5-6d98-429f-a4fa-a7611d8d55d1)
+    (uuid 80eec2b4-5cfa-4b8d-a0c7-2afddd352cb9)
   )
   (wire (pts (xy 220.98 231.14) (xy 236.22 231.14))
     (stroke (width 0) (type default))
-    (uuid 8fb41dcf-214d-416b-89a0-77deaf6c08fa)
+    (uuid bee61fc9-a867-48f2-ad09-79485bda5492)
   )
   (wire (pts (xy 236.22 231.14) (xy 246.38 231.14))
     (stroke (width 0) (type default))
-    (uuid 3464126c-67c3-4371-87e0-24e4c3746497)
+    (uuid a463bd64-6f3d-4af9-8d56-227ed4a59494)
   )
   (wire (pts (xy 246.38 231.14) (xy 259.08 231.14))
     (stroke (width 0) (type default))
-    (uuid e09fc0eb-8807-45a3-b21e-05f56bf0a60a)
+    (uuid 2b129b9a-d121-40a4-9bbd-93d19d85259f)
   )
 
   (rectangle (start 81.28 83.82) (end 167.64 160.02)
     (stroke (width 0.254) (type dash))
     (fill (type none))
-    (uuid 87bb2e0f-e812-46e7-979c-15a785fb7b86)
+    (uuid 172b9c1e-d5db-41d3-ab25-93e54eaf56db)
   )
   (rectangle (start 172.72 83.82) (end 270.51 187.96)
     (stroke (width 0.254) (type dash))
     (fill (type none))
-    (uuid 084f9ede-099d-49e9-8ac0-8cd4828631e8)
+    (uuid 9ebe6242-54d2-42e0-9171-4507f835a5a2)
   )
   (rectangle (start 281.94 83.82) (end 401.32 170.18)
     (stroke (width 0.254) (type dash))
     (fill (type none))
-    (uuid a2d2d3a8-8f6f-4cd3-8a80-c3eb9d6fcc78)
+    (uuid a743ac19-bc2e-4232-b99f-e93c7c312cd4)
   )
   (rectangle (start 81.28 200.66) (end 165.1 259.08)
     (stroke (width 0.254) (type dash))
     (fill (type none))
-    (uuid e81bec16-74be-4f3b-a335-3046077ba4be)
+    (uuid c0aaa0ca-22a9-432a-9003-19fd5484af55)
   )
   (rectangle (start 172.72 200.66) (end 294.64 264.16)
     (stroke (width 0.254) (type dash))
     (fill (type none))
-    (uuid 53b69d96-cf11-4bc8-9f1d-60493b01de62)
+    (uuid 70f04075-d4cb-40d1-a964-1bf486f499ae)
   )
 
   (text "OPTICAL FRONT-END" (at 82.55 82.55 0)
     (effects (font (size 2.0 2.0) bold) (justify left bottom))
-    (uuid f704f536-69f3-42b0-929c-5c262c060bab)
+    (uuid a1265871-ca08-4627-a79d-546f1bdddd19)
   )
   (text "LED anodes on VBAT; MAX86141 drivers\nsink the cathodes (0-124 mA, set in firmware)"
     (at 83.82 154.94 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid fe0a3d57-9c34-4524-8161-53099fe3b55b)
+    (uuid 25aa9f96-9fc6-45ed-9eff-35ea84a61a80)
   )
   (text "MCU + BLE RADIO" (at 173.99 82.55 0)
     (effects (font (size 2.0 2.0) bold) (justify left bottom))
-    (uuid bf328563-06c1-464c-8cb0-b34311546213)
+    (uuid 00ebf7ac-f7e1-47b9-9986-8456ec4e8741)
   )
   (text "Pull-ups 4.7k to +1V8, one I2C bus at 400 kHz" (at 175.26 184.15 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid dc17136f-b437-4f18-af73-b7135cee255e)
+    (uuid d92ee76d-6dfe-4dc3-8eeb-f9f1fcbc535f)
   )
   (text "SENSORS" (at 283.21 82.55 0)
     (effects (font (size 2.0 2.0) bold) (justify left bottom))
-    (uuid 2c6a94d2-8a41-4b58-971e-4c5bf9f26397)
+    (uuid 69fd8705-b3f6-4a69-9039-7464becccc7b)
   )
   (text "U3: ADD0 = GND -> address 0x48" (at 284.48 161.29 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid b23d470d-07c8-40d8-b564-8810eb60c9d4)
+    (uuid 4a43268f-d32c-4096-ab0e-f35717c5aaa9)
   )
   (text "U4: CS = SA0 = +1V8 -> I2C mode, address 0x19" (at 284.48 166.37 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid daccd789-2858-4e0b-a2d6-014091f09128)
+    (uuid ba5fae39-2af1-4def-911b-1d0bfa9c8231)
   )
   (text "DECOUPLING" (at 82.55 199.39 0)
     (effects (font (size 2.0 2.0) bold) (justify left bottom))
-    (uuid f47f8b8d-316a-4af5-8561-a5a46c2d97ad)
+    (uuid 3b0c870e-3c40-432c-a03a-d929b573f709)
   )
   (text "One 100 nF / 1 uF next to each supply pin" (at 83.82 254.0 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid 0b8ce5e0-85c4-45b8-a3e4-6fe1ba603adf)
+    (uuid 94df0293-89bd-4439-b5ec-e0891f54df93)
   )
   (text "CHARGER + BATTERY" (at 173.99 199.39 0)
     (effects (font (size 2.0 2.0) bold) (justify left bottom))
-    (uuid 77c465e9-1073-440c-b689-97bafecc006a)
+    (uuid 3c271331-9c84-4a70-a6d2-54e84448efbd)
   )
   (text "SYS buck = 3.3 V (set over I2C) -> nRF52840 VDDH; REG0 makes +1V8"
     (at 175.26 261.62 0)
     (effects (font (size 1.27 1.27) italic) (justify left))
-    (uuid ed8ca30d-4ea4-478d-9c82-676ccec240b8)
+    (uuid a270ca83-3668-43c6-9004-edbc9be333da)
   )
 
   (label "SPI_SCK" (at 157.48000000000002 109.22 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 31c8176c-34c0-4840-921d-bf7dba65e269)
+    (uuid 78aeaeb2-045f-4e49-a735-b832b98771ca)
   )
   (label "SPI_MOSI" (at 157.48000000000002 114.3 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid a15e39d5-fdbf-44db-8a58-9eb3af5b49da)
+    (uuid bf445c70-fa7f-4432-a6ab-d9e9c4591cb0)
   )
   (label "SPI_MISO" (at 157.48000000000002 119.38 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 11843f4e-c780-4d84-917c-e4b4a4632f28)
+    (uuid f8c03d74-77cd-4cfc-a094-a52c2a182a8b)
   )
   (label "AFE_CS" (at 157.48000000000002 124.46 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 5c539883-96b0-4bae-84eb-03d061f221d8)
+    (uuid f24bc78f-5e5a-43d0-90fb-2742d3bb1ecf)
   )
   (label "AFE_INT" (at 157.48000000000002 129.54 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 2c665546-a026-492b-b7f9-5ff9480e99d4)
+    (uuid b0c3fa55-58d9-4f7c-8422-95207e272e97)
   )
   (label "I2C_SDA" (at 241.29999999999998 109.22 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid c261cc6f-3957-48dc-9dda-30115822e823)
+    (uuid 6430bb2d-6b46-42ae-a845-a992db63976d)
   )
   (label "I2C_SCL" (at 241.29999999999998 114.3 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 2a894c97-ebbe-42ee-bc60-97bc2b27205f)
+    (uuid a90a7955-dc80-4757-a9e6-068f8542203c)
   )
   (label "ACC_INT" (at 241.29999999999998 119.38 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 2191e210-788d-4705-b75d-4c6dd5f3ee7d)
+    (uuid 633ecb62-7daf-42d5-8915-750d602fb50c)
   )
   (label "TEMP_ALRT" (at 241.29999999999998 124.46 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 84f6cc26-ad62-4a03-aade-23ac0217332c)
+    (uuid b8d50219-5cbf-4939-bcd5-1abb438c574b)
   )
   (label "CHG_INT" (at 241.29999999999998 129.54 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 6f021115-e475-4f7f-8d71-43a86f856704)
+    (uuid d0169218-9005-4510-abe5-82890d49b101)
   )
   (label "I2C_SCL" (at 292.1 121.92 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 581dc8a7-a03e-4599-8ab8-571953d3af74)
+    (uuid 7151e9a2-3c4f-43fd-aeab-b75760287cfc)
   )
   (label "I2C_SDA" (at 292.1 127.0 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 471b0e9c-b464-4210-a25a-9282a2812f24)
+    (uuid 873bfec7-d306-4d48-ba91-6d03e7a42e3c)
   )
   (label "TEMP_ALRT" (at 292.1 132.08 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 38f7ccd0-2727-419a-ac9d-5ed1f583f09c)
+    (uuid fd780360-aa37-4412-b7a1-63303fa37441)
   )
   (label "I2C_SCL" (at 353.06 116.84 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 1c5dc50e-eaaa-4506-a245-88a096623ab7)
+    (uuid 6f0dc5d6-daef-4804-80b2-dc7789bab72f)
   )
   (label "I2C_SDA" (at 353.06 121.92 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 30cdb600-1216-4016-b42c-37ee9e7bf10e)
+    (uuid 2b69d4b7-ee32-4627-9d18-caafa20bc630)
   )
   (label "ACC_INT" (at 353.06 137.16 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid c81bd9b3-174b-46a5-99a6-d7909f3295c4)
+    (uuid 4801e4e6-7136-4ecc-a99b-7e6a9925c19b)
   )
   (label "I2C_SDA" (at 177.8 215.9 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 1ae966e0-3efd-4e96-bdfc-b938976027e2)
+    (uuid 80a190f0-0169-4a94-a23c-fc5da1d03985)
   )
   (label "I2C_SCL" (at 177.8 220.98 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 3b2f6de1-968a-44a5-b8d5-267acd274e1c)
+    (uuid 129d2ba9-266e-4aa6-9946-090c73cc8311)
   )
   (label "CHG_INT" (at 177.8 226.06 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid e59e2d59-5eb0-4459-a90e-b6b7395e5d30)
+    (uuid 0a29a6c2-1086-4e25-9caf-f838d64e8d55)
   )
 
   (symbol (lib_id "NadiSense:MAX86141") (at 134.62 121.92 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid a25bdcf3-06a3-44d2-a84d-4dcf0669fd7d)
+    (uuid bc77d4cd-e6b8-429a-9e09-f5291393c268)
     (property "Reference" "U2" (id 0) (at 124.46 100.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -1603,21 +1654,21 @@
     (property "Datasheet" "~" (id 3) (at 134.62 121.92 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid af1f3a99-2f4e-42d8-90ec-5885cf509747))
-    (pin "2" (uuid 747e5447-6f4e-4b50-a83e-815d62c694db))
-    (pin "3" (uuid ea4295ac-e40d-4ef8-8639-61c80a8d68cb))
-    (pin "4" (uuid 0173a417-27ab-44a0-acdf-49ba23442de2))
-    (pin "5" (uuid 03d54030-4821-4452-a830-ee12f3c2a0cd))
-    (pin "6" (uuid b83c7edc-ed17-4921-8b81-c8fcf49331b6))
-    (pin "7" (uuid 5ad3b449-b407-41fd-bf47-8d62cf289861))
-    (pin "8" (uuid d029cc64-630c-4c16-82eb-8bc9d359c1f7))
-    (pin "9" (uuid 907d4aa8-640f-4c24-a13e-748d9a1f748a))
-    (pin "10" (uuid 5a942864-9bae-4aa3-8680-ca8fb5cbdde3))
-    (pin "11" (uuid 4e0727da-7015-4aa6-8e53-d79b9f9d8ace))
-    (pin "12" (uuid f6ff99ef-ed45-4431-baff-1019914e479f))
+    (pin "1" (uuid f85688d6-b607-4fee-a915-8f7008b4d80a))
+    (pin "2" (uuid 560923da-b279-4250-9b68-63376d7a44bf))
+    (pin "3" (uuid 95539327-fc5c-4403-83b8-8b92c57ecfd9))
+    (pin "4" (uuid 8df8f701-4d66-40cb-97ed-ee6142d36663))
+    (pin "5" (uuid d4586fbc-44d3-4571-98b8-67a8323780bf))
+    (pin "6" (uuid 9187d0d1-22d7-487f-882a-ea2b4d738d9c))
+    (pin "7" (uuid 6e428287-cb76-43a5-912f-bea203cdaf02))
+    (pin "8" (uuid b4906d75-f6e7-4a49-b4de-493f72f994b5))
+    (pin "9" (uuid 0b80de10-4890-4429-972b-743c61dd45b4))
+    (pin "10" (uuid 2f5e3f2a-a0c7-49f5-ac9e-b721bf219779))
+    (pin "11" (uuid dd8f39bd-a477-4307-84f7-fa2c0155f4bb))
+    (pin "12" (uuid 3ba2e98d-f341-4dd8-a4bd-579a4034bb42))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "U2") (unit 1)
         )
       )
@@ -1626,7 +1677,7 @@
 
   (symbol (lib_id "Device:LED") (at 109.22 96.52 90) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 826eea82-d7f1-462e-8ba0-ca2827ac05dd)
+    (uuid 85d811a5-6431-49f2-841b-f69f28f29584)
     (property "Reference" "D1" (id 0) (at 111.76 95.25 270)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -1639,11 +1690,11 @@
     (property "Datasheet" "~" (id 3) (at 109.22 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid df193b65-3382-47f0-9a13-ba361f342da0))
-    (pin "2" (uuid e8dcded7-54fe-4aa1-8793-592e202b3f26))
+    (pin "1" (uuid c1b9ceff-a9ba-41e2-9512-5939e5982eb7))
+    (pin "2" (uuid 8039e41c-31ab-4230-bc04-7520cec526c3))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "D1") (unit 1)
         )
       )
@@ -1652,7 +1703,7 @@
 
   (symbol (lib_id "Device:LED") (at 96.52 96.52 90) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 6692212f-b8dc-4061-bfd2-cecb137d1211)
+    (uuid ff150bf2-8785-4a43-a710-c7ef20f72a8c)
     (property "Reference" "D2" (id 0) (at 93.98 95.25 270)
       (effects (font (size 1.27 1.27) bold) (justify right))
     )
@@ -1665,11 +1716,11 @@
     (property "Datasheet" "~" (id 3) (at 96.52 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid de87a1c4-721b-4b6b-ab10-666e6b30cf66))
-    (pin "2" (uuid a5353b6a-c3d4-45dc-ab8e-15d7a957fe71))
+    (pin "1" (uuid b1fe5900-e107-4a7f-be96-4510a1b71579))
+    (pin "2" (uuid fa85b6d1-7044-4146-856d-ec3b60c7f9a1))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "D2") (unit 1)
         )
       )
@@ -1678,7 +1729,7 @@
 
   (symbol (lib_id "Device:D_Photo") (at 109.22 140.97 270) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 57c66bf3-9bfc-4803-9742-e3d3b12f458b)
+    (uuid 01f46749-b029-4607-9868-1de6d61847b9)
     (property "Reference" "D3" (id 0) (at 106.68 139.7 90)
       (effects (font (size 1.27 1.27) bold) (justify right))
     )
@@ -1691,20 +1742,20 @@
     (property "Datasheet" "~" (id 3) (at 109.22 140.97 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 8b4478e7-217d-483c-b329-0b63a9abc4ff))
-    (pin "2" (uuid 08104345-45ee-4580-92e0-c1f3e77852e0))
+    (pin "1" (uuid 3e880cfe-237f-4002-b9f2-713f576a6ab5))
+    (pin "2" (uuid 44618644-a816-41ee-b9a9-f35fd6f6e78c))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "D3") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 109.22 92.71 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 109.22 92.71 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid c4225441-2ec0-472a-8e79-b9fab4e5354e)
+    (uuid d2291e9b-f434-4a40-8c6d-378ee9e23195)
     (property "Reference" "#PWR01" (id 0) (at 109.22 88.9 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1717,19 +1768,19 @@
     (property "Datasheet" "~" (id 3) (at 109.22 92.71 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 7069eae9-6172-426d-aaaa-443cd8bc767b))
+    (pin "1" (uuid cd3c6b3c-34fc-44a9-8308-15c8387a82f6))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR01") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 96.52 92.71 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 96.52 92.71 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid ebdab71b-e440-493e-9a20-56d2132a5122)
+    (uuid deec6c47-16ef-4bf1-a2d2-776e1c6615cb)
     (property "Reference" "#PWR02" (id 0) (at 96.52 88.9 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1742,10 +1793,10 @@
     (property "Datasheet" "~" (id 3) (at 96.52 92.71 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 20cc446d-984d-4419-b0ec-07e78e133a46))
+    (pin "1" (uuid f8007e90-37be-4149-9da2-88ba65fd580d))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR02") (unit 1)
         )
       )
@@ -1754,7 +1805,7 @@
 
   (symbol (lib_id "power:GND") (at 109.22 143.51 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 990a4a93-a2f2-4bcc-9556-767c44bc4c7e)
+    (uuid c9723939-e1a4-4ba6-8399-264710497394)
     (property "Reference" "#PWR03" (id 0) (at 109.22 149.86 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1767,10 +1818,10 @@
     (property "Datasheet" "~" (id 3) (at 109.22 143.51 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0e4ec411-37b5-4014-804d-511dc586ca65))
+    (pin "1" (uuid e0c8bdb8-29b6-42f3-9100-6cfa27c43faa))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR03") (unit 1)
         )
       )
@@ -1779,7 +1830,7 @@
 
   (symbol (lib_id "power:GND") (at 114.3 127.0 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid bdc7baa4-f565-47ef-95a1-0ccf324eca75)
+    (uuid 404fcb39-64e8-4dfb-98bd-eeabb39e51ef)
     (property "Reference" "#PWR04" (id 0) (at 114.3 133.35 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1792,10 +1843,10 @@
     (property "Datasheet" "~" (id 3) (at 114.3 127.0 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid a5d05530-3fa9-471e-8a44-0620e313fda4))
+    (pin "1" (uuid 0d95010e-d2f1-43b9-a0f5-0ca66fe21b50))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR04") (unit 1)
         )
       )
@@ -1804,7 +1855,7 @@
 
   (symbol (lib_id "power:+1V8") (at 129.54 96.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid d02474ed-742d-407b-8460-000ed4db8a55)
+    (uuid 17cdf1db-6e1c-4f62-b813-b327ae539f63)
     (property "Reference" "#PWR05" (id 0) (at 129.54 92.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1817,19 +1868,19 @@
     (property "Datasheet" "~" (id 3) (at 129.54 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid f5845bcc-d908-41c2-8334-217efc72529e))
+    (pin "1" (uuid 08e78fae-6ec9-4ce5-b138-b1107a67c10b))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR05") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 139.7 96.52 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 139.7 96.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 597a954d-9dcf-42c7-8b19-faca034e069a)
+    (uuid 6b870db0-3cb2-4ea1-905d-a8d1ba98390b)
     (property "Reference" "#PWR06" (id 0) (at 139.7 92.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1842,10 +1893,10 @@
     (property "Datasheet" "~" (id 3) (at 139.7 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0adc1624-f71c-4761-ba68-8dafdf6b5f4d))
+    (pin "1" (uuid ecb9af17-e6e2-4647-a875-baabc9878f55))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR06") (unit 1)
         )
       )
@@ -1854,7 +1905,7 @@
 
   (symbol (lib_id "power:GND") (at 134.62 147.32 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 51a4ab38-f645-4f0f-b68e-37ba1d491227)
+    (uuid e5aae6d5-6ead-4edb-940d-7832def3a43c)
     (property "Reference" "#PWR07" (id 0) (at 134.62 153.67 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1867,10 +1918,10 @@
     (property "Datasheet" "~" (id 3) (at 134.62 147.32 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid ffe16921-14d8-4f14-8532-b5aeeab7b16e))
+    (pin "1" (uuid af6fdb31-e8dd-4c38-84ff-0d27b9e9f1c6))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR07") (unit 1)
         )
       )
@@ -1879,7 +1930,7 @@
 
   (symbol (lib_id "NadiSense:nRF52840") (at 218.44 121.92 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 3ca4236c-98ce-46c1-b199-08b87b10f7dd)
+    (uuid 17097958-d6c1-4f19-a371-b883405a18ff)
     (property "Reference" "U1" (id 0) (at 203.2 100.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -1892,26 +1943,26 @@
     (property "Datasheet" "~" (id 3) (at 218.44 121.92 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 10a9984c-4b9c-46c1-a5a9-5deec691920e))
-    (pin "2" (uuid 37201d88-7e7d-43f8-bc8d-004c38ff1bc7))
-    (pin "3" (uuid bcec1a85-3289-4ee0-90df-0df9b7592273))
-    (pin "4" (uuid 5ad3df3a-92f4-4aa6-8b1a-3c1ca5803cdf))
-    (pin "5" (uuid 6e6aa3ec-ecf3-4f14-a5be-95467f12417c))
-    (pin "6" (uuid d8a50753-3644-4322-a491-88649a7ca17f))
-    (pin "7" (uuid ec5ff5d2-bf0e-449e-9223-2e524a560faf))
-    (pin "8" (uuid 221dbf8e-4f16-4096-ad0e-2fea14f03b02))
-    (pin "9" (uuid 7c266b09-c4d6-4c91-93b4-750d640b26fc))
-    (pin "10" (uuid 0b4db7a6-f584-4f70-a393-80d1b09967fb))
-    (pin "11" (uuid 71349f27-f626-4744-babc-545bd2430c30))
-    (pin "12" (uuid 2e01b51e-5d40-4d91-995e-540ce466f950))
-    (pin "13" (uuid 729ae746-14e0-429c-9fd4-975e8c48df9d))
-    (pin "14" (uuid 4ee3b3ee-c289-445d-8b99-52db4ae6cb45))
-    (pin "15" (uuid d17e5598-6760-4cce-8d28-a5ddd0808ce0))
-    (pin "16" (uuid d94b30a6-74d7-4b0c-afb4-d927afef1dc9))
-    (pin "17" (uuid 520bd2be-469f-4395-8cd2-df1b6cd76ad0))
+    (pin "1" (uuid d130828a-efc2-4c11-b98b-14787d00223d))
+    (pin "2" (uuid fd6f44f3-fcda-454d-b489-0dc8c337b867))
+    (pin "3" (uuid 235f29e9-e569-4295-8206-664292c0b111))
+    (pin "4" (uuid 8ae25c28-f87c-421b-90c8-20fb8bfd3ac9))
+    (pin "5" (uuid 879596f7-3b13-4d85-816f-ccc9d1a6f4f8))
+    (pin "6" (uuid f13208d5-af55-471b-b44a-1d7c5017e021))
+    (pin "7" (uuid e0d4c274-5e2c-4e6c-a8a4-53c0d3fe8b8f))
+    (pin "8" (uuid d26230de-e2fc-4a0e-bc16-28bee266ec7d))
+    (pin "9" (uuid 5c6d687d-02df-4f35-8f52-fd052ecfea83))
+    (pin "10" (uuid 16d6c06d-ac4e-4608-80f2-6d2769b7cec9))
+    (pin "11" (uuid a155cc5d-e27f-4574-a059-b3438091ce2d))
+    (pin "12" (uuid 0060372b-71c5-4f5e-aa92-6fde6eb750d0))
+    (pin "13" (uuid 0abc7e01-693e-494e-af6f-ffbbde9cfd89))
+    (pin "14" (uuid b5c27157-7b26-4eb4-a29e-3bf04c900b66))
+    (pin "15" (uuid 08d51cbb-42c3-48cf-afcc-e1c21f56724e))
+    (pin "16" (uuid b7176226-c1f1-4b79-b24c-503ca5e8a9db))
+    (pin "17" (uuid 1bdff367-40eb-45bd-b32d-027673f14b01))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "U1") (unit 1)
         )
       )
@@ -1920,7 +1971,7 @@
 
   (symbol (lib_id "Device:C") (at 187.96 95.25 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 68b683de-8dd4-4ec4-bd71-e47535b97d26)
+    (uuid a3d0371a-b7af-47b0-9abf-d8a215cd15c3)
     (property "Reference" "C6" (id 0) (at 190.5 93.98 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -1933,11 +1984,11 @@
     (property "Datasheet" "~" (id 3) (at 187.96 95.25 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid be774918-4988-4327-98c3-943c5f10b599))
-    (pin "2" (uuid 5b92d0ad-2c4f-40b7-bc74-60e6a00c0d65))
+    (pin "1" (uuid 4b9eef7b-57d3-4f6f-ab1a-508a33d149e1))
+    (pin "2" (uuid 9edb4352-2877-4574-8bd9-de6b89e13b67))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C6") (unit 1)
         )
       )
@@ -1946,7 +1997,7 @@
 
   (symbol (lib_id "power:GND") (at 187.96 99.06 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 7578a012-492b-4a0c-a20c-d061f5e21a14)
+    (uuid 205fc878-3221-4f4d-988e-ac2e5ca43051)
     (property "Reference" "#PWR08" (id 0) (at 187.96 105.41 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1959,19 +2010,19 @@
     (property "Datasheet" "~" (id 3) (at 187.96 99.06 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 9be6af9d-c324-4d63-8d27-898f0e286e12))
+    (pin "1" (uuid 2312488e-8db2-4020-9994-03474d512709))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR08") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VSYS") (at 218.44 96.52 0) (unit 1)
+  (symbol (lib_id "NadiSense:VSYS") (at 218.44 96.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 880e3266-5a0c-49f1-9bdc-52240e967233)
+    (uuid 59fc85b2-f761-4d62-98ba-5e835da62659)
     (property "Reference" "#PWR09" (id 0) (at 218.44 92.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -1984,10 +2035,10 @@
     (property "Datasheet" "~" (id 3) (at 218.44 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid f9bcc9ea-0798-4705-963b-b2f676cf18ec))
+    (pin "1" (uuid 9a15a70a-c672-4084-ae3c-30575c005d9c))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR09") (unit 1)
         )
       )
@@ -1996,7 +2047,7 @@
 
   (symbol (lib_id "power:+1V8") (at 228.6 96.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 4451ca0a-876a-48e8-b4dc-696360b11d94)
+    (uuid 4bc6b0a4-17be-429e-b3e9-1310da717366)
     (property "Reference" "#PWR10" (id 0) (at 228.6 92.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2009,10 +2060,10 @@
     (property "Datasheet" "~" (id 3) (at 228.6 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid de131cd7-018d-4acd-89dd-9a019df531f5))
+    (pin "1" (uuid d8d358ae-b375-4374-bd87-bf1d044e7487))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR10") (unit 1)
         )
       )
@@ -2021,7 +2072,7 @@
 
   (symbol (lib_id "Device:Crystal") (at 205.74 160.02 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 37b0708b-d56e-4ce3-9d59-bbede21f0922)
+    (uuid c8e4d2cd-ef4a-43f8-a105-92e9675d7833)
     (property "Reference" "Y1" (id 0) (at 204.47 156.21 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2034,11 +2085,11 @@
     (property "Datasheet" "~" (id 3) (at 205.74 160.02 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 720fbc65-4b78-41bd-9d42-d6592a68a7a8))
-    (pin "2" (uuid 18d79ecb-e9ce-4268-8e5e-cb44dffd8420))
+    (pin "1" (uuid 36cb6330-6fd4-495c-ac13-b56173cecc0c))
+    (pin "2" (uuid 8e02492a-f2b4-4fb3-afad-a89904cefb26))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "Y1") (unit 1)
         )
       )
@@ -2047,7 +2098,7 @@
 
   (symbol (lib_id "Device:C") (at 201.93 168.91 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 8874c856-4fc1-40f8-a0f5-82eefb1fc7e6)
+    (uuid 9af0ac83-1305-46a0-9b0a-920830aca819)
     (property "Reference" "C7" (id 0) (at 199.39 167.64 0)
       (effects (font (size 1.27 1.27) bold) (justify right))
     )
@@ -2060,11 +2111,11 @@
     (property "Datasheet" "~" (id 3) (at 201.93 168.91 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 97dd5119-117c-4583-86be-f70bb48e9f3b))
-    (pin "2" (uuid 7fb8484b-b866-45f8-9d6a-e0a6ef6a94f9))
+    (pin "1" (uuid 3ae32de8-b1fb-452d-9bc4-08f62173c11a))
+    (pin "2" (uuid 204c7864-888d-4d8a-850b-dc973367f5a5))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C7") (unit 1)
         )
       )
@@ -2073,7 +2124,7 @@
 
   (symbol (lib_id "Device:C") (at 209.55 168.91 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid c1e0ef34-75b5-449d-b83f-3023568aeed4)
+    (uuid 0f2d9c09-d430-4259-ad49-84f6363657ef)
     (property "Reference" "C8" (id 0) (at 212.09 167.64 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2086,11 +2137,11 @@
     (property "Datasheet" "~" (id 3) (at 209.55 168.91 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0322a83c-e4a4-4305-bd61-ce3eba31463b))
-    (pin "2" (uuid 12660f3e-fb20-49d1-bcb4-f02b5c1c04d5))
+    (pin "1" (uuid 4ff38c91-58cf-4008-a246-cbe5f2162f6a))
+    (pin "2" (uuid fa0e9f47-fb37-413b-a3fc-25e69006e4ad))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C8") (unit 1)
         )
       )
@@ -2099,7 +2150,7 @@
 
   (symbol (lib_id "power:GND") (at 201.93 172.72 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 1d975852-878e-4dcb-b543-72792f2ff3b1)
+    (uuid 572e08ec-d96a-4128-9f4e-d4410f0f3f2b)
     (property "Reference" "#PWR11" (id 0) (at 201.93 179.07 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2112,10 +2163,10 @@
     (property "Datasheet" "~" (id 3) (at 201.93 172.72 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid cda208d1-7981-4bd2-ab2b-6c3fc1cd983b))
+    (pin "1" (uuid d0df6a22-a039-4071-8fb2-47b42adb44f5))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR11") (unit 1)
         )
       )
@@ -2124,7 +2175,7 @@
 
   (symbol (lib_id "power:GND") (at 209.55 172.72 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid d38e7b34-50f9-42ce-a287-853e1790eb7f)
+    (uuid f3af011f-321b-41ca-80e7-5de4dd049c84)
     (property "Reference" "#PWR12" (id 0) (at 209.55 179.07 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2137,10 +2188,10 @@
     (property "Datasheet" "~" (id 3) (at 209.55 172.72 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid acf8c1cc-01b6-4864-a8a1-3be44b342dc6))
+    (pin "1" (uuid 658b599e-c8cc-45bd-b652-9a10bd783ed4))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR12") (unit 1)
         )
       )
@@ -2149,7 +2200,7 @@
 
   (symbol (lib_id "Device:Antenna_Chip") (at 241.3 157.48 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid feaf3ec5-ce84-4561-8bca-aa019d64eef0)
+    (uuid f3cc02cb-7a0e-4a81-989f-0158140333a2)
     (property "Reference" "AE1" (id 0) (at 246.38 152.4 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2162,11 +2213,11 @@
     (property "Datasheet" "~" (id 3) (at 241.3 157.48 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 147c592c-e96a-4de7-98c8-afcdf112cba8))
-    (pin "2" (uuid b6061f6b-516c-47f1-a968-368faab4ddcf))
+    (pin "1" (uuid f9891439-ddad-411e-81e7-4d8ed41731ce))
+    (pin "2" (uuid f0bc3dcd-90ea-4f8f-b89b-00779b540ef1))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "AE1") (unit 1)
         )
       )
@@ -2175,7 +2226,7 @@
 
   (symbol (lib_id "power:GND") (at 228.6 147.32 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid d9909e4e-45e4-4581-b7a6-142908636f2c)
+    (uuid eac566f5-87e2-4543-9e0a-57bcbb9939ae)
     (property "Reference" "#PWR13" (id 0) (at 228.6 153.67 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2188,10 +2239,10 @@
     (property "Datasheet" "~" (id 3) (at 228.6 147.32 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 3739c033-434d-4b66-91bd-c0924bf4c2b5))
+    (pin "1" (uuid a6b19345-6c0c-4b8e-a078-657144cf37fa))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR13") (unit 1)
         )
       )
@@ -2200,7 +2251,7 @@
 
   (symbol (lib_id "Device:R") (at 246.38 102.87 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 0b7473cb-347b-4b38-a1e0-101c2813f9a0)
+    (uuid 7f6aa4f8-9015-4b3d-9b16-ec753fc55316)
     (property "Reference" "R1" (id 0) (at 248.92 101.6 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2213,11 +2264,11 @@
     (property "Datasheet" "~" (id 3) (at 246.38 102.87 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 54a8aa2c-42ea-48db-b874-1fce1972c15d))
-    (pin "2" (uuid cfae0fbf-067f-46df-a843-d901e0ebb7a9))
+    (pin "1" (uuid 58935fbf-5de2-4194-bf62-9ac78d785dcd))
+    (pin "2" (uuid 05fbdb78-1289-4c56-ad24-a2ef44918f38))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "R1") (unit 1)
         )
       )
@@ -2226,7 +2277,7 @@
 
   (symbol (lib_id "Device:R") (at 256.54 107.95 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid ddcd5dc1-6814-4e2b-af77-b1699b6591d5)
+    (uuid 5fd280ac-f539-4d96-b68a-f959190662bf)
     (property "Reference" "R2" (id 0) (at 259.08 106.68 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2239,11 +2290,11 @@
     (property "Datasheet" "~" (id 3) (at 256.54 107.95 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0dfad8d4-2da3-48d0-99e6-d60e0d8281ee))
-    (pin "2" (uuid 5f25f5d2-2b8f-469a-ba74-d80cee4ee24c))
+    (pin "1" (uuid 20567e90-9107-4265-920f-772a8a655a97))
+    (pin "2" (uuid aa9c7175-7731-43ef-9742-064cce399d2d))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "R2") (unit 1)
         )
       )
@@ -2252,7 +2303,7 @@
 
   (symbol (lib_id "power:+1V8") (at 246.38 99.06 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 1b846565-57fc-43b6-9112-ae3b8e8a85cb)
+    (uuid 320619b0-bce9-40cb-913a-49d2effeff60)
     (property "Reference" "#PWR14" (id 0) (at 246.38 95.25 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2265,10 +2316,10 @@
     (property "Datasheet" "~" (id 3) (at 246.38 99.06 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 9dee0214-72d6-4d58-8fda-6c0e0099816f))
+    (pin "1" (uuid c8b6546a-9a31-4006-a79d-0edefbc92317))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR14") (unit 1)
         )
       )
@@ -2277,7 +2328,7 @@
 
   (symbol (lib_id "power:+1V8") (at 256.54 104.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 1177212f-ab55-4e75-b2e4-4597c2d390cd)
+    (uuid 05cdea10-3348-4433-9563-dad1d3f35c2a)
     (property "Reference" "#PWR15" (id 0) (at 256.54 100.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2290,10 +2341,10 @@
     (property "Datasheet" "~" (id 3) (at 256.54 104.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 231442ea-47fb-44db-ab60-bba0181327cb))
+    (pin "1" (uuid 359698df-86cf-4475-9be2-b2ec9c09f593))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR15") (unit 1)
         )
       )
@@ -2302,7 +2353,7 @@
 
   (symbol (lib_id "NadiSense:TMP117") (at 317.5 129.54 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 95a6d542-1a1d-4ce4-a61c-ff4e9aa81a90)
+    (uuid 4c2cfcef-ef09-4c9e-aff2-77de8132f0b7)
     (property "Reference" "U3" (id 0) (at 309.88 113.03 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2315,15 +2366,15 @@
     (property "Datasheet" "~" (id 3) (at 317.5 129.54 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 91683f2d-1d2d-41db-83a0-21bc173b3151))
-    (pin "2" (uuid 7a3697fa-0151-4d4f-bd97-4278601197bb))
-    (pin "3" (uuid 6a007f8f-03fc-49cc-a4b7-dea4b83a46b9))
-    (pin "4" (uuid 7cc9a401-d974-40f1-8957-1bae017662e2))
-    (pin "5" (uuid 65cb0a03-c65f-4d19-98ef-7d83a2d227f7))
-    (pin "6" (uuid 596697d6-954e-4e1d-80f2-92424e4f29ae))
+    (pin "1" (uuid c6670ccb-d815-4412-94b1-891a96a31c7f))
+    (pin "2" (uuid e196aeda-3bae-44af-ae23-780f57bd753a))
+    (pin "3" (uuid dd223940-d449-4b8c-9d50-a27331863ce5))
+    (pin "4" (uuid a0d34ba7-4d62-4232-83bd-2ecdbf3d371c))
+    (pin "5" (uuid 13b1df23-11c5-464b-8417-647d3e2d6ed0))
+    (pin "6" (uuid 749eb0dd-6ba2-4149-a594-3315c07a0461))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "U3") (unit 1)
         )
       )
@@ -2332,7 +2383,7 @@
 
   (symbol (lib_id "power:GND") (at 299.72 139.7 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid d6bd8d4c-4ee4-4b62-ae3a-4cfc9877dc1d)
+    (uuid a9119f19-03db-43aa-a422-dac4314d6780)
     (property "Reference" "#PWR16" (id 0) (at 299.72 146.05 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2345,10 +2396,10 @@
     (property "Datasheet" "~" (id 3) (at 299.72 139.7 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 87125dae-77e0-4e7f-aa60-cdfa628ecb2b))
+    (pin "1" (uuid f2b57ce1-7807-4eb7-b8d6-16e265201517))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR16") (unit 1)
         )
       )
@@ -2357,7 +2408,7 @@
 
   (symbol (lib_id "power:+1V8") (at 317.5 109.22 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 98ee5b96-4581-4372-821b-3ef120bddf70)
+    (uuid 789ef925-93f8-4bab-adbe-dbff93534f32)
     (property "Reference" "#PWR17" (id 0) (at 317.5 105.41 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2370,10 +2421,10 @@
     (property "Datasheet" "~" (id 3) (at 317.5 109.22 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid c94fe1af-b23b-47c6-8168-d9578f05ea0f))
+    (pin "1" (uuid 7840a44a-5dc0-4020-8e5f-7e66a97b5149))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR17") (unit 1)
         )
       )
@@ -2382,7 +2433,7 @@
 
   (symbol (lib_id "power:GND") (at 317.5 149.86 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 4fee986c-2261-402c-9311-90f61a62e02f)
+    (uuid 86f539cc-1711-4fef-b76d-2777cb5a86c6)
     (property "Reference" "#PWR18" (id 0) (at 317.5 156.21 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2395,10 +2446,10 @@
     (property "Datasheet" "~" (id 3) (at 317.5 149.86 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0401460e-48f1-4a86-8f54-fb0f6015a0c9))
+    (pin "1" (uuid 194d4ef1-5105-4679-a81b-0f496652d506))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR18") (unit 1)
         )
       )
@@ -2407,7 +2458,7 @@
 
   (symbol (lib_id "Device:C") (at 332.74 110.49 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 84025f31-6734-4994-8787-f8fefa02403c)
+    (uuid 67c91d6d-6ba4-4fdf-8f11-4afd23793254)
     (property "Reference" "C2" (id 0) (at 335.28 109.22 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2420,11 +2471,11 @@
     (property "Datasheet" "~" (id 3) (at 332.74 110.49 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid fc4ae339-1c2a-4dbb-8109-b877daa62c00))
-    (pin "2" (uuid 1c94a13e-2d45-49f8-bf40-a3ae82edec2f))
+    (pin "1" (uuid 30a8a9ba-6f8c-4350-b834-ee9f81630543))
+    (pin "2" (uuid 0ed0c52b-c3d8-41d3-9857-18f44b75dc01))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C2") (unit 1)
         )
       )
@@ -2433,7 +2484,7 @@
 
   (symbol (lib_id "power:+1V8") (at 332.74 106.68 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid d4219a18-b994-4f1f-af78-ffe50ba6a5fe)
+    (uuid 67d918e1-b17e-447a-bf26-18f6423181ae)
     (property "Reference" "#PWR19" (id 0) (at 332.74 102.87 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2446,10 +2497,10 @@
     (property "Datasheet" "~" (id 3) (at 332.74 106.68 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid e27e2722-a3f2-4caf-b5cc-de795649a2ad))
+    (pin "1" (uuid a89010eb-8645-417c-a03a-bca2998f9c95))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR19") (unit 1)
         )
       )
@@ -2458,7 +2509,7 @@
 
   (symbol (lib_id "power:GND") (at 332.74 114.3 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 4f0b0275-ae22-4802-9dca-0d7533d2c0c5)
+    (uuid 0cd9a1b2-c335-47ef-8e73-810eccaa8def)
     (property "Reference" "#PWR20" (id 0) (at 332.74 120.65 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2471,10 +2522,10 @@
     (property "Datasheet" "~" (id 3) (at 332.74 114.3 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 886a142f-9c74-4855-85fe-fc173423a995))
+    (pin "1" (uuid 0de6d007-ac7f-450a-8e39-98609021aa83))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR20") (unit 1)
         )
       )
@@ -2483,7 +2534,7 @@
 
   (symbol (lib_id "NadiSense:LIS2DW12") (at 378.46 129.54 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 8aaaa2ae-a7fe-445c-8f2b-41be5b70fd77)
+    (uuid 28f8138b-f658-4ad1-899a-e416bce35794)
     (property "Reference" "U4" (id 0) (at 370.84 107.95 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2496,18 +2547,18 @@
     (property "Datasheet" "~" (id 3) (at 378.46 129.54 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid cd65bbb0-4db2-46de-8df0-26649f3a969d))
-    (pin "2" (uuid 3c86ba22-624f-4d01-bd1b-3b206a6f866b))
-    (pin "3" (uuid 085259a9-3b46-4951-a92c-3c52ebec8f26))
-    (pin "4" (uuid f8b65a14-1372-4310-8497-00f806c6f1f2))
-    (pin "5" (uuid 9b6cdc83-2015-4ee9-a7b3-dca6f4b51b79))
-    (pin "6" (uuid e10538bf-ecf6-42a0-bcac-b783b01bc947))
-    (pin "7" (uuid e5fefb42-8e08-4457-8310-db0fc5cdf6b5))
-    (pin "8" (uuid 2015835a-e48b-4011-abc1-72a98aaa9ee1))
-    (pin "9" (uuid 2bb5be34-7dd0-429d-8f34-7294d3aaa91d))
+    (pin "1" (uuid 95755f5d-9186-4432-98d1-6953fe2e5065))
+    (pin "2" (uuid 5c3afd96-7c37-4d56-a15a-6c24093cad3d))
+    (pin "3" (uuid 5e05f310-b159-4e84-a18c-0b57dba66780))
+    (pin "4" (uuid d85c74ee-fb10-4de1-8b30-fd042a340b9b))
+    (pin "5" (uuid 3283d6a2-cce0-4776-80be-87c74ca1ae1c))
+    (pin "6" (uuid c6668c2a-73a6-4d8b-8627-3a64d9465a97))
+    (pin "7" (uuid 986b30c7-5709-4a2a-9129-43fc36bf2f97))
+    (pin "8" (uuid 312d51c3-6949-49f5-9fc2-dcaae1340a68))
+    (pin "9" (uuid 5fb1e2e0-42fa-41f2-bf0f-434e6015f579))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "U4") (unit 1)
         )
       )
@@ -2516,7 +2567,7 @@
 
   (symbol (lib_id "power:+1V8") (at 360.68 127.0 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 2cb011cd-46cf-4722-92de-7d7a42b6df70)
+    (uuid d846b8b1-2114-4057-93c0-9cf06d76a92f)
     (property "Reference" "#PWR21" (id 0) (at 360.68 123.19 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2529,10 +2580,10 @@
     (property "Datasheet" "~" (id 3) (at 360.68 127.0 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 9a7e9e1c-aa84-40f5-84e0-84e724e6bb26))
+    (pin "1" (uuid f106357d-6bad-469a-b00f-556bbc28e161))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR21") (unit 1)
         )
       )
@@ -2541,7 +2592,7 @@
 
   (symbol (lib_id "power:+1V8") (at 375.92 104.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 13861a5b-8370-4879-95f2-059dfa83b79a)
+    (uuid 5db8d410-4133-4b59-ad01-cde77ecc842e)
     (property "Reference" "#PWR22" (id 0) (at 375.92 100.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2554,10 +2605,10 @@
     (property "Datasheet" "~" (id 3) (at 375.92 104.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 424d2335-35a6-4909-9ad2-2119045abce0))
+    (pin "1" (uuid b085484e-606b-4c64-a3e4-ee6eee0f7a56))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR22") (unit 1)
         )
       )
@@ -2566,7 +2617,7 @@
 
   (symbol (lib_id "power:+1V8") (at 383.54 104.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 417fbab2-7ec9-4681-add3-51ecfa602992)
+    (uuid a318cf11-912b-4e2e-8895-04c9aa9b90b9)
     (property "Reference" "#PWR23" (id 0) (at 383.54 100.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2579,10 +2630,10 @@
     (property "Datasheet" "~" (id 3) (at 383.54 104.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 3bf179d7-6338-42a1-8c54-a1a2f89c0800))
+    (pin "1" (uuid ff6f1e5b-97c5-4fe9-b06e-4abb74e3f4e2))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR23") (unit 1)
         )
       )
@@ -2591,7 +2642,7 @@
 
   (symbol (lib_id "power:GND") (at 378.46 154.94 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid f20201a2-7761-4de5-aa75-973850ab467d)
+    (uuid 3722c482-1fcc-415a-88a4-4d327237f73d)
     (property "Reference" "#PWR24" (id 0) (at 378.46 161.29 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2604,10 +2655,10 @@
     (property "Datasheet" "~" (id 3) (at 378.46 154.94 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid d491a27a-0da1-44f3-8582-37edff379523))
+    (pin "1" (uuid ab92e17a-5d23-4fcd-ba92-8e295c8d62e5))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR24") (unit 1)
         )
       )
@@ -2616,7 +2667,7 @@
 
   (symbol (lib_id "Device:C") (at 393.7 100.33 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 80bdb512-d2ab-4aed-8bb6-31289f8c9253)
+    (uuid b4c6fda1-7cd1-4b90-b481-73d2010cca59)
     (property "Reference" "C9" (id 0) (at 396.24 99.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2629,11 +2680,11 @@
     (property "Datasheet" "~" (id 3) (at 393.7 100.33 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 2642b059-a8ef-4628-b991-ebdef37e8efe))
-    (pin "2" (uuid d36315da-ff77-4699-a090-3babc1f52f10))
+    (pin "1" (uuid 19e22c98-91d2-42f3-a6a1-47102d1880ce))
+    (pin "2" (uuid c7bc5787-33ee-4794-a562-d5a831a8ab09))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C9") (unit 1)
         )
       )
@@ -2642,7 +2693,7 @@
 
   (symbol (lib_id "power:+1V8") (at 393.7 96.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid f153e791-d8f2-4478-bf68-40c31856c76a)
+    (uuid 4ca4d8da-c223-4492-8e0c-66ba5c4b8d5e)
     (property "Reference" "#PWR25" (id 0) (at 393.7 92.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2655,10 +2706,10 @@
     (property "Datasheet" "~" (id 3) (at 393.7 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid ccd73695-77e8-4d11-9ea2-d0219ba4d729))
+    (pin "1" (uuid 95afd99a-2eb1-48e6-8e71-47bfb022fd2a))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR25") (unit 1)
         )
       )
@@ -2667,7 +2718,7 @@
 
   (symbol (lib_id "power:GND") (at 393.7 104.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 2a775be9-3a11-4c54-b43f-37a249f79b21)
+    (uuid f4d4f28a-adfb-45df-a609-eedb00da00fa)
     (property "Reference" "#PWR26" (id 0) (at 393.7 110.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2680,10 +2731,10 @@
     (property "Datasheet" "~" (id 3) (at 393.7 104.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 3385c919-414a-4b41-bb33-a2c4f3a8b0dd))
+    (pin "1" (uuid a816b7b4-352b-4efd-aa03-b07f415e4118))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR26") (unit 1)
         )
       )
@@ -2692,7 +2743,7 @@
 
   (symbol (lib_id "Device:C") (at 91.44 227.33 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 96470a4c-c330-4705-8cda-3d57e99bb1e9)
+    (uuid 63581254-785d-4c1c-b4c7-031dc5eed5a7)
     (property "Reference" "C1" (id 0) (at 93.98 226.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2705,11 +2756,11 @@
     (property "Datasheet" "~" (id 3) (at 91.44 227.33 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid a17a1e80-7aed-41df-9f7b-cc650179c710))
-    (pin "2" (uuid 4d7f0216-55fd-4a80-b295-7c12e10b97cd))
+    (pin "1" (uuid 1f37d97a-0043-41ca-85ce-304b7e5ddbd9))
+    (pin "2" (uuid ecbeb0f1-50e5-458c-968a-93c3eff3ef4a))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C1") (unit 1)
         )
       )
@@ -2718,7 +2769,7 @@
 
   (symbol (lib_id "power:+1V8") (at 91.44 223.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 1bb8727f-b537-49d4-940f-2f0b329f6047)
+    (uuid b84e4b37-2924-43d6-9ba1-8bcd5fea4b38)
     (property "Reference" "#PWR27" (id 0) (at 91.44 219.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2731,10 +2782,10 @@
     (property "Datasheet" "~" (id 3) (at 91.44 223.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 6f6afde3-ee9b-4ba5-a30f-ce421cf46672))
+    (pin "1" (uuid d2f99122-eebb-4f81-9a64-63ed87c1d130))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR27") (unit 1)
         )
       )
@@ -2743,7 +2794,7 @@
 
   (symbol (lib_id "power:GND") (at 91.44 231.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 59c5e766-1358-4f09-ac72-a0ef965d94dd)
+    (uuid e594b252-de0e-40a0-921e-299a41ff0ccf)
     (property "Reference" "#PWR28" (id 0) (at 91.44 237.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2756,10 +2807,10 @@
     (property "Datasheet" "~" (id 3) (at 91.44 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 3749d6ff-a090-4e82-98db-f40c03c4a036))
+    (pin "1" (uuid 0b8897f7-8299-4878-8b02-f7854f3820e7))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR28") (unit 1)
         )
       )
@@ -2768,7 +2819,7 @@
 
   (symbol (lib_id "Device:C") (at 109.22 227.33 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 2b6308bb-1730-4e6c-82b6-d6a48a9eaf0e)
+    (uuid 73ac0f9f-dda2-455c-b96a-fb99e9c9d4d1)
     (property "Reference" "C10" (id 0) (at 111.76 226.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2781,11 +2832,11 @@
     (property "Datasheet" "~" (id 3) (at 109.22 227.33 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 7a1f98be-f9de-4de4-af3d-c5adab22d309))
-    (pin "2" (uuid e7ee0807-3de4-4b16-84dd-70853fa9e1a7))
+    (pin "1" (uuid f5d68ebc-e730-4af8-b989-1b373ab38487))
+    (pin "2" (uuid bb396757-b687-4f0b-bee3-1e69b009c290))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C10") (unit 1)
         )
       )
@@ -2794,7 +2845,7 @@
 
   (symbol (lib_id "power:+1V8") (at 109.22 223.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 34167da6-18e6-4387-9a69-0f0823df28a8)
+    (uuid cb92b88a-0698-473e-ad4f-e6324630a1f3)
     (property "Reference" "#PWR29" (id 0) (at 109.22 219.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2807,10 +2858,10 @@
     (property "Datasheet" "~" (id 3) (at 109.22 223.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid a9d65314-82ce-4ea4-a836-d7a90ceeb260))
+    (pin "1" (uuid 39ba7c68-824f-4ed2-bea6-a86decd2eeb7))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR29") (unit 1)
         )
       )
@@ -2819,7 +2870,7 @@
 
   (symbol (lib_id "power:GND") (at 109.22 231.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 489fa542-dbbc-4663-a03a-08ba2ffe1f04)
+    (uuid cf131d95-7871-48d4-8248-a0f658991dd8)
     (property "Reference" "#PWR30" (id 0) (at 109.22 237.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2832,10 +2883,10 @@
     (property "Datasheet" "~" (id 3) (at 109.22 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 8803171c-cc46-4a29-867b-24060410007a))
+    (pin "1" (uuid 63b15235-08a6-421d-9365-ec8640c2c177))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR30") (unit 1)
         )
       )
@@ -2844,7 +2895,7 @@
 
   (symbol (lib_id "Device:C") (at 127.0 227.33 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid abd56784-3c3d-48f9-80c8-ec33d5dae761)
+    (uuid 06a9b41c-8478-4443-b8dd-cdc68541321b)
     (property "Reference" "C3" (id 0) (at 129.54 226.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2857,20 +2908,20 @@
     (property "Datasheet" "~" (id 3) (at 127.0 227.33 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid a05cce60-d16f-4cd0-be79-aa858f5dbba3))
-    (pin "2" (uuid cccc778d-408a-425c-af65-f5f2418e5262))
+    (pin "1" (uuid bb060fde-47c0-42b0-aa98-ab2c47afe79e))
+    (pin "2" (uuid c6007e40-73d0-466f-915f-eab2e182bf05))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C3") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 127.0 223.52 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 127.0 223.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid ac44ae59-f510-4511-8945-16cedf0d6877)
+    (uuid 8399643b-a32a-4f95-83fd-8d26a88ce2d6)
     (property "Reference" "#PWR31" (id 0) (at 127.0 219.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2883,10 +2934,10 @@
     (property "Datasheet" "~" (id 3) (at 127.0 223.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 60355b3c-475d-49e1-b72b-97af0560ca3f))
+    (pin "1" (uuid c169ec9e-c994-4b9c-a32f-59bd92edceb2))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR31") (unit 1)
         )
       )
@@ -2895,7 +2946,7 @@
 
   (symbol (lib_id "power:GND") (at 127.0 231.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid f55460af-b1cf-4531-b3c5-174821f27c33)
+    (uuid c816d83a-9ded-494e-9933-0c114ec3296d)
     (property "Reference" "#PWR32" (id 0) (at 127.0 237.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2908,10 +2959,10 @@
     (property "Datasheet" "~" (id 3) (at 127.0 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 51ed8d88-5ce4-4d08-95e0-28bdc3460af7))
+    (pin "1" (uuid cd6289ea-93f5-4f3e-bc3c-176465e72fde))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR32") (unit 1)
         )
       )
@@ -2920,7 +2971,7 @@
 
   (symbol (lib_id "Device:C") (at 144.78 227.33 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 4be86705-7cd2-4190-9da4-18a81a6dd012)
+    (uuid 822499c0-c5ec-4422-928b-61cb5695b7c5)
     (property "Reference" "C11" (id 0) (at 147.32 226.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -2933,20 +2984,20 @@
     (property "Datasheet" "~" (id 3) (at 144.78 227.33 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 63b6dbf7-2149-4ffd-841a-cdf1f1e1dd92))
-    (pin "2" (uuid 6d2ab2b4-ed37-45f1-bb6e-751d0dec1be3))
+    (pin "1" (uuid 016a27eb-645b-4bba-9ea5-ed8627f408f7))
+    (pin "2" (uuid 2272ab97-bb83-44d9-87f0-45c21fd69c85))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C11") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 144.78 223.52 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 144.78 223.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid c621db96-0966-4ce3-bb15-33f7ec4c4cdf)
+    (uuid 0e03e54c-9f70-4daf-9175-55985fcdf176)
     (property "Reference" "#PWR33" (id 0) (at 144.78 219.71 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2959,10 +3010,10 @@
     (property "Datasheet" "~" (id 3) (at 144.78 223.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid d465e25a-7098-4bbe-94aa-9eae84d7a0d7))
+    (pin "1" (uuid dbecc642-dc86-4a27-a381-3fefcc9b436b))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR33") (unit 1)
         )
       )
@@ -2971,7 +3022,7 @@
 
   (symbol (lib_id "power:GND") (at 144.78 231.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid a02d5f56-146c-4bdd-8a84-8f7fe7a0af73)
+    (uuid 00c5a3df-64d1-4925-a925-0443a58ff113)
     (property "Reference" "#PWR34" (id 0) (at 144.78 237.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -2984,10 +3035,10 @@
     (property "Datasheet" "~" (id 3) (at 144.78 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 337e2a7a-0a19-4917-812d-e4b1acbc0840))
+    (pin "1" (uuid 9df7e636-8c1a-47a7-b996-d450a18824f3))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR34") (unit 1)
         )
       )
@@ -2996,7 +3047,7 @@
 
   (symbol (lib_id "NadiSense:BQ25120A") (at 205.74 226.06 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 5120375c-5e8e-4c56-901e-6d721c3e72e9)
+    (uuid 6b4b2425-afa3-476a-a76c-63ba7d862411)
     (property "Reference" "U5" (id 0) (at 195.58 212.06 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3009,17 +3060,17 @@
     (property "Datasheet" "~" (id 3) (at 205.74 226.06 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 530229e5-60bb-41f9-a403-0547a139fafe))
-    (pin "2" (uuid 67cee2f5-d8fd-4fcc-97d3-0a2d277d659b))
-    (pin "3" (uuid 6e332b4f-1de0-4cfd-9794-ecc2f951c0bf))
-    (pin "4" (uuid d4130a98-5e27-499c-905d-b4167847ee85))
-    (pin "5" (uuid 578dbfc0-b4cc-4b05-b899-255ea8ce010e))
-    (pin "6" (uuid 302a9aef-6149-4d4c-874a-e27db5bd0c78))
-    (pin "7" (uuid e35d2649-d95a-4d59-b617-be5f047b7133))
-    (pin "8" (uuid 4bddce08-4612-46ea-b9d2-2132ea3efd91))
+    (pin "1" (uuid 23772c39-690a-4657-800a-39b9b22eb112))
+    (pin "2" (uuid 8c9dc255-afc4-44f8-b2ee-3bb54b8a6c06))
+    (pin "3" (uuid 8281773a-8681-4b8c-a148-27c0b22efb02))
+    (pin "4" (uuid 9735f4d0-8011-4716-8158-07d698500eb2))
+    (pin "5" (uuid b23c6cfc-d6dc-4409-8efd-36673c33a294))
+    (pin "6" (uuid ef9a5732-4370-4400-acbb-60df7e19b1c5))
+    (pin "7" (uuid 05d50cff-20af-4cdf-ab72-9a62f99abdcc))
+    (pin "8" (uuid f7c172db-9338-4a88-a7f5-ad58f86622f1))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "U5") (unit 1)
         )
       )
@@ -3028,7 +3079,7 @@
 
   (symbol (lib_id "power:GND") (at 205.74 243.84 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 1d0e880f-410d-4c4a-af91-cd72727173d4)
+    (uuid f6fd19bc-d0ae-409e-b1c1-f7bc5894b619)
     (property "Reference" "#PWR35" (id 0) (at 205.74 250.19 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -3041,10 +3092,10 @@
     (property "Datasheet" "~" (id 3) (at 205.74 243.84 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid f4afa303-38f4-4e0b-8052-fb945161f49f))
+    (pin "1" (uuid dcf889f4-3194-43d6-9d7c-82df2ccb7014))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR35") (unit 1)
         )
       )
@@ -3053,7 +3104,7 @@
 
   (symbol (lib_id "Connector:Conn_01x02_Pin") (at 279.4 218.44 180) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 1e3773b2-78d8-4e57-bc66-272c903c262f)
+    (uuid c0e52628-aa42-4ec3-9555-4fce44583fdf)
     (property "Reference" "J1" (id 0) (at 281.94 214.63 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3066,11 +3117,11 @@
     (property "Datasheet" "~" (id 3) (at 279.4 218.44 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 62434022-e6df-42bd-94c0-27e32a08af5e))
-    (pin "2" (uuid 3f8b1bc7-c7d3-40cd-886b-863d6117f7f6))
+    (pin "1" (uuid c30ab187-6929-4423-a8ac-38ce6d4bc6c0))
+    (pin "2" (uuid 012a153c-35d3-407f-970a-157a758d31c8))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "J1") (unit 1)
         )
       )
@@ -3079,7 +3130,7 @@
 
   (symbol (lib_id "power:GND") (at 269.24 220.98 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 82515bcd-ed11-48a4-8dfe-f16b8af8f076)
+    (uuid a18adf02-8296-49f2-bd37-9b615fa3f0d3)
     (property "Reference" "#PWR36" (id 0) (at 269.24 227.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
@@ -3092,11 +3143,61 @@
     (property "Datasheet" "~" (id 3) (at 269.24 220.98 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 324bcc4e-a034-4325-9efe-2775e5340e57))
+    (pin "1" (uuid 75f28518-c6b6-4620-868e-b91921707751))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "#PWR36") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:PWR_FLAG") (at 269.24 218.44 0) (unit 1)
+    (in_bom no) (on_board yes)
+    (uuid ef465b07-ad6f-45d6-b62c-4e158ae7139e)
+    (property "Reference" "#PWR37" (id 0) (at 269.24 214.63 0)
+      (effects (font (size 1.27 1.27) bold) (justify left) hide)
+    )
+    (property "Value" "PWR_FLAG" (id 1) (at 269.24 214.63 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (id 2) (at 269.24 218.44 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (id 3) (at 269.24 218.44 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 453bb46a-0247-4c3a-a079-d50df8072e97))
+    (instances
+      (project "NadiSense_ring_v2"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR37") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:PWR_FLAG") (at 233.67999999999998 215.9 0) (unit 1)
+    (in_bom no) (on_board yes)
+    (uuid 6470ec80-b536-44f2-9f30-0918a6e1f48f)
+    (property "Reference" "#PWR38" (id 0) (at 233.68 212.09 0)
+      (effects (font (size 1.27 1.27) bold) (justify left) hide)
+    )
+    (property "Value" "PWR_FLAG" (id 1) (at 233.67999999999998 212.09 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (id 2) (at 233.67999999999998 215.9 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (id 3) (at 233.67999999999998 215.9 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 5eea2661-b485-463c-8017-7456ca61101c))
+    (instances
+      (project "NadiSense_ring_v2"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR38") (unit 1)
         )
       )
     )
@@ -3104,7 +3205,7 @@
 
   (symbol (lib_id "Device:C") (at 251.46 219.71 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 289f05b9-0332-4049-b2ec-b60ca42a6f69)
+    (uuid 10d2bcda-3ab4-44b8-949e-80f1334c72b8)
     (property "Reference" "C5" (id 0) (at 254.0 218.44 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3117,11 +3218,11 @@
     (property "Datasheet" "~" (id 3) (at 251.46 219.71 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 3116a12a-0c81-4cdf-94b3-80c2a26159e5))
-    (pin "2" (uuid c513f9d5-72f6-4996-b8f9-56d99e5effd9))
+    (pin "1" (uuid 081879bd-e54d-4f95-b2a8-32389e7eef0f))
+    (pin "2" (uuid e624ef2b-6850-4a2b-a520-60cf4176b594))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C5") (unit 1)
         )
       )
@@ -3130,8 +3231,8 @@
 
   (symbol (lib_id "power:GND") (at 251.46 223.52 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid fb93957a-e4e9-4675-b1f9-5cb429a7b9b0)
-    (property "Reference" "#PWR37" (id 0) (at 251.46 229.87 0)
+    (uuid 4772b163-d499-4dd9-b85c-ef13e5cf8e23)
+    (property "Reference" "#PWR39" (id 0) (at 251.46 229.87 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "GND" (id 1) (at 251.46 227.33 0)
@@ -3143,20 +3244,20 @@
     (property "Datasheet" "~" (id 3) (at 251.46 223.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid bdd4253a-9040-4853-830e-814d543f15db))
+    (pin "1" (uuid a336fbfb-e00b-4eda-9a23-5bac7db136ec))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR37") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR39") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 226.06 220.98 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 226.06 220.98 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 54ba9eef-1580-4730-b22b-b5723771d3b0)
-    (property "Reference" "#PWR38" (id 0) (at 226.06 217.17 0)
+    (uuid ecf21bbc-b496-4676-b155-f6ff79f47ef7)
+    (property "Reference" "#PWR40" (id 0) (at 226.06 217.17 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "VBAT" (id 1) (at 226.06 217.42 0)
@@ -3168,11 +3269,11 @@
     (property "Datasheet" "~" (id 3) (at 226.06 220.98 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 20a8e34d-f8f7-4916-a6df-8cb6f555eb65))
+    (pin "1" (uuid 5ceac516-bb37-4425-aeb1-53557ce1b308))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR38") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR40") (unit 1)
         )
       )
     )
@@ -3180,7 +3281,7 @@
 
   (symbol (lib_id "Device:L") (at 229.87 226.06 90) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid ad115d24-cef0-4240-83e0-e9fc5a5902f1)
+    (uuid 02205292-dfa4-45b2-bd0e-c902e8b6828a)
     (property "Reference" "L1" (id 0) (at 228.6 223.52 270)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3193,11 +3294,11 @@
     (property "Datasheet" "~" (id 3) (at 229.87 226.06 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 2df8a07c-7372-43ae-84c9-4b531ca70781))
-    (pin "2" (uuid 7bfaa4b6-0252-4322-ab1f-bdfae72681e4))
+    (pin "1" (uuid 64c69ba7-0d81-4185-b5ce-46c71459285c))
+    (pin "2" (uuid 04406d6a-f3fb-4a86-bfbe-df99ed72cb5f))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "L1") (unit 1)
         )
       )
@@ -3206,7 +3307,7 @@
 
   (symbol (lib_id "Device:C") (at 246.38 234.95 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 9bd73057-a8b8-4df5-ac0a-25f16b4e84b6)
+    (uuid ffc4a207-f47b-49b6-a5ba-2ebb859d6c41)
     (property "Reference" "C4" (id 0) (at 248.92 233.68 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3219,11 +3320,11 @@
     (property "Datasheet" "~" (id 3) (at 246.38 234.95 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 70edce51-f2bd-4eb7-a1a3-188180830f4b))
-    (pin "2" (uuid 97bfd642-114b-4833-b3ad-892c6ed6c9a1))
+    (pin "1" (uuid c9dcf6ca-adf8-48b9-b01a-afc4daa98d3d))
+    (pin "2" (uuid 8a1b4d80-d4b8-45b7-860f-6253c411187b))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "C4") (unit 1)
         )
       )
@@ -3232,8 +3333,8 @@
 
   (symbol (lib_id "power:GND") (at 246.38 238.76 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 6c9bdce7-2cc8-407a-bed5-fa1bcf1e167a)
-    (property "Reference" "#PWR39" (id 0) (at 246.38 245.11 0)
+    (uuid a485145d-220c-4688-bee1-5f05909eaf32)
+    (property "Reference" "#PWR41" (id 0) (at 246.38 245.11 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "GND" (id 1) (at 246.38 242.57 0)
@@ -3245,20 +3346,20 @@
     (property "Datasheet" "~" (id 3) (at 246.38 238.76 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid f035bfb4-9a02-4eca-8af7-6ad15aa37d30))
+    (pin "1" (uuid b88ea0d7-4457-413f-9f9e-8bb31990f78b))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR39") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR41") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VSYS") (at 259.08 231.14 0) (unit 1)
+  (symbol (lib_id "NadiSense:VSYS") (at 259.08 231.14 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid ab7360f9-8a5c-4c4d-bd8a-7a16804ee08c)
-    (property "Reference" "#PWR40" (id 0) (at 259.08 227.33 0)
+    (uuid 1c57dcf6-6dc4-4564-80ba-c064404e257c)
+    (property "Reference" "#PWR42" (id 0) (at 259.08 227.33 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "VSYS" (id 1) (at 259.08 227.58 0)
@@ -3270,11 +3371,11 @@
     (property "Datasheet" "~" (id 3) (at 259.08 231.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 35ecac3c-f2cc-4ca0-89c7-b136a38cd299))
+    (pin "1" (uuid 60e4ff89-6535-4319-ba61-75c08a710308))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR40") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR42") (unit 1)
         )
       )
     )
@@ -3282,7 +3383,7 @@
 
   (symbol (lib_id "Device:Battery_Cell") (at 269.24 246.38 0) (unit 1)
     (in_bom yes) (on_board yes)
-    (uuid 3f902f31-3262-4cde-99b2-a6b220dc62fa)
+    (uuid f1f143dd-e37c-4e1e-92f7-9cf7a18b56b1)
     (property "Reference" "BT1" (id 0) (at 273.05 245.11 0)
       (effects (font (size 1.27 1.27) bold) (justify left))
     )
@@ -3295,21 +3396,21 @@
     (property "Datasheet" "~" (id 3) (at 269.24 246.38 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid d3066d78-dd1b-41fa-9da1-2161df559c25))
-    (pin "2" (uuid e2d79631-c70a-42e7-b285-380d45bc8fad))
+    (pin "1" (uuid df0ada3d-2161-4951-a890-3e783272bc0b))
+    (pin "2" (uuid 16e2dbd1-a24a-4c6d-9559-65dc0227262b))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
           (reference "BT1") (unit 1)
         )
       )
     )
   )
 
-  (symbol (lib_id "power:VBAT") (at 269.24 241.3 0) (unit 1)
+  (symbol (lib_id "NadiSense:VBAT") (at 269.24 241.3 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 5a06376c-1301-4f5b-9ce7-2bf4fce4a009)
-    (property "Reference" "#PWR41" (id 0) (at 269.24 237.49 0)
+    (uuid 7367c5f8-58c1-48e0-ad5a-34e8de646f05)
+    (property "Reference" "#PWR43" (id 0) (at 269.24 237.49 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "VBAT" (id 1) (at 269.24 237.74 0)
@@ -3321,11 +3422,11 @@
     (property "Datasheet" "~" (id 3) (at 269.24 241.3 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid d1a44ccf-a581-4a28-ab76-80d7e84a71dd))
+    (pin "1" (uuid 7cd41a0c-c74c-46ce-93fd-a583799e1530))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR41") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR43") (unit 1)
         )
       )
     )
@@ -3333,8 +3434,8 @@
 
   (symbol (lib_id "power:GND") (at 269.24 248.92 0) (unit 1)
     (in_bom no) (on_board yes)
-    (uuid 87478025-55cc-4e75-8f22-98a33f7e350b)
-    (property "Reference" "#PWR42" (id 0) (at 269.24 255.27 0)
+    (uuid 1051fd0a-eef5-45d3-8929-583e1c8b76c0)
+    (property "Reference" "#PWR44" (id 0) (at 269.24 255.27 0)
       (effects (font (size 1.27 1.27) bold) (justify left) hide)
     )
     (property "Value" "GND" (id 1) (at 269.24 252.73 0)
@@ -3346,11 +3447,11 @@
     (property "Datasheet" "~" (id 3) (at 269.24 248.92 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid c8e98975-07ed-4f9a-86a4-2659c9239509))
+    (pin "1" (uuid fdd9dcc0-a537-4f82-a063-474bcc8c9f0a))
     (instances
       (project "NadiSense_ring_v2"
-        (path "/ac44604d-7518-4482-9447-6a234a6ca777"
-          (reference "#PWR42") (unit 1)
+        (path "/0aaf721b-d94c-454b-b79b-32b21f374cd6"
+          (reference "#PWR44") (unit 1)
         )
       )
     )

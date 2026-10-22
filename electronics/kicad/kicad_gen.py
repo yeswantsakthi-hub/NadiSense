@@ -34,12 +34,12 @@ pwr_n = [0]
 
 def std(libname, name, newname=None, value=None):
     """Copy a KiCad standard symbol into the schematic's lib_symbols."""
-    lid = f"{libname}:{newname or name}"
+    lid = f"{'NadiSense' if newname else libname}:{newname or name}"
     if lid in lib:
         return lid
     sl = SymbolLib.from_file(KLIB + libname + ".kicad_sym")
     s = copy.deepcopy([x for x in sl.symbols if x.entryName == name][0])
-    s.libraryNickname = libname
+    s.libraryNickname = "NadiSense" if newname else libname
     if newname:
         s.entryName = newname
         for u in s.units:
@@ -130,7 +130,7 @@ def place(lid, ref, value, X, Y, rot=0, ref_off=None, val_off=None, hide_ref=Fal
 
 
 def pwr(net, at, rot=0):
-    lid = {"GND": std("power", "GND"), "+1V8": std("power", "+1V8")}.get(net) or std("power", "+1V8", net, net)
+    lid = {"GND": std("power", "GND"), "+1V8": std("power", "+1V8"), "PWR_FLAG": std("power", "PWR_FLAG")}.get(net) or std("power", "+1V8", net, net)
     pwr_n[0] += 1
     place(lid, f"#PWR{pwr_n[0]:02d}", net, at[0], at[1], rot,
           ref_off=(0, 6.35) if net == "GND" else (0, -3.81), val_off=(0, 3.81) if net == "GND" else (0, -3.556), hide_ref=True)
@@ -175,9 +175,9 @@ IND = std("Device", "L"); J2 = std("Connector", "Conn_01x02_Pin")
 
 NRF = custom("nRF52840", 15.24, 20.32, [
     ("P0.04/SCK", "output", "L", 12.7), ("P0.05/MOSI", "output", "L", 7.62), ("P0.06/MISO", "input", "L", 2.54),
-    ("P0.07/CS", "output", "L", -2.54), ("P0.08/INT", "input", "L", -7.62),
-    ("P0.26/SDA", "bidirectional", "R", 12.7), ("P0.27/SCL", "bidirectional", "R", 7.62), ("P0.11", "input", "R", 2.54),
-    ("P0.12", "input", "R", -2.54), ("P0.13", "input", "R", -7.62),
+    ("P0.07/CS", "output", "L", -2.54), ("P0.08/INT", "bidirectional", "L", -7.62),
+    ("P0.26/SDA", "bidirectional", "R", 12.7), ("P0.27/SCL", "bidirectional", "R", 7.62), ("P0.11", "bidirectional", "R", 2.54),
+    ("P0.12", "bidirectional", "R", -2.54), ("P0.13", "bidirectional", "R", -7.62),
     ("DCCH", "passive", "T", -10.16), ("VDDH", "power_in", "T", 0), ("VDD", "power_out", "T", 10.16),
     ("XC1", "passive", "B", -10.16), ("XC2", "passive", "B", -5.08), ("ANT", "bidirectional", "B", 5.08),
     ("VSS", "power_in", "B", 10.16)])
@@ -196,7 +196,7 @@ ACC = custom("LIS2DW12", 7.62, 20.32, [
     ("VDD", "power_in", "T", -2.54), ("VDD_IO", "power_in", "T", 5.08), ("GND", "power_in", "B", 0)])
 CHG = custom("BQ25120A", 10.16, 12.7, [
     ("SDA", "bidirectional", "L", 10.16), ("SCL", "input", "L", 5.08), ("INT", "open_collector", "L", 0),
-    ("IN", "power_in", "R", 10.16), ("BAT", "power_out", "R", 5.08), ("SW", "power_out", "R", 0), ("SYS", "power_in", "R", -5.08),
+    ("IN", "power_in", "R", 10.16), ("BAT", "power_out", "R", 5.08), ("SW", "power_out", "R", 0), ("SYS", "power_out", "R", -5.08),
     ("GND", "power_in", "B", 0)])
 
 # ------------------------------------------------------------------ optical front-end
@@ -287,6 +287,8 @@ vin = u5("IN")
 j1 = place(J2, "J1", "Pogo pads", 279.4, vin[1] + 2.54, 180, ref_off=(2.54, -3.81), val_off=(2.54, 3.81))
 wire(vin, j1("Pin_2"))
 pj = j1("Pin_1"); wire(pj, (pj[0] - 5.08, pj[1]), (pj[0] - 5.08, pj[1] + 2.54)); pwr("GND", (pj[0] - 5.08, pj[1] + 2.54))
+pf1 = (pj[0] - 5.08, pj[1]); pwr("PWR_FLAG", pf1); placed[-1].properties[1].position = Position(pf1[0], round(pf1[1] - 3.81, 2), 0)
+vf = (vin[0] + 12.7, vin[1]); pwr("PWR_FLAG", vf); placed[-1].properties[1].position = Position(vf[0], round(vf[1] - 3.81, 2), 0)
 c5 = place(C, "C5", "1uF", 251.46, vin[1] + 3.81, ref_off=(2.54, -1.27), val_off=(2.54, 1.27))
 junction(c5("1")); pwr("GND", c5("2"))
 bt = u5("BAT"); wire(bt, (bt[0] + 5.08, bt[1])); pwr("VBAT", (bt[0] + 5.08, bt[1]))
@@ -371,6 +373,14 @@ sch.texts = texts
 sch.shapes = rects
 sch.sheetInstances = [HierarchicalSheetInstance(instancePath="/", page="1")]
 sch.to_file(f"{OUT}/{PROJECT}.kicad_sch")
+from kiutils.symbol import SymbolLib as _SL
+plib = _SL(version=20220914, generator="kicad_symbol_editor")
+for lid_, sym_ in lib.items():
+    if lid_.startswith("NadiSense:"):
+        c_ = copy.deepcopy(sym_); c_.libraryNickname = None
+        plib.symbols.append(c_)
+plib.to_file(f"{OUT}/NadiSense.kicad_sym")
+open(f"{OUT}/sym-lib-table", "w").write('(sym_lib_table\n  (version 7)\n  (lib (name "NadiSense")(type "KiCad")(uri "${KIPRJMOD}/NadiSense.kicad_sym")(options "")(descr "NadiSense project symbols"))\n)\n')
 json.dump({"meta": {"filename": f"{PROJECT}.kicad_pro", "version": 1}, "sheets": [[ROOT, "Root"]]},
           open(f"{OUT}/{PROJECT}.kicad_pro", "w"), indent=2)
 print("symbols", len(placed), "wires", len(wires), "labels", len(labels))
