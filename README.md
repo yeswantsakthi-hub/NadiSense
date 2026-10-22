@@ -24,6 +24,7 @@ It screens and refers to a clinician; it does not diagnose or report blood-press
 | `electronics/` | Power budget (`power_budget.py` + results) |
 | `renders/` | Assembled, half-section and exploded views |
 | `docs/` | Design summary, Stage 2 deck PDF, FreeCAD and KiCad screenshots |
+| `app/` | Companion app (React + Vite + Firebase), live at https://nadisense-app.vercel.app, runs on simulated sensor data until the ring is built |
 
 ## Key design numbers
 
