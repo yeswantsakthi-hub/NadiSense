@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// NadiSense: every user can only touch their own data. Health data is written only after
+// the user has turned on the matching consent switch. Doctor links are readable by exact
+// token (never listed) until they expire.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function consent(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.get('consent', {});
+    }
+
+    match /users/{uid} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(['profile', 'consent', 'updatedAt']);
+
+      // Session summaries: numbers only, gated by the "back up session summaries" switch.
+      match /sessions/{sessionId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+          && consent(uid).get('summaries', false) == true
+          && request.resource.data.id == sessionId
+          && request.resource.data.durationS is number;
+      }
+
+      // Raw recordings, gated by the "save raw recordings" switch. Firestore caps docs at 1 MiB.
+      match /recordings/{recordingId} {
+        allow read, delete: if isOwner(uid);
+        allow create: if isOwner(uid)
+          && consent(uid).get('raw', false) == true
+          && request.resource.data.id == recordingId
+          && request.resource.data.kind in ['ppg', 'ecg', 'imu'];
+      }
+
+      // The owner's own list of doctor links.
+      match /shares/{token} {
+        allow read, delete: if isOwner(uid);
+        allow create: if isOwner(uid) && request.resource.data.token == token;
+      }
+    }
+
+    // Doctor links: anyone with the exact token may read until it expires; no listing.
+    match /shares/{token} {
+      allow get: if resource.data.expiresAt > request.time;
+      allow list: if false;
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && token.size() == 32
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt <= request.time + duration.value(8, 'd');
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow update: if false;
+    }
+  }
+}

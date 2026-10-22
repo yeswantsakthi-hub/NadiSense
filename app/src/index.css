@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Instrument-console theme: black panels, hairline borders, red signal and brand. */
+:root {
+  --bg: #050505;
+  --panel: #0e0e10;
+  --panel-2: #151518;
+  --line: #242428;
+  --line-strong: #38383e;
+  --fg: #f3f3f4;
+  --muted: #9d9da5;
+  --label: #cf8a88;
+  --signal: #ef3b36;
+  --turmeric: #e0a31a;
+  --amber: #f2a23a;
+  /* Elevated-risk warnings: same red family, but always shown as a filled badge with ⚠. */
+  --alert: #ff4d45;
+  --select: #f3f3f4;
+  --grid: rgba(239, 59, 54, 0.07);
+  --grid-strong: rgba(239, 59, 54, 0.17);
+  --band: rgba(242, 162, 58, 0.13);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-label: var(--label);
+  --color-signal: var(--signal);
+  --color-turmeric: var(--turmeric);
+  --color-amber: var(--amber);
+  --color-alert: var(--alert);
+  --color-select: var(--select);
+  --font-sans: "Figtree", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
+    "Noto Sans Malayalam", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--select);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Small uppercase section label used across the console. */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
+html:not([lang="en"]) .label,
+html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
+  letter-spacing: normal;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.live-dot {
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
