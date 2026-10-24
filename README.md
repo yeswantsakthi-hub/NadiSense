@@ -1,7 +1,7 @@
 # NadiSense — continuous-wear smart ring for overnight pulse-based screening
 
 **Vishwakarma Awards 2026-27 · Frontier Diagnostics: The Next Vital Signs · Application ID VK26-AU-FD-0015**
-Rajalakshmi Engineering College, Chennai · Team: [team name] · Faculty guide: [name]
+Rajalakshmi Engineering College, Chennai · Team: Ring of Care · Faculty guide: [name]
 
 NadiSense turns Nadi Pariksha — the traditional reading of the pulse's rate, rhythm, force and hardness — into
 measurable photoplethysmography (PPG) features. A finger-worn ring records the pulse wave, SpO₂, skin temperature
