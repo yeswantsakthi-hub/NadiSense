@@ -63,10 +63,10 @@ flex = band(11.6, 11.8, -3.0, 3.0, a0=150, span=330)
 BAT_R0, BAT_R1, BAT_SPAN = 10.1, 11.55, 150
 battery = band(BAT_R0, BAT_R1, -3.0, 3.0, a0=15, span=BAT_SPAN)
 
-# 6. PPG optical module (MAX30101, 5.6 x 3.3 x 1.55)
+# 6. Optical module: MAX86141 AFE + red/IR LEDs + photodiode (5.6 x 3.3 x 1.55 envelope)
 ppg = radial_box(PPG_ANGLE, 11.6 - 0.775, 5.6, 3.3, 1.55)
 
-# 7. Temperature sensor (MAX30205, 3 x 3 x 0.8 TDFN)
+# 7. Temperature sensor (TMP117, 3 x 3 x 0.8 envelope)
 temp = radial_box(296, 11.6 - 0.4, 3.0, 3.0, 0.8)
 
 # 8. BLE SoC (nRF52840 WLCSP, 3.5 x 3.6 x 0.5)
@@ -94,8 +94,8 @@ PARTS = [
     ("Optical window", lens, (0.55, 0.85, 0.95), "Optically clear epoxy"),
     ("Flex PCB", flex, (0.85, 0.55, 0.12), "Polyimide 2-layer, 0.2 mm"),
     ("Li-Po cell", battery, (0.60, 0.62, 0.66), "3.7 V curved Li-Po"),
-    ("PPG module", ppg, (0.10, 0.10, 0.12), "MAX30101"),
-    ("Temp sensor", temp, (0.25, 0.25, 0.28), "MAX30205"),
+    ("PPG module", ppg, (0.10, 0.10, 0.12), "MAX86141 + LEDs + photodiode"),
+    ("Temp sensor", temp, (0.25, 0.25, 0.28), "TMP117"),
     ("BLE SoC", mcu, (0.30, 0.30, 0.34), "nRF52840"),
     ("Accelerometer", accel, (0.30, 0.30, 0.34), "LIS2DW12"),
     ("Charger IC", pmic, (0.30, 0.30, 0.34), "BQ25120A"),
