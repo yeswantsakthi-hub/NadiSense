@@ -192,30 +192,31 @@ def bend(m, rb=80.0):
     return m
 
 
-meshes = [(bend(m).compute_normals(split_vertices=True, feature_angle=40), mat) for m, mat in items]
-zmin = min(m.bounds[4] for m, _ in meshes)
+if __name__ == "__main__":
+    meshes = [(bend(m).compute_normals(split_vertices=True, feature_angle=40), mat) for m, mat in items]
+    zmin = min(m.bounds[4] for m, _ in meshes)
 
-pl = pv.Plotter(off_screen=True, window_size=(2400, 1300), lighting="none")
-pl.set_background("#FFFFFF")
-ground = pv.Plane(center=(0, 0, zmin - 0.005), direction=(0, 0, 1), i_size=400, j_size=400)
-pl.add_mesh(ground, color="#FBFBFA", ambient=0.55, diffuse=0.5, specular=0.0)
-for m, (c, met, rough) in meshes:
-    pl.add_mesh(m, color=c, smooth_shading=True, ambient=0.32, diffuse=0.72,
-                specular=0.25 + 0.75 * met * (1 - rough), specular_power=15 + 70 * (1 - rough))
-key = pv.Light(position=(-25, -40, 70), focal_point=(0, 0, 0), intensity=1.1, positional=True, cone_angle=50)
-fill = pv.Light(position=(60, -20, 30), focal_point=(0, 0, 0), intensity=0.45)
-rim = pv.Light(position=(0, 60, 40), focal_point=(0, 0, 0), intensity=0.35)
-for lt in (key, fill, rim):
-    pl.add_light(lt)
-try:
-    pl.enable_shadows()
-except Exception as e:
-    print("shadows off:", e)
-pl.camera.position = (-6, -78, 50)
-pl.camera.focal_point = (0, 0, -5)
-pl.camera.up = (0, 0, 1)
-pl.camera.view_angle = 24
-pl.camera.zoom(1.0)
-pl.enable_anti_aliasing("ssaa")
-pl.screenshot(OUT)
-print("wrote", OUT, "length %.1f mm" % L)
+    pl = pv.Plotter(off_screen=True, window_size=(2400, 1300), lighting="none")
+    pl.set_background("#FFFFFF")
+    ground = pv.Plane(center=(0, 0, zmin - 0.005), direction=(0, 0, 1), i_size=400, j_size=400)
+    pl.add_mesh(ground, color="#FBFBFA", ambient=0.55, diffuse=0.5, specular=0.0)
+    for m, (c, met, rough) in meshes:
+        pl.add_mesh(m, color=c, smooth_shading=True, ambient=0.32, diffuse=0.72,
+                    specular=0.25 + 0.75 * met * (1 - rough), specular_power=15 + 70 * (1 - rough))
+    key = pv.Light(position=(-25, -40, 70), focal_point=(0, 0, 0), intensity=1.1, positional=True, cone_angle=50)
+    fill = pv.Light(position=(60, -20, 30), focal_point=(0, 0, 0), intensity=0.45)
+    rim = pv.Light(position=(0, 60, 40), focal_point=(0, 0, 0), intensity=0.35)
+    for lt in (key, fill, rim):
+        pl.add_light(lt)
+    try:
+        pl.enable_shadows()
+    except Exception as e:
+        print("shadows off:", e)
+    pl.camera.position = (-6, -78, 50)
+    pl.camera.focal_point = (0, 0, -5)
+    pl.camera.up = (0, 0, 1)
+    pl.camera.view_angle = 24
+    pl.camera.zoom(1.0)
+    pl.enable_anti_aliasing("ssaa")
+    pl.screenshot(OUT)
+    print("wrote", OUT, "length %.1f mm" % L)
