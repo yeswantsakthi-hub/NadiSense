@@ -1,0 +1,35 @@
+%TF.GenerationSoftware,KiCad,Pcbnew,7.0.11+dfsg-1build4*%
+%TF.CreationDate,2026-10-28T19:53:31+00:00*%
+%TF.ProjectId,NadiSense_ring_v2_revB,4e616469-5365-46e7-9365-5f72696e675f,rev?*%
+%TF.SameCoordinates,Original*%
+%TF.FileFunction,Soldermask,Bot*%
+%TF.FilePolarity,Negative*%
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW 7.0.11+dfsg-1build4) date 2026-10-28 19:53:31*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%ADD10C,0.800000*%
+G04 APERTURE END LIST*
+D10*
+%TO.C,TP5*%
+X108000000Y-98600000D03*
+%TD*%
+%TO.C,TP2*%
+X109200000Y-100000000D03*
+%TD*%
+%TO.C,TP4*%
+X108000000Y-100000000D03*
+%TD*%
+%TO.C,TP6*%
+X141000000Y-101500000D03*
+%TD*%
+%TO.C,TP3*%
+X108000000Y-101400000D03*
+%TD*%
+%TO.C,TP1*%
+X109200000Y-101400000D03*
+%TD*%
+M02*

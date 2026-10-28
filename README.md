@@ -20,8 +20,8 @@ It screens and refers to a clinician; it does not diagnose or report blood-press
 |---|---|
 | `cad/` | Parametric ring model (`nadisense_ring.py`, CadQuery), full assembly `NadiSense_Ring_v2.step`, shell `Outer_shell.step`, one STL per part, render script |
 | `fea/` | Linear-static FEA of the shell (`fea_squeeze.py`), results for three meshes (`fea_results.jsonl`), stress plot |
-| `electronics/kicad/` | KiCad 7 project: wired schematic, project symbol library, ERC report (0 errors, 0 warnings), netlist, PDF and PNG of the sheet, generator script |
-| `electronics/pcb/` | Flex PCB Rev A layout study: KiCad board, Gerbers, drill, BOM, pick-and-place, DRC report (0 errors), build scripts |
+| `electronics/kicad/` | (Stage 2 submission, simplified) KiCad 7 project: wired schematic, project symbol library, ERC report (0 errors, 0 warnings), netlist, PDF and PNG of the sheet, generator script |
+| `electronics/ring_v2_revB/` | **Rev B schematic + flex PCB**: manufacturer pin maps, routed 2-layer flex, DRC 0 errors / 0 unconnected, Gerbers, BOM, pick-and-place, renders |
 | `electronics/` | Power budget (`power_budget.py` + results) |
 | `renders/` | Assembled, half-section and exploded views |
 | `docs/` | Design summary, Stage 2 deck PDF, FreeCAD and KiCad screenshots |
