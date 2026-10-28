@@ -1,0 +1,20 @@
+Qty,References,Value,Footprint
+1,AE1,2450AT18A100,RF_Antenna:Johanson_2450AT18x100
+1,BT1,Li-Po 3.7V 12mAh,NadiSense:NS_LiPo_Tabs
+2,C11 C4,10uF,Capacitor_SMD:C_0402_1005Metric
+3,C1 C3 C5,1uF,Capacitor_SMD:C_0402_1005Metric
+1,C6,10nF,Capacitor_SMD:C_0402_1005Metric
+2,C7 C8,12pF,Capacitor_SMD:C_0402_1005Metric
+3,C10 C2 C9,100nF,Capacitor_SMD:C_0402_1005Metric
+1,D1,Red 660 nm,LED_SMD:LED_0603_1608Metric
+1,D2,IR 880 nm,LED_SMD:LED_0603_1608Metric
+1,D3,Si PIN photodiode,NadiSense:NS_PD_2x2mm
+1,J1,Pogo pads,NadiSense:NS_ChargePads_2x1.2mm
+1,L1,2.2uH,Inductor_SMD:L_0603_1608Metric
+2,R1 R2,4.7k,Resistor_SMD:R_0402_1005Metric
+1,U1,nRF52840-QIAA,NadiSense:NS_U1_nRF52840
+1,U2,MAX86141,NadiSense:NS_U2_MAX86141
+1,U3,TMP117AIDRVR,NadiSense:NS_U3_TMP117
+1,U4,LIS2DW12TR,NadiSense:NS_U4_LIS2DW12
+1,U5,BQ25120AYFPR,NadiSense:NS_U5_BQ25120A
+1,Y1,32MHz,NadiSense:NS_XTAL_2016
