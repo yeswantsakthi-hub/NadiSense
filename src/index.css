@@ -1,36 +1,36 @@
 @import "tailwindcss";
 
 /*
- * Super-app look (PhonePe / Paytm style): light grey canvas, white cards with real borders,
- * a solid indigo brand band, Roboto, bold figures. No glows, no gradients on content.
- * Screening flags are a filled red badge with ⚠, never colour alone.
+ * Operations-console look (matches the reference monitoring dashboard): near-black page, charcoal
+ * panels with thin borders and almost-square corners, small uppercase olive labels, green for live,
+ * red only for real alarms, orange for changes, blue for the selected item.
  */
 :root {
-  --bg: #f2f4f8;
-  --panel: #ffffff;
-  --panel-2: #f1f3f7;
-  --line: #e4e7ee;
-  --line-strong: #cdd3de;
-  --fg: #0f172a;
-  --label: #4b5565;
-  --muted: #7b8494;
-  /* Brand (buttons, links, active tab, header band) */
-  --signal: #2741c9;
-  --brand-ink: #ffffff;
-  /* One colour per metric */
-  --hr: #e5484d;
-  --spo2: #0e9ae9;
-  --temp: #e8740c;
-  --rhythm: #7c3aed;
-  --turmeric: #2741c9;
-  /* Text-safe warning on white */
-  --amber: #b45309;
-  --alert: #d92d20;
-  --select: #2741c9;
-  --grid: rgba(15, 23, 42, 0.05);
-  --grid-strong: rgba(15, 23, 42, 0.1);
-  --band: rgba(180, 83, 9, 0.1);
-  color-scheme: light;
+  --bg: #0c0c0d;
+  --panel: #232426;
+  --panel-2: #1a1c21;
+  --line: #36383c;
+  --line-strong: #4b4e54;
+  --fg: #e9e9e6;
+  --label: #a7a47a;
+  --muted: #8d8c86;
+  /* Live / OK */
+  --signal: #4cc06a;
+  --brand-ink: #0c0c0d;
+  --hr: #4cc06a;
+  --spo2: #6fa8dc;
+  --temp: #e8a24a;
+  --rhythm: #b49ce0;
+  --turmeric: #c9b45c;
+  /* Changes / caution */
+  --amber: #f0a33f;
+  /* Alarms only */
+  --alert: #e2483f;
+  --select: #4a90d9;
+  --grid: rgba(167, 164, 122, 0.12);
+  --grid-strong: rgba(167, 164, 122, 0.22);
+  --band: rgba(240, 163, 63, 0.14);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -73,22 +73,24 @@ body {
 :focus-visible {
   outline: 2px solid var(--select);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 
-/* Section heading above cards and fields. */
+/* Small uppercase olive label used on every panel. */
 .label {
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--label);
 }
 
-/* Letter-spacing breaks the joined letters of Indic scripts. */
+/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
+html:not([lang="en"]) .label,
 html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   letter-spacing: normal;
 }
 
-/* Every number is tabular so live values don't jitter sideways. */
 .font-mono {
   font-variant-numeric: tabular-nums;
 }
@@ -101,19 +103,17 @@ html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   animation: live-pulse 1.6s ease-in-out infinite;
 }
 
-/* Screens slide in a little on navigation. */
 @keyframes screen-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .screen-in {
-  animation: screen-in 0.22s ease-out both;
+  animation: screen-in 0.18s ease-out both;
 }
 
-/* One pop per real beat from the ring (the element is re-keyed on every beat). */
 @keyframes beat-pop {
   0% { transform: scale(1); }
-  18% { transform: scale(1.2); }
+  18% { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
 .beat-pop {
@@ -121,7 +121,7 @@ html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
 }
 
 @keyframes breathe {
-  0%, 100% { opacity: 0.55; }
+  0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 .breathe {

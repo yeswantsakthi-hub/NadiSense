@@ -1,22 +1,30 @@
+import type { ReactNode } from 'react';
 import { useI18n } from '../i18n';
 import { RingArt } from './RingArt';
 
-/** Brand band for the sign-in screen: wordmark, tagline, product shot on an overlapping card. */
-export function Masthead(_props: { caption?: string }) {
+/** Console-style wordmark bar used before the main app (sign-in, pairing). */
+export function Wordmark() {
+  return (
+    <p className="keep-tracking border-b border-line py-3 text-center text-[13px] font-medium tracking-[0.32em]">NADISENSE</p>
+  );
+}
+
+/** Top of the sign-in and pairing screens: wordmark, title block, product shot in a panel. */
+export function Masthead({ title, subtitle, active }: { title?: ReactNode; subtitle?: ReactNode; active?: boolean }) {
   const { t } = useI18n();
   return (
     <header>
-      <div className="-mx-4 bg-signal px-5 pt-5 pb-16 text-brand-ink">
-        <p className="flex items-center gap-2 text-[17px] font-bold">
-          <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 13h4l2-6 3.5 11 2.5-8 1.5 3H22" />
-          </svg>
-          NadiSense
-        </p>
-        <h1 className="mt-5 text-[24px] leading-tight font-bold">{t('app.tagline')}</h1>
+      <div className="-mx-4">
+        <Wordmark />
       </div>
-      <div className="-mt-10 rounded-2xl border border-line bg-panel py-2 shadow-[0_4px_16px_rgba(16,24,40,0.08)]">
-        <RingArt className="mx-auto h-28 w-full max-w-[240px]" />
+      <div className="mt-5 rounded-[3px] border border-line bg-panel">
+        <div className="px-3.5 pt-3.5">
+          <h1 className="text-[22px] leading-tight font-medium">{title ?? t('app.tagline')}</h1>
+          {subtitle && <p className="mt-1 text-[12px] text-label">{subtitle}</p>}
+        </div>
+        <div className="mx-3.5 mt-3 mb-3.5 rounded-[2px] bg-panel-2 py-2">
+          <RingArt active={active} className="mx-auto h-28 w-full max-w-[240px]" />
+        </div>
       </div>
     </header>
   );

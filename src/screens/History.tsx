@@ -31,6 +31,7 @@ export function History() {
         <div className="max-w-xs">
           <Segmented<Range>
             legend={t('history.title')}
+            hideLegend
             value={range}
             options={[
               { value: '7', label: t('history.days7') },
@@ -73,7 +74,7 @@ function HrBars({ rows }: { rows: DayRow[] }) {
               <span className="font-mono text-[11px] text-label">{d.hrAvg ?? ''}</span>
               <div className="flex h-24 w-full items-end">
                 <div
-                  className="w-full rounded-full bg-gradient-to-t from-signal/30 to-signal"
+                  className="mx-auto w-full max-w-10 rounded-t-[2px] bg-signal/70"
                   style={{ height: `${Math.max(6, h * 100)}%` }}
                   aria-label={`${date(d.day)}: ${d.hrAvg ?? '––'} bpm`}
                 />

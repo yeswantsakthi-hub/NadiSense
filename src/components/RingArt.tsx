@@ -15,7 +15,7 @@ export function RingArt({ active = false, className = '' }: { active?: boolean; 
           <stop offset="1" stopColor="#2b3140" />
         </linearGradient>
       </defs>
-      <ellipse cx="100" cy="122" rx="62" ry="7" fill="#0f172a" opacity="0.08" />
+      <ellipse cx="100" cy="122" rx="62" ry="7" fill="#000" opacity="0.5" />
       {/* Back of the band (inside surface) */}
       <path d="M42 66 A58 26 0 0 1 158 66" fill="none" stroke="url(#ring-inner)" strokeWidth="13" />
       {/* Front of the band */}
@@ -24,7 +24,7 @@ export function RingArt({ active = false, className = '' }: { active?: boolean; 
       {/* Optical sensor window */}
       <rect x="90" y="86" width="20" height="7" rx="3.5" fill="#1b2130" />
       <circle cx="96" cy="89.5" r="1.8" fill="#e5484d" className={active ? 'breathe' : ''} />
-      <circle cx="104" cy="89.5" r="1.8" fill="#2741c9" className={active ? 'breathe' : ''} />
+      <circle cx="104" cy="89.5" r="1.8" fill="#4cc06a" className={active ? 'breathe' : ''} />
     </svg>
   );
 }

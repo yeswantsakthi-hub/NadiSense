@@ -17,7 +17,9 @@ import { Settings } from './screens/Settings';
 import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
 import { Validation } from './screens/Validation';
-import { useSensorStore } from './store/sensorStore';
+import { scenarioKey, useSensorStore } from './store/sensorStore';
+import { clockTime } from './lib/format';
+import { useNow } from './lib/useNow';
 
 const SCREENS: Record<Route, () => ReactNode> = {
   '/signin': () => <SignIn />,
@@ -106,11 +108,11 @@ function MainApp() {
           {SCREENS[route]()}
         </div>
       ) : (
-        <div className="mx-auto flex min-h-dvh max-w-xl flex-col bg-bg">
-          <AppHeader />
-          {/* Re-keyed per route so each screen fades in. */}
-          <main key={route} className="screen-in flex-1 px-4 pb-24">
-            {SCREENS[route]()}
+        <div className="mx-auto flex min-h-dvh max-w-[1320px] flex-col">
+          <AppHeader route={route} />
+          {/* The console uses the full width; other screens sit in a readable column. */}
+          <main key={route} className="screen-in flex-1 px-3 pb-24 lg:px-4 lg:pb-6">
+            {route === '/dashboard' ? SCREENS[route]() : <div className="mx-auto max-w-3xl">{SCREENS[route]()}</div>}
           </main>
           <TabBar route={route} />
         </div>
@@ -119,17 +121,42 @@ function MainApp() {
   );
 }
 
-function AppHeader() {
+function AppHeader({ route }: { route: Route }) {
+  const { t } = useI18n();
+  const now = useNow();
+  const { kind, scenario, source } = useSensorStore();
+  const context = !source
+    ? t('link.offline')
+    : kind === 'sim'
+      ? t('home.sim', { scenario: t(scenarioKey(scenario)) })
+      : t('home.live');
   return (
-    <header className="sticky top-0 z-20 -mb-px bg-signal text-brand-ink">
-      <div className="flex h-14 items-center justify-between gap-3 px-4">
-        <a href="#/dashboard" className="flex items-center gap-2 text-[17px] font-bold tracking-tight">
-          <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 13h4l2-6 3.5 11 2.5-8 1.5 3H22" />
-          </svg>
-          NadiSense
-        </a>
+    <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 lg:h-12 lg:px-4">
+      <div className="min-w-0">
+        <p className="hidden truncate text-[11px] text-muted sm:block lg:hidden">{context}</p>
+        <nav aria-label={t('nav.main')} className="hidden lg:block">
+          <ul className="flex gap-4">
+            {NAV.map(({ route: r, label }) => (
+              <li key={r}>
+                <a
+                  href={`#${r}`}
+                  aria-current={isActive(r, route) ? 'page' : undefined}
+                  className={`label transition-colors ${isActive(r, route) ? '!text-fg' : '!text-muted hover:!text-fg'}`}
+                >
+                  {t(label)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+      <a href="#/dashboard" className="keep-tracking text-[13px] font-medium tracking-[0.32em] text-fg lg:text-[15px]">
+        NADISENSE
+      </a>
+      <div className="flex items-center justify-end gap-3">
+        <span className="hidden truncate text-[11px] text-muted lg:inline">{context}</span>
         <LinkChip />
+        <time className="hidden font-mono text-[11px] text-muted sm:inline">{clockTime(now)}</time>
       </div>
     </header>
   );
@@ -143,13 +170,13 @@ const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
   '/settings': GearIcon,
 };
 
-/** Bottom navigation, like most Indian super apps: white bar, icon over label, brand colour when active. */
+/** Phone navigation: dark bar, icon over a small uppercase label. Hidden on desktop (tabs in the header). */
 function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
     <nav
       aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       <ul className="mx-auto flex max-w-xl">
         {NAV.map(({ route: r, label }) => {
@@ -160,12 +187,12 @@ function TabBar({ route }: { route: Route }) {
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex h-16 flex-col items-center justify-center gap-1 px-0.5 text-center text-[11px] leading-tight font-medium [overflow-wrap:anywhere] ${
-                  active ? 'text-signal' : 'text-muted hover:text-label'
+                className={`relative flex h-14 flex-col items-center justify-center gap-0.5 px-0.5 text-center text-[10px] leading-tight font-medium tracking-[0.06em] uppercase [overflow-wrap:anywhere] ${
+                  active ? 'text-fg' : 'text-muted'
                 }`}
               >
-                {active && <span aria-hidden className="absolute top-0 h-[3px] w-10 rounded-b bg-signal" />}
-                <Icon className="size-[22px]" />
+                {active && <span aria-hidden className="absolute top-0 h-0.5 w-8 bg-signal" />}
+                <Icon className={`size-5 ${active ? 'text-signal' : ''}`} />
                 {t(label)}
               </a>
             </li>

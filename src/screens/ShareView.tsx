@@ -60,7 +60,7 @@ export function ShareView({ token }: { token: string }) {
           </>
         )}
         <p className="border-l-2 border-amber pl-3 text-xs text-label">{t('share.disclaimer')}</p>
-        <div className="rounded-2xl border border-line bg-panel p-4">
+        <div className="rounded-[3px] border border-line bg-panel p-4">
           <LanguagePicker compact />
         </div>
       </div>

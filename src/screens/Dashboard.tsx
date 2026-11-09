@@ -1,268 +1,349 @@
 import type { ReactNode } from 'react';
 import { BeatStrip } from '../components/BeatStrip';
 import { EventLog } from '../components/EventLog';
-import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, InfoIcon, SparkIcon, BluetoothIcon, ChevronIcon } from '../components/icons';
-import { Tag } from '../components/Panel';
-import { SessionPanel } from '../components/SessionPanel';
+import { Panel, Tag, TONE_TEXT, type Tone } from '../components/Panel';
 import { temperatureBaseline, temperatureDrift } from '../dsp/baseline';
-import { analyseRhythm, RHYTHM_WINDOW_MS, type RhythmResult } from '../dsp/rhythm';
+import { analyseRhythm, NRMSSD_FLAG, PNN50_FLAG, type RhythmResult } from '../dsp/rhythm';
 import { useI18n, type MessageKey } from '../i18n';
-import { clockTime } from '../lib/format';
 import { useNow } from '../lib/useNow';
 import { FINGER_ON } from '../ring/contract';
 import { readingState, type ReadingState } from '../ring/readings';
 import { useSessions, useValidations } from '../store/db';
-import { beatLog, useLiveStore, type EventLevel } from '../store/liveStore';
-import { scenarioKey, useSensorStore } from '../store/sensorStore';
-import { nextVolunteerId } from '../validation/model';
+import { beatLog, useLiveStore } from '../store/liveStore';
+import { useSensorStore } from '../store/sensorStore';
+import { summarize } from '../validation/model';
 
-const STATE_TEXT: Record<Exclude<ReadingState, 'ok'>, MessageKey> = {
-  'no-data': 'reading.noData',
-  place: 'reading.place',
-  hold: 'reading.hold',
+type Status = 'live' | 'hold' | 'place' | 'noData' | 'flag';
+
+const STATUS: Record<Status, { word: MessageKey; title: MessageKey; lead: MessageKey; tone: Tone; bullets: MessageKey[] }> = {
+  live: { word: 'c.live', title: 'c.titleLive', lead: 'c.leadLive', tone: 'signal', bullets: ['c.b1', 'c.b2', 'c.b3'] },
+  hold: { word: 'c.hold', title: 'c.titleHold', lead: 'c.leadHold', tone: 'amber', bullets: ['c.b1', 'c.b2'] },
+  place: { word: 'c.place', title: 'c.titlePlace', lead: 'c.leadPlace', tone: 'muted', bullets: ['c.b1'] },
+  noData: { word: 'c.noData', title: 'c.titleNoData', lead: 'c.leadNoData', tone: 'muted', bullets: ['c.b1'] },
+  flag: { word: 'c.flag', title: 'rhythm.irregular', lead: 'c.leadFlag', tone: 'alert', bullets: ['c.bFlag1', 'c.bFlag2'] },
 };
 
-function greetingKey(hour: number): MessageKey {
-  if (hour < 12) return 'home.morning';
-  if (hour < 17) return 'home.afternoon';
-  return 'home.evening';
+function statusOf(state: ReadingState, rhythm: RhythmResult): Status {
+  if (state === 'no-data') return 'noData';
+  if (state === 'place') return 'place';
+  if (rhythm.status === 'irregular') return 'flag';
+  return state === 'hold' ? 'hold' : 'live';
 }
 
-const signedDeg = (d: number) => `${d > 0 ? '+' : ''}${d.toFixed(1)} °C`;
+const TONE_DOT: Record<Tone, string> = {
+  signal: 'bg-signal',
+  amber: 'bg-amber',
+  alert: 'bg-alert',
+  muted: 'bg-muted',
+  label: 'bg-label',
+  turmeric: 'bg-turmeric',
+};
 
-/** Home, laid out like an Indian super app: brand band, live card, services, banners, activity. */
+const signed = (v: number, digits = 1) => `${v > 0 ? '+' : ''}${v.toFixed(digits)}`;
+
+/** Live console: status banner, beat chart, metric cards; event log and analysis on the right. */
 export function Dashboard() {
-  const { t } = useI18n();
+  const { t, ago } = useI18n();
   const now = useNow(500);
-  const { kind, scenario } = useSensorStore();
+  const kind = useSensorStore((s) => s.kind);
   const { latest, lastPacketAt } = useLiveStore();
   const state = readingState(latest, lastPacketAt, now);
   const ok = state === 'ok';
   const fingerOn = latest?.fingerStatus === FINGER_ON && state !== 'no-data';
   const rhythm = analyseRhythm(beatLog, now);
+  const status = statusOf(state, rhythm);
+  const s = STATUS[status];
 
   const sessions = useSessions(kind === 'sim' ? 'mock' : 'ble');
   const baseline = temperatureBaseline(sessions);
   const temp = fingerOn ? (latest?.skinTempC ?? null) : null;
   const drift = temp !== null && baseline.status === 'ready' ? temperatureDrift(temp, baseline.celsius) : null;
-  const stateText = ok ? null : t(STATE_TEXT[state]);
 
   return (
-    <div className="pb-4">
-      {/* Brand band continues from the header; the live card overlaps it. */}
-      <section className="-mx-4 bg-signal px-4 pt-2 pb-16 text-brand-ink">
-        <h1 className="text-[22px] font-bold">{t(greetingKey(new Date(now).getHours()))}</h1>
-        <p className="mt-0.5 text-sm text-white/80">
-          {kind === 'sim' ? t('home.sim', { scenario: t(scenarioKey(scenario)) }) : t('home.live')}
-        </p>
-      </section>
-
+    <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
+      {/* Status banner */}
       <section
-        aria-label={t('vital.hr')}
-        className="relative -mt-12 rounded-2xl border border-line bg-panel shadow-[0_4px_16px_rgba(16,24,40,0.08)]"
+        aria-label={t('status.aria')}
+        aria-live="polite"
+        className="grid gap-x-8 gap-y-3 rounded-[3px] border border-line bg-panel px-4 py-4 sm:grid-cols-[minmax(150px,auto)_minmax(0,1fr)] lg:col-span-2 lg:grid-cols-[minmax(190px,auto)_minmax(0,1fr)_auto] lg:items-center lg:px-5"
       >
-        <div className="flex items-start justify-between gap-3 px-4 pt-4">
-          <div>
-            <p className="flex items-center gap-1.5 text-sm font-medium text-label">
-              <HeartIcon key={ok ? latest?.beatSeq : 'idle'} className={`size-[18px] text-hr ${ok ? 'beat-pop' : ''}`} />
-              {t('vital.hr')}
-            </p>
-            <p className="mt-1 flex items-baseline gap-1.5">
-              <span className={`font-mono text-[44px] leading-none font-bold ${ok ? 'text-fg' : 'text-line-strong'}`}>
-                {ok && latest?.hrBpm ? latest.hrBpm : '--'}
-              </span>
-              <span className="text-sm font-medium text-muted">bpm</span>
-            </p>
-          </div>
-          <dl className="grid grid-cols-2 gap-x-5 gap-y-1 text-right">
-            <dt className="text-xs text-muted">{t('vital.spo2')}</dt>
-            <dt className="text-xs text-muted">{t('vital.temp')}</dt>
-            <dd className="font-mono text-lg font-bold text-spo2">{ok && latest?.spo2Pct ? `${latest.spo2Pct}%` : '--'}</dd>
-            <dd className="font-mono text-lg font-bold text-temp">
-              {drift !== null ? signedDeg(drift) : temp !== null ? `${temp.toFixed(1)}°` : '--'}
-            </dd>
-          </dl>
-        </div>
-
-        {stateText ? (
-          <p
-            role="status"
-            className={`mx-4 mt-3 rounded-lg px-3 py-2 text-sm font-medium ${
-              state === 'hold' ? 'bg-amber/10 text-amber' : 'bg-panel-2 text-label'
-            }`}
-          >
-            {stateText}
+        <p className={`text-[28px] leading-none font-medium tracking-tight lg:text-[34px] ${TONE_TEXT[s.tone]}`}>{t(s.word)}</p>
+        <div className="min-w-0">
+          <h1 className="text-[13px] font-semibold">
+            {status === 'live' && latest?.hrBpm ? t('c.titleLive', { hr: latest.hrBpm }) : t(s.title, { hr: '' })}
+          </h1>
+          <p className="mt-0.5 text-[11px] text-label">
+            {t('c.sub', { ago: lastPacketAt ? ago(lastPacketAt, now) : '––' })}
           </p>
-        ) : null}
-
-        <BeatStrip label={t('pulse.aria')} colorVar="--hr" className="mt-2 h-20" />
-        <div className="flex items-center justify-between border-t border-line px-4 py-2.5 text-xs text-muted">
-          <span>{t('pulse.beatTiming')}</span>
-          <span>
-            {fingerOn && latest ? t('home.signal', { pct: latest.confidence }) : ''}
-            {drift === null && baseline.status === 'building' && temp !== null
-              ? ` · ${t('home.baselineProgress', { n: baseline.sessions })}`
-              : ''}
-          </span>
+          <p className="mt-2 text-[13px] font-semibold">{t(s.lead)}</p>
+          <ul className="mt-1 space-y-0.5 text-[12px] text-label">
+            {s.bullets.map((b) => (
+              <li key={b} className="flex gap-2">
+                <span aria-hidden className={`mt-[6px] size-1 shrink-0 rounded-full ${TONE_DOT[s.tone]}`} />
+                {t(b)}
+              </li>
+            ))}
+          </ul>
         </div>
+        <dl className="flex gap-8 border-t border-line pt-3 sm:col-span-2 lg:col-span-1 lg:border-0 lg:pt-0">
+          <Kpi label={t('c.signal')} value={fingerOn && latest ? `${latest.confidence}%` : '––'} tone={ok ? 'signal' : 'amber'} />
+          <Kpi label={t('c.link')} value={lastPacketAt && now - lastPacketAt < 4000 ? t('c.live') : '––'} tone="signal" />
+        </dl>
       </section>
 
-      <Services />
+      {/* Left: chart + cards */}
+      <div className="min-w-0 space-y-3">
+        <Panel
+          flush
+          label={t('c.chart')}
+          aside={
+            <>
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden className="size-2 rounded-full bg-signal" />
+                {t('c.clean')}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span aria-hidden className="size-2 rounded-full border border-amber" />
+                {t('c.moving')}
+              </span>
+            </>
+          }
+        >
+          <div className="px-3.5 pb-3.5">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-2">
+              <div aria-hidden className="flex flex-col justify-between py-1 text-right font-mono text-[10px] text-muted">
+                <span>1.0</span>
+                <span>0.5</span>
+                <span>0</span>
+              </div>
+              <div className="rounded-[2px] bg-panel-2">
+                <BeatStrip label={t('pulse.aria')} colorVar="--signal" className="h-48 lg:h-64" />
+              </div>
+              <span />
+              <div aria-hidden className="mt-1 flex justify-between font-mono text-[10px] text-muted">
+                {[-6, -5, -4, -3, -2, -1, 0].map((n) => (
+                  <span key={n}>{n === 0 ? t('pulse.now') : n}</span>
+                ))}
+              </div>
+            </div>
+            <p className="mt-1 text-[11px] text-label">{t('pulse.beatTiming')}</p>
+          </div>
+        </Panel>
 
-      <RhythmBanner rhythm={rhythm} />
-      <ValidationBanner />
+        <section aria-label={t('vital.hr')} className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <MetricCard
+            name={t('vital.hr')}
+            tag={ok ? { text: t('c.live'), tone: 'signal' } : { text: t(s.word), tone: s.tone === 'alert' ? 'amber' : s.tone }}
+            tone={ok ? 'ok' : state === 'hold' ? 'hold' : 'idle'}
+            rows={[
+              { k: 'HR', v: ok && latest?.hrBpm ? `${latest.hrBpm}` : '––', unit: 'bpm' },
+              { k: t('c.signal'), v: fingerOn && latest ? `${latest.confidence}%` : '––' },
+            ]}
+            footer={ok ? t('c.nominal') : t(s.title, { hr: '' })}
+            battery={latest?.batteryPct}
+          />
+          <MetricCard
+            name={t('vital.spo2')}
+            tag={ok ? { text: t('c.live'), tone: 'signal' } : { text: t(s.word), tone: s.tone === 'alert' ? 'amber' : s.tone }}
+            tone={ok ? 'ok' : state === 'hold' ? 'hold' : 'idle'}
+            rows={[{ k: 'SpO₂', v: ok && latest?.spo2Pct ? `${latest.spo2Pct}` : '––', unit: '%' }]}
+            footer={ok ? t('c.nominal') : t(s.title, { hr: '' })}
+            battery={latest?.batteryPct}
+          />
+          <MetricCard
+            name={t('vital.temp')}
+            tag={temp !== null ? { text: t('c.live'), tone: 'signal' } : { text: t('c.place'), tone: 'muted' }}
+            tone={temp !== null ? 'ok' : 'idle'}
+            rows={[
+              {
+                k: '°C',
+                v: temp !== null ? temp.toFixed(2) : '––',
+                pred: baseline.status === 'ready' ? t('c.base', { v: baseline.celsius.toFixed(2) }) : t('home.baselineProgress', { n: baseline.sessions }),
+                delta: drift !== null ? `${signed(drift)} °C` : undefined,
+              },
+            ]}
+            footer={temp !== null ? t('c.nominal') : t('c.titlePlace')}
+            battery={latest?.batteryPct}
+          />
+          <MetricCard
+            name={t('vital.rhythm')}
+            tag={
+              rhythm.status === 'collecting'
+                ? { text: t('home.measuring'), tone: 'label' }
+                : rhythm.status === 'irregular'
+                  ? { text: t('c.flag'), tone: 'alert' }
+                  : { text: t('rhythm.tagRegular'), tone: 'signal' }
+            }
+            tone={rhythm.status === 'irregular' ? 'alarm' : rhythm.status === 'regular' ? 'ok' : 'idle'}
+            rows={
+              rhythm.status === 'collecting'
+                ? [
+                    { k: 'RMSSD', v: '––' },
+                    { k: 'pNN50', v: '––' },
+                  ]
+                : [
+                    { k: 'RMSSD', v: `${rhythm.rmssdMs}`, unit: 'ms' },
+                    { k: 'pNN50', v: `${rhythm.pnn50}`, unit: '%', delta: rhythm.pnn50 >= PNN50_FLAG ? `≥ ${PNN50_FLAG}%` : undefined },
+                  ]
+            }
+            footer={
+              rhythm.status === 'collecting'
+                ? `${t('home.measuring')} ${Math.round(rhythm.progress * 100)}%`
+                : rhythm.status === 'irregular'
+                  ? t('rhythm.tagIrregular')
+                  : t('rhythm.window')
+            }
+            battery={latest?.batteryPct}
+          />
+        </section>
+      </div>
 
-      <RecentActivity />
-
-      <details className="group mt-3 rounded-2xl border border-line bg-panel">
-        <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-medium text-label [&::-webkit-details-marker]:hidden">
-          {t('home.details')}
-          <ChevronIcon className="size-4 transition-transform group-open:rotate-90" />
-        </summary>
-        <div className="space-y-3 px-3 pb-3">
-          <SessionPanel />
-          <EventLog />
-        </div>
-      </details>
-
-      <p className="mt-4 text-center text-[11px] text-muted">{t('app.disclaimer')}</p>
+      {/* Right column */}
+      <div className="min-w-0 space-y-3">
+        <EventLog />
+        <RhythmAnalysis rhythm={rhythm} />
+        <ValidationContext />
+        <p className="px-1 text-[11px] text-muted">{t('app.disclaimer')}</p>
+      </div>
     </div>
   );
 }
 
-/** Icon grid of everything the app can do; v2 items carry a "Soon" badge. */
-function Services() {
-  const { t } = useI18n();
-  const items: { href: string; label: string; icon: (p: { className?: string }) => ReactNode; tint: string; soon?: boolean }[] = [
-    { href: '#/validate', label: t('nav.validate'), icon: CheckListIcon, tint: 'bg-signal/10 text-signal' },
-    { href: '#/history', label: t('nav.history'), icon: ChartIcon, tint: 'bg-spo2/10 text-spo2' },
-    { href: '#/report', label: t('svc.doctor'), icon: HeartIcon, tint: 'bg-hr/10 text-hr' },
-    { href: '#/settings', label: t('svc.ring'), icon: BluetoothIcon, tint: 'bg-temp/10 text-temp' },
-    { href: '#/nadi', label: t('nav.nadi'), icon: SparkIcon, tint: 'bg-rhythm/10 text-rhythm', soon: true },
-    { href: '#/ecg', label: t('svc.ecg'), icon: HeartIcon, tint: 'bg-hr/10 text-hr', soon: true },
-    { href: '#/settings', label: t('lang.label'), icon: InfoIcon, tint: 'bg-spo2/10 text-spo2' },
-    { href: '#/settings', label: t('nav.settings'), icon: GearIcon, tint: 'bg-panel-2 text-label' },
-  ];
+function Kpi({ label, value, tone }: { label: string; value: string; tone: Tone }) {
   return (
-    <section aria-labelledby="services-title" className="mt-4 rounded-2xl border border-line bg-panel px-3 pt-4 pb-3">
-      <h2 id="services-title" className="px-1 text-[15px] font-semibold">
-        {t('home.services')}
-      </h2>
-      <ul className="mt-3 grid grid-cols-4 gap-y-4">
-        {items.map((it) => (
-          <li key={it.label}>
-            <a href={it.href} className="group flex flex-col items-center gap-1.5 rounded-xl px-1 py-1 text-center">
-              <span className={`relative grid size-12 place-items-center rounded-2xl ${it.tint} transition group-hover:scale-105`}>
-                <it.icon className="size-6" />
-                {it.soon && (
-                  <span className="absolute -top-1.5 -right-2 rounded-full bg-amber px-1.5 py-px text-[9px] font-bold text-white">
-                    {t('svc.soon')}
-                  </span>
-                )}
+    <div>
+      <dt className="label">{label}</dt>
+      <dd className={`mt-1 font-mono text-[20px] font-medium ${TONE_TEXT[tone]}`}>{value}</dd>
+    </div>
+  );
+}
+
+const CARD_BORDER = {
+  ok: 'border-signal/50',
+  hold: 'border-amber/60',
+  alarm: 'border-alert/80',
+  idle: 'border-line',
+};
+
+/** Like the node cards in the reference: name + tag, value rows with base/delta, status footer, battery. */
+function MetricCard(props: {
+  name: string;
+  tag: { text: string; tone: Tone };
+  tone: keyof typeof CARD_BORDER;
+  rows: { k: string; v: string; unit?: string; pred?: string; delta?: string }[];
+  footer: string;
+  battery?: number;
+}) {
+  return (
+    <article
+      tabIndex={0}
+      className={`flex min-w-0 flex-col rounded-[3px] border bg-panel p-3 transition-colors outline-none hover:border-select focus-visible:border-select ${CARD_BORDER[props.tone]}`}
+    >
+      <header className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
+        <h3 className="text-[13px] font-semibold">{props.name}</h3>
+        <Tag tone={props.tag.tone}>{props.tag.text}</Tag>
+      </header>
+      <dl className="mt-2.5 space-y-1">
+        {props.rows.map((r) => (
+          <div key={r.k} className="flex items-baseline gap-2">
+            <dt className="w-12 shrink-0 truncate text-[11px] text-muted">{r.k}</dt>
+            <dd className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-1.5">
+              <span className="font-mono text-[15px] font-medium">
+                {r.v}
+                {r.unit && r.v !== '––' && <span className="ml-0.5 text-[11px] text-label">{r.unit}</span>}
               </span>
-              <span className="text-[11.5px] leading-tight font-medium text-fg [overflow-wrap:anywhere]">{it.label}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-/** Rhythm screen as a banner card: progress while measuring, then the result with the disclaimer. */
-function RhythmBanner({ rhythm }: { rhythm: RhythmResult }) {
-  const { t } = useI18n();
-  const irregular = rhythm.status === 'irregular';
-  const collecting = rhythm.status === 'collecting';
-  return (
-    <section
-      aria-label={t('vital.rhythm')}
-      aria-live="polite"
-      className={`mt-3 rounded-2xl border p-4 ${irregular ? 'border-alert/40 bg-alert/5' : 'border-rhythm/20 bg-rhythm/5'}`}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[15px] font-semibold">{t('vital.rhythm')}</h2>
-        {collecting ? (
-          <Tag>{t('tag.pending')}</Tag>
-        ) : (
-          <Tag tone={irregular ? 'alert' : 'signal'}>{irregular ? t('rhythm.tagIrregular') : t('rhythm.tagRegular')}</Tag>
-        )}
-      </div>
-      {collecting ? (
-        <>
-          <p className="mt-1 text-sm text-label">
-            {t('insight.collecting', {
-              secs: Math.max(5, Math.round(((1 - rhythm.progress) * RHYTHM_WINDOW_MS) / 1000)),
-            })}
-          </p>
-          <div
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(rhythm.progress * 100)}
-            aria-label={t('vital.rhythm')}
-            className="mt-3 h-2 overflow-hidden rounded-full bg-white"
-          >
-            <div className="h-full rounded-full bg-rhythm transition-[width]" style={{ width: `${rhythm.progress * 100}%` }} />
+              {r.pred && <span className="text-[10.5px] text-label">{r.pred}</span>}
+              {r.delta && <span className="ml-auto font-mono text-[12px] text-amber">{r.delta}</span>}
+            </dd>
           </div>
-        </>
-      ) : (
-        <>
-          <p className={`mt-1 text-base font-semibold ${irregular ? 'text-alert' : 'text-fg'}`}>
-            {irregular ? t('rhythm.irregular') : t('rhythm.regular')}
-          </p>
-          <p className="mt-0.5 font-mono text-xs text-label">{t('rhythm.metrics', { rmssd: rhythm.rmssdMs, pnn50: rhythm.pnn50 })}</p>
-        </>
-      )}
-      <p className="mt-3 text-[11px] text-muted">
-        {t('rhythm.window')} · {t('app.disclaimer')}
+        ))}
+      </dl>
+      <div aria-hidden className="min-h-3 flex-1" />
+      <footer className="mt-2.5 flex items-center justify-between gap-2 border-t border-line pt-2 text-[11px] text-label">
+        <span className="min-w-0 truncate">{props.footer}</span>
+        {props.battery !== undefined && <Battery pct={props.battery} />}
+      </footer>
+    </article>
+  );
+}
+
+function Battery({ pct }: { pct: number }) {
+  return (
+    <span className="flex shrink-0 items-center gap-1 font-mono text-muted">
+      <svg aria-hidden viewBox="0 0 10 16" className="h-3 w-2">
+        <rect x="2.5" y="0" width="5" height="2" fill="currentColor" />
+        <rect x="0.75" y="2" width="8.5" height="13.25" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <rect x="2" y={3.5 + 10.5 * (1 - pct / 100)} width="6" height={10.5 * (pct / 100)} fill={pct <= 15 ? 'var(--amber)' : 'var(--signal)'} />
+      </svg>
+      {pct}%
+    </span>
+  );
+}
+
+/** "Model analysis" for the rhythm screen: one big figure, method, and the numbers behind it. */
+function RhythmAnalysis({ rhythm }: { rhythm: RhythmResult }) {
+  const { t } = useI18n();
+  const rows: { name: string; note: string; score: string; flagged: boolean }[] =
+    rhythm.status === 'collecting'
+      ? [{ name: t('home.measuring'), note: t('rhythm.window'), score: `${Math.round(rhythm.progress * 100)}%`, flagged: false }]
+      : [
+          { name: 'pNN50', note: `${t('c.rule')} ≥ ${PNN50_FLAG}%`, score: `${rhythm.pnn50}%`, flagged: rhythm.pnn50 >= PNN50_FLAG },
+          {
+            name: 'RMSSD / RR',
+            note: `${t('c.rule')} ≥ ${NRMSSD_FLAG}`,
+            score: (rhythm.rmssdMs / rhythm.meanRrMs).toFixed(2),
+            flagged: rhythm.rmssdMs / rhythm.meanRrMs >= NRMSSD_FLAG,
+          },
+        ];
+  const big: ReactNode =
+    rhythm.status === 'collecting' ? (
+      <>
+        {Math.round(rhythm.progress * 100)}
+        <span className="text-[13px]">%</span>
+      </>
+    ) : (
+      rhythm.rmssdMs
+    );
+  return (
+    <Panel label={t('c.analysis')} aside={<Tag tone="label">{t('c.screening')}</Tag>}>
+      <p className="flex items-baseline gap-2">
+        <span className="font-mono text-[26px] font-medium">{big}</span>
+        <span className="text-[12px] text-fg">{rhythm.status === 'collecting' ? t('home.measuring') : 'ms RMSSD'}</span>
       </p>
-    </section>
-  );
-}
-
-/** Shortcut for accuracy testing, with the next volunteer code ready. */
-function ValidationBanner() {
-  const { t } = useI18n();
-  const sessions = useValidations();
-  return (
-    <a
-      href="#/validate"
-      className="mt-3 flex items-center gap-3 rounded-2xl border border-temp/25 bg-temp/5 p-4 transition hover:bg-temp/10"
-    >
-      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-temp/15 text-temp">
-        <CheckListIcon className="size-6" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-semibold">{t('val.title')}</span>
-        <span className="block text-sm text-label">{t('val.nextVolunteer', { id: nextVolunteerId(sessions[0]?.volunteerId ?? null) })}</span>
-      </span>
-      <ChevronIcon className="size-5 text-muted" />
-    </a>
-  );
-}
-
-const DOT: Record<EventLevel, string> = { live: 'bg-signal', info: 'bg-line-strong', motion: 'bg-amber', alert: 'bg-alert' };
-
-/** Latest events as a transaction-style list. */
-function RecentActivity() {
-  const { t } = useI18n();
-  const events = useLiveStore((s) => s.events).slice(0, 4);
-  if (!events.length) return null;
-  return (
-    <section aria-labelledby="recent-title" className="mt-3 rounded-2xl border border-line bg-panel px-4 pt-4 pb-1">
-      <h2 id="recent-title" className="text-[15px] font-semibold">
-        {t('home.recent')}
-      </h2>
-      <ul className="mt-1 divide-y divide-line">
-        {events.map((e) => (
-          <li key={e.id} className="flex items-center gap-3 py-3">
-            <span aria-hidden className={`size-2.5 shrink-0 rounded-full ${DOT[e.level]}`} />
-            <span className="min-w-0 flex-1 text-sm">{t(e.key, e.vars?.scenario ? { ...e.vars, scenario: t(scenarioKey(e.vars.scenario as never)) } : e.vars)}</span>
-            <time className="font-mono text-xs text-muted">{clockTime(e.at)}</time>
+      <p className="text-[11px] text-label">{t('c.method')}</p>
+      <h3 className="label mt-3 mb-1">{t('c.factors')}</h3>
+      <ul className="space-y-1.5">
+        {rows.map((r) => (
+          <li key={r.name} className="flex items-start gap-2 text-[12px]">
+            <span aria-hidden className={`mt-[5px] size-1.5 shrink-0 rounded-full ${r.flagged ? 'bg-amber' : 'bg-turmeric'}`} />
+            <span className="min-w-0 flex-1">
+              <span className="font-semibold">{r.name}</span>
+              <span className="block text-[11px] text-label">{r.note}</span>
+            </span>
+            <span className={`font-mono ${r.flagged ? 'text-amber' : 'text-label'}`}>{r.score}</span>
           </li>
         ))}
       </ul>
-    </section>
+    </Panel>
+  );
+}
+
+/** Like the "context" panel in the reference: the latest validation session, if any. */
+function ValidationContext() {
+  const { t } = useI18n();
+  const last = useValidations()[0];
+  const s = last ? summarize(last) : null;
+  return (
+    <Panel label={t('c.validation')}>
+      {last && s ? (
+        <a href="#/validate" className="block text-[12px] text-label hover:text-fg">
+          {t('c.lastVal', { id: last.volunteerId, hr: s.hr.diff ?? '––', spo2: s.spo2.diff ?? '––' })}
+        </a>
+      ) : (
+        <a href="#/validate" className="block text-[12px] text-muted hover:text-fg">
+          {t('c.noValidation')}
+        </a>
+      )}
+    </Panel>
   );
 }

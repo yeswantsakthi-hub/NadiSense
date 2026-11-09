@@ -4,7 +4,7 @@ import { useNow } from '../lib/useNow';
 import { useLiveStore } from '../store/liveStore';
 import { useSensorStore } from '../store/sensorStore';
 
-/** Header chip on the brand bar: is the ring (or simulator) connected and sending, and its battery. */
+/** Header status: ring link and battery, as quiet grey text with a coloured dot. */
 export function LinkChip() {
   const { t } = useI18n();
   const now = useNow();
@@ -13,25 +13,18 @@ export function LinkChip() {
 
   const silent = status === 'connected' && (lastPacketAt === null || now - lastPacketAt > LINK_TIMEOUT_MS);
   const [key, dot]: [MessageKey, string] = !source
-    ? ['link.offline', 'bg-white/50']
+    ? ['link.offline', 'bg-muted']
     : status === 'reconnecting' || status === 'connecting'
-      ? [status === 'connecting' ? 'link.connecting' : 'link.reconnecting', 'bg-amber-300']
+      ? [status === 'connecting' ? 'link.connecting' : 'link.reconnecting', 'bg-amber']
       : silent
-        ? ['link.noData', 'bg-amber-300']
-        : ['link.connected', 'bg-emerald-300'];
+        ? ['link.noData', 'bg-amber']
+        : ['link.connected', 'bg-signal'];
 
   return (
-    <a
-      href="#/settings"
-      className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-white hover:bg-white/25"
-    >
-      <span aria-hidden className={`size-2 rounded-full ${dot} ${key === 'link.connected' ? 'live-dot' : ''}`} />
+    <a href="#/settings" className="flex items-center gap-1.5 text-[11px] whitespace-nowrap text-muted hover:text-fg">
+      <span aria-hidden className={`size-1.5 rounded-full ${dot} ${key === 'link.connected' ? 'live-dot' : ''}`} />
       {kind === 'sim' && source ? t('link.sim') : t(key)}
-      {source && latest && (
-        <span className="font-mono text-white/80">
-          · {latest.batteryPct}%
-        </span>
-      )}
+      {source && latest && <span className="font-mono">· {latest.batteryPct}%</span>}
     </a>
   );
 }

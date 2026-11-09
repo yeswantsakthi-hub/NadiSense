@@ -72,22 +72,25 @@ src/cloud/         optional Firestore backup + doctor links
   reference readings (oximeter HR/SpO₂, thermometer), per-session ring-mean vs reference difference,
   CSV export (samples and accuracy table) through the share sheet.
 
-## Design direction (Indian super-app style, like PhonePe / Paytm)
-- Light only. Tokens in `src/index.css`: canvas `#f2f4f8`, white cards (`rounded-2xl`, hairline
-  `#e4e7ee`, light shadow), text `#0f172a` / `#4b5565` / `#7b8494`.
-- Brand indigo `#2741c9` (`signal`): header bar, greeting band, primary buttons, active tab.
-  Metric colours: heart `#e5484d`, SpO₂ `#0e9ae9`, temperature `#e8740c`, rhythm `#7c3aed`.
-  Warnings `#b45309`; screening flags `#d92d20` as a filled `<Tag tone="alert">` with ⚠.
-- Roboto (native Android feel), bold figures with tabular numerals. No glows, neon or glass effects.
-- Buttons are rounded rectangles (`rounded-xl`), chips are pills.
-- Home: brand greeting band → live card overlapping it (HR with beat-synced heart, SpO₂,
-  temperature drift, beat strip, gate message) → Services icon grid (v2 items with "Soon") →
-  rhythm banner (progress/result + disclaimer) → validation banner (next volunteer) →
-  recent activity list → session details.
-- Sign-in and pairing use the same brand band with the ring product shot on an overlapping card.
-- Shell: sticky indigo header (wordmark + link/battery chip), white bottom nav with icons:
-  Pulse · Validate · Nadi (v2) · History · Settings. Single phone-width column everywhere.
-  Motion is minimal and off under prefers-reduced-motion.
+## Design direction (operations console, like a monitoring dashboard)
+- Dark only. Tokens in `src/index.css`: page `#0c0c0d`, charcoal panels `#232426` with a thin
+  border `#36383c` and almost square corners (`rounded-[3px]`), no shadows. Text `#e9e9e6`;
+  small uppercase olive labels (`.label`, `#a7a47a`); muted `#8d8c86`.
+- Colour means state: green `#4cc06a` (`signal`) = live / trusted, amber `#f0a33f` = changes and
+  "hold still", red `#e2483f` (`alert`) = screening flags only, blue `#4a90d9` (`select`) =
+  focused/selected. Tags are outlined uppercase (`<Tag>`); alert tags are filled with ⚠.
+- Roboto, figures with tabular numerals. No glows, neon or glass effects. Primary buttons are
+  green with black text; selected chips are outlined green.
+- Pulse console (`Dashboard.tsx`): full-width status banner (big status word LIVE / HOLD STILL /
+  PLACE RING / NO DATA / POSSIBLE IRREGULAR, title, gate rule, lead + bullets, KPIs) → beat-timing
+  chart with axes → metric cards (HR, SpO₂, temp drift, rhythm) with state-coloured borders and
+  battery footer. Right column (stacked on phones): event log, rhythm analysis (RMSSD, pNN50
+  vs. flag limits), last validation session, disclaimer.
+- Sign-in and pairing: spaced `NADISENSE` wordmark bar, then panels (title + ring product shot).
+- Shell: header with nav labels (desktop) / context (phone), centred wordmark, link + battery and
+  clock on the right; dark bottom tab bar on phones: Pulse · Validate · Nadi (v2) · History ·
+  Settings. Other screens use a single max-w-3xl column. Motion is minimal and off under
+  prefers-reduced-motion.
 
 ## Working rules for Claude Code
 - Keep `dsp/`, `ring/packets.ts`, `ring/readings.ts` and `validation/model.ts` free of React and

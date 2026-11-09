@@ -57,9 +57,9 @@ export function SignIn() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
-      <Masthead caption={t('connect.awaiting')} />
+      <Masthead />
 
-      <div className="mt-3 rounded-2xl border border-line bg-panel p-4">
+      <div className="mt-3 rounded-[3px] border border-line bg-panel p-4">
         <LanguagePicker />
       </div>
 
@@ -69,7 +69,7 @@ export function SignIn() {
           <button
             type="button"
             onClick={continueAsGuest}
-            className="mt-4 h-11 w-full rounded-xl border border-line-strong font-semibold transition-colors hover:border-fg/60"
+            className="mt-4 h-11 w-full rounded-[3px] border border-line-strong font-semibold transition-colors hover:border-fg/60"
           >
             {t('auth.continueWithout')}
           </button>
@@ -130,7 +130,7 @@ export function SignIn() {
             <button
               type="submit"
               disabled={busy}
-              className="h-11 w-full rounded-xl bg-signal font-semibold text-brand-ink transition-colors hover:bg-signal/85 disabled:opacity-60"
+              className="h-11 w-full rounded-[3px] bg-signal font-semibold text-brand-ink transition-colors hover:bg-signal/85 disabled:opacity-60"
             >
               {busy ? t('auth.wait') : submitLabel}
             </button>
@@ -150,11 +150,11 @@ export function SignIn() {
       )}
 
       {status !== 'unconfigured' && (
-        <div className="mt-3 rounded-2xl border border-line bg-panel p-4 text-center">
+        <div className="mt-3 rounded-[3px] border border-line bg-panel p-4 text-center">
           <button
             type="button"
             onClick={continueAsGuest}
-            className="h-11 w-full rounded-xl border border-line-strong font-semibold transition-colors hover:border-fg/60"
+            className="h-11 w-full rounded-[3px] border border-line-strong font-semibold transition-colors hover:border-fg/60"
           >
             {t('auth.useWithout')}
           </button>
