@@ -72,26 +72,22 @@ src/cloud/         optional Firestore backup + doctor links
   reference readings (oximeter HR/SpO₂, thermometer), per-session ring-mean vs reference difference,
   CSV export (samples and accuracy table) through the share sheet.
 
-## Design direction (wellness app, Oura / Whoop style)
-- Dark only. Tokens in `src/index.css`: bg `#07090d` with a faint teal glow at the top, surfaces
-  `#11141b` / `#191d26`, hairlines `#20242e`, text `#f4f6fa` / `#aab2c0` / `#7d8696`.
-- One colour per metric: heart rate / brand teal `#2ec4b6` (`signal`), SpO₂ `#5ab8ff`, temperature
-  `#ffb27a`, rhythm `#a78bfa`. Warnings `#e8b44c`, screening flags `#ff8a65` as a filled
-  `<Tag tone="alert">` with ⚠ (never colour alone).
-- Inter; big figures are thin (font-extralight/light) with tabular numerals. Labels are quiet
-  sentence case (`.label`), no uppercase.
-- Shapes: `rounded-3xl` cards, pill buttons and chips, `RingGauge` circular gauges.
-- Home: greeting, hero `RingGauge` (centre = live HR or "Place ring"/"Hold still…", arc = pulse-ox
-  confidence, heart icon pops on every real beat), beat strip, one plain-language insight line,
-  three mini gauges (SpO₂, temperature drift, rhythm progress/result), rhythm card with the
-  disclaimer, session details folded in a `<details>`.
-- Pairing: ring artwork, three checks (charge, Bluetooth/Nearby devices, keep close), one big
-  Connect button, error card with a concrete fix, demo option behind "Try the demo".
-- Validation: 4-step flow (volunteer → record → reference → result), countdown `RingGauge`,
-  volunteer code auto-advances (V01 → V02), result shows within/outside ±5 bpm / ±3 % SpO₂.
-- Single phone-width column on all screen sizes; floating icon tab bar:
-  Pulse · Validate · Nadi (v2) · History · Settings. Screens fade in (`.screen-in`); all motion
-  is off under prefers-reduced-motion. Letter-spacing off for non-English text.
+## Design direction (Indian super-app style, like PhonePe / Paytm)
+- Light only. Tokens in `src/index.css`: canvas `#f2f4f8`, white cards (`rounded-2xl`, hairline
+  `#e4e7ee`, light shadow), text `#0f172a` / `#4b5565` / `#7b8494`.
+- Brand indigo `#2741c9` (`signal`): header bar, greeting band, primary buttons, active tab.
+  Metric colours: heart `#e5484d`, SpO₂ `#0e9ae9`, temperature `#e8740c`, rhythm `#7c3aed`.
+  Warnings `#b45309`; screening flags `#d92d20` as a filled `<Tag tone="alert">` with ⚠.
+- Roboto (native Android feel), bold figures with tabular numerals. No glows, neon or glass effects.
+- Buttons are rounded rectangles (`rounded-xl`), chips are pills.
+- Home: brand greeting band → live card overlapping it (HR with beat-synced heart, SpO₂,
+  temperature drift, beat strip, gate message) → Services icon grid (v2 items with "Soon") →
+  rhythm banner (progress/result + disclaimer) → validation banner (next volunteer) →
+  recent activity list → session details.
+- Sign-in and pairing use the same brand band with the ring product shot on an overlapping card.
+- Shell: sticky indigo header (wordmark + link/battery chip), white bottom nav with icons:
+  Pulse · Validate · Nadi (v2) · History · Settings. Single phone-width column everywhere.
+  Motion is minimal and off under prefers-reduced-motion.
 
 ## Working rules for Claude Code
 - Keep `dsp/`, `ring/packets.ts`, `ring/readings.ts` and `validation/model.ts` free of React and

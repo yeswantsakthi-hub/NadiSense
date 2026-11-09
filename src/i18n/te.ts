@@ -56,7 +56,6 @@ export const te: Messages = {
 
   'pulse.aria': 'ఉంగరం ఇన్‌ఫ్రారెడ్ సెన్సార్ నుండి లైవ్ నాడీ తరంగం. నీడ ఉన్న భాగాలు కదలిక కోసం గుర్తించబడ్డాయి.',
 
-  'vitals.aria': 'వైటల్స్',
   'vital.hr': 'హృదయ స్పందన',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'చర్మ ఉష్ణోగ్రత',
@@ -184,7 +183,6 @@ export const te: Messages = {
   'reading.hold': 'కదలకుండా ఉండండి…',
   'pulse.beatTiming': 'ఉంగరం నుండి స్పందన సమయం',
   'vital.rhythm': 'లయ',
-  'vital.fromRing': 'ఉంగరం నుండి',
   'session.packets': 'ప్యాకెట్లు',
   'session.lastPacket': 'చివరి ప్యాకెట్',
 
@@ -193,7 +191,6 @@ export const te: Messages = {
   'rhythm.tagIrregular': 'అసమానం కావచ్చు',
   'rhythm.regular': 'అసమాన లయ కనబడలేదు',
   'rhythm.irregular': 'అసమాన లయ ఉండవచ్చు — వైద్యుడితో తనిఖీ చేయించండి',
-  'rhythm.progress': '2 నిమిషాల స్థిర స్పందనలు అవసరం · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% స్పందన మార్పులు > 50 ms',
   'rhythm.window': 'చివరి 2 నిమిషాలు, కదలిక మినహాయించబడింది',
   'v2.tag': 'v2లో వస్తుంది',
@@ -256,17 +253,9 @@ export const te: Messages = {
   'home.live': 'మీ ఉంగరం నుండి లైవ్',
   'home.sim': 'సిమ్యులేటెడ్ ఉంగరం · {scenario}',
   'home.signal': 'సిగ్నల్ నాణ్యత {pct}%',
-  'home.measuring': 'కొలుస్తోంది',
-  'home.steady': 'స్థిరం',
-  'home.vsBaseline': 'మీ బేస్‌లైన్‌తో',
   'home.baselineProgress': 'బేస్‌లైన్ {n}/3',
   'home.details': 'సెషన్ వివరాలు',
-  'insight.noData': 'ఉంగరం డేటా కోసం వేచి ఉంది…',
-  'insight.place': 'కొలవడం ప్రారంభించడానికి ఉంగరాన్ని వేలికి ధరించండి.',
-  'insight.hold': 'కొన్ని సెకన్లు కదలకుండా ఉండండి. కదిలినప్పుడు రీడింగ్‌లు ఆగుతాయి.',
   'insight.collecting': 'కదలకండి: మీ లయను తనిఖీ చేయడానికి ఇంకా సుమారు {secs} సెకన్లు.',
-  'insight.regular': 'చివరి 2 నిమిషాల్లో లయ స్థిరంగా ఉంది.',
-  'insight.irregular': 'చివరి 2 నిమిషాలు అసమానంగా కనిపించాయి. ఇది స్క్రీనింగ్ సూచన, రోగనిర్ధారణ కాదు; వైద్యుడితో తనిఖీ చేయించుకోవచ్చు.',
   'pair.title': 'మీ ఉంగరాన్ని జత చేయండి',
   'pair.subtitle': 'మూడు చిన్న తనిఖీలు, తర్వాత కనెక్ట్ నొక్కండి.',
   'pair.searching': 'మీ ఉంగరం కోసం వెతుకుతోంది…',
@@ -298,4 +287,11 @@ export const te: Messages = {
   'val.within': '±{tol} {unit} లోపల',
   'val.outside': '±{tol} {unit} బయట',
   'history.hrChart': 'సగటు హృదయ స్పందన',
+
+  'home.services': 'సేవలు',
+  'home.recent': 'ఇటీవలి కార్యకలాపం',
+  'svc.doctor': 'వైద్యుల లింక్',
+  'svc.ring': 'నా ఉంగరం',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'త్వరలో',
 };

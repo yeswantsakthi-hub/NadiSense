@@ -20,7 +20,7 @@ export function Segmented<T extends string>({ legend, value, options, onChange }
             <label
               key={o.value}
               className={`flex-1 cursor-pointer rounded-full px-2 py-2 text-center text-[13px] font-medium transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-select ${
-                selected ? 'bg-fg text-bg' : 'text-label hover:text-fg'
+                selected ? 'bg-signal text-brand-ink' : 'text-label hover:text-fg'
               }`}
             >
               <input

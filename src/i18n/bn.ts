@@ -56,7 +56,6 @@ export const bn: Messages = {
 
   'pulse.aria': 'আংটির ইনফ্রারেড সেন্সর থেকে লাইভ নাড়ির তরঙ্গ। ছায়াযুক্ত অংশ নড়াচড়ার জন্য চিহ্নিত।',
 
-  'vitals.aria': 'প্রাণচিহ্ন',
   'vital.hr': 'হৃদস্পন্দন',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'ত্বকের তাপ',
@@ -184,7 +183,6 @@ export const bn: Messages = {
   'reading.hold': 'স্থির থাকুন…',
   'pulse.beatTiming': 'আংটি থেকে স্পন্দনের সময়',
   'vital.rhythm': 'ছন্দ',
-  'vital.fromRing': 'আংটি থেকে',
   'session.packets': 'প্যাকেট',
   'session.lastPacket': 'শেষ প্যাকেট',
 
@@ -193,7 +191,6 @@ export const bn: Messages = {
   'rhythm.tagIrregular': 'সম্ভবত অনিয়মিত',
   'rhythm.regular': 'কোনো অনিয়মিত ছন্দ পাওয়া যায়নি',
   'rhythm.irregular': 'সম্ভবত অনিয়মিত ছন্দ — চিকিৎসককে দেখান',
-  'rhythm.progress': '২ মিনিটের স্থির স্পন্দন দরকার · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% স্পন্দন পরিবর্তন > 50 ms',
   'rhythm.window': 'শেষ ২ মিনিট, নড়াচড়া বাদ দিয়ে',
   'v2.tag': 'v2-তে আসছে',
@@ -256,17 +253,9 @@ export const bn: Messages = {
   'home.live': 'আপনার আংটি থেকে লাইভ',
   'home.sim': 'সিমুলেটেড আংটি · {scenario}',
   'home.signal': 'সিগন্যালের মান {pct}%',
-  'home.measuring': 'মাপছে',
-  'home.steady': 'স্থির',
-  'home.vsBaseline': 'আপনার বেসলাইনের তুলনায়',
   'home.baselineProgress': 'বেসলাইন {n}/3',
   'home.details': 'সেশনের বিবরণ',
-  'insight.noData': 'আংটি থেকে ডেটার অপেক্ষায়…',
-  'insight.place': 'মাপা শুরু করতে আংটিটি আঙুলে পরুন।',
-  'insight.hold': 'কয়েক সেকেন্ড স্থির থাকুন। নড়লে রিডিং থেমে যায়।',
   'insight.collecting': 'স্থির থাকুন: আপনার ছন্দ যাচাই করতে আর প্রায় {secs} সেকেন্ড।',
-  'insight.regular': 'শেষ ২ মিনিটে ছন্দ স্থির ছিল।',
-  'insight.irregular': 'শেষ ২ মিনিট অনিয়মিত মনে হয়েছে। এটি স্ক্রিনিং সংকেত, রোগনির্ণয় নয়; চিকিৎসককে দেখানোর কথা ভাবুন।',
   'pair.title': 'আপনার আংটি যুক্ত করুন',
   'pair.subtitle': 'তিনটি ছোট যাচাই, তারপর সংযুক্ত করুন চাপুন।',
   'pair.searching': 'আপনার আংটি খোঁজা হচ্ছে…',
@@ -298,4 +287,11 @@ export const bn: Messages = {
   'val.within': '±{tol} {unit}-এর মধ্যে',
   'val.outside': '±{tol} {unit}-এর বাইরে',
   'history.hrChart': 'গড় হৃদস্পন্দন',
+
+  'home.services': 'পরিষেবা',
+  'home.recent': 'সাম্প্রতিক কার্যকলাপ',
+  'svc.doctor': 'চিকিৎসকের লিঙ্ক',
+  'svc.ring': 'আমার আংটি',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'শীঘ্রই',
 };

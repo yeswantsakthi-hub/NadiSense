@@ -58,7 +58,6 @@ export const en = {
 
   'pulse.aria': 'Live pulse waveform from the ring’s infrared sensor. Shaded areas are flagged for movement.',
 
-  'vitals.aria': 'Vitals',
   'vital.hr': 'Heart rate',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'Skin temp',
@@ -186,7 +185,6 @@ export const en = {
   'reading.hold': 'Hold still…',
   'pulse.beatTiming': 'Beat timing from ring',
   'vital.rhythm': 'Rhythm',
-  'vital.fromRing': 'from the ring',
   'session.packets': 'Packets',
   'session.lastPacket': 'Last packet',
 
@@ -195,7 +193,6 @@ export const en = {
   'rhythm.tagIrregular': 'possible irregular',
   'rhythm.regular': 'No irregular rhythm detected',
   'rhythm.irregular': 'Possible irregular rhythm — check with a doctor',
-  'rhythm.progress': 'Needs 2 minutes of still beats · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% of beat changes > 50 ms',
   'rhythm.window': 'Last 2 minutes, movement skipped',
   'v2.tag': 'Coming in v2',
@@ -258,17 +255,9 @@ export const en = {
   'home.live': 'Live from your ring',
   'home.sim': 'Simulated ring · {scenario}',
   'home.signal': 'Signal quality {pct}%',
-  'home.measuring': 'measuring',
-  'home.steady': 'steady',
-  'home.vsBaseline': 'vs your baseline',
   'home.baselineProgress': 'baseline {n}/3',
   'home.details': 'Session details',
-  'insight.noData': 'Waiting for the ring to send data…',
-  'insight.place': 'Slide the ring onto your finger to start measuring.',
-  'insight.hold': 'Hold still for a few seconds. Readings pause while you move.',
   'insight.collecting': 'Keep still: about {secs} more seconds to check your rhythm.',
-  'insight.regular': 'Steady rhythm over the last 2 minutes.',
-  'insight.irregular': 'The last 2 minutes looked irregular. This is a screening flag, not a diagnosis; consider checking with a doctor.',
   'pair.title': 'Pair your ring',
   'pair.subtitle': 'Three quick checks, then tap Connect.',
   'pair.searching': 'Looking for your ring…',
@@ -300,6 +289,13 @@ export const en = {
   'val.within': 'Within ±{tol} {unit}',
   'val.outside': 'Outside ±{tol} {unit}',
   'history.hrChart': 'Average heart rate',
+
+  'home.services': 'Services',
+  'home.recent': 'Recent activity',
+  'svc.doctor': 'Doctor link',
+  'svc.ring': 'My ring',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'Soon',
 } as const;
 
 export type MessageKey = keyof typeof en;

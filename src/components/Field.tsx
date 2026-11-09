@@ -20,7 +20,7 @@ export function Field({ label, value, onChange, hint, className = '', ...input }
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-describedby={hint ? `${id}-hint` : undefined}
-        className="h-11 w-full rounded-full border border-line bg-bg px-3 text-[15px] text-fg placeholder:text-muted focus:border-signal focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-1"
+        className="h-11 w-full rounded-xl border border-line bg-bg px-3 text-[15px] text-fg placeholder:text-muted focus:border-signal focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-1"
         {...input}
       />
       {hint && (

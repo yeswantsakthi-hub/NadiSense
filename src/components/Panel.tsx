@@ -12,13 +12,13 @@ interface Props {
   as?: 'section' | 'div';
 }
 
-/** Soft raised card with a quiet label. */
+/** White card with a hairline border and a bold title. */
 export function Panel({ label, aside, children, className = '', flush, labelClassName = '', as = 'section' }: Props) {
   const Tag = as;
   return (
-    <Tag className={`rounded-3xl border border-line bg-panel ${className}`}>
+    <Tag className={`rounded-2xl border border-line bg-panel shadow-[0_1px_2px_rgba(16,24,40,0.05)] ${className}`}>
       <header className="flex min-h-11 items-center justify-between gap-3 px-5 pt-4 pb-2">
-        <h2 className={`label ${labelClassName}`}>{label}</h2>
+        <h2 className={`text-[15px] font-semibold text-fg ${labelClassName}`}>{label}</h2>
         {aside && <div className="flex items-center gap-3 text-xs text-muted">{aside}</div>}
       </header>
       <div className={flush ? '' : 'px-5 pb-5'}>{children}</div>
@@ -51,7 +51,7 @@ export const TONE_TEXT: Record<Tone, string> = {
 const TONE_TAG: Record<Tone, string> = {
   signal: 'bg-signal/15 text-signal',
   amber: 'bg-amber/15 text-amber',
-  alert: 'bg-alert text-bg font-semibold',
+  alert: 'bg-alert text-brand-ink font-semibold',
   muted: 'bg-panel-2 text-muted',
   label: 'bg-panel-2 text-label',
   turmeric: 'bg-turmeric/15 text-turmeric',

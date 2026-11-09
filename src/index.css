@@ -1,31 +1,36 @@
 @import "tailwindcss";
 
 /*
- * Wellness look (Oura / Whoop style): near-black, soft raised surfaces, thin oversized numbers,
- * one colour per metric. Screening flags are a filled badge with ⚠, never colour alone.
+ * Super-app look (PhonePe / Paytm style): light grey canvas, white cards with real borders,
+ * a solid indigo brand band, Roboto, bold figures. No glows, no gradients on content.
+ * Screening flags are a filled red badge with ⚠, never colour alone.
  */
 :root {
-  --bg: #07090d;
-  --panel: #11141b;
-  --panel-2: #191d26;
-  --line: #20242e;
-  --line-strong: #2e3441;
-  --fg: #f4f6fa;
-  --label: #aab2c0;
-  --muted: #7d8696;
-  /* Brand + heart rate */
-  --signal: #2ec4b6;
-  --spo2: #5ab8ff;
-  --temp: #ffb27a;
-  --rhythm: #a78bfa;
-  --turmeric: #2ec4b6;
-  --amber: #e8b44c;
-  --alert: #ff8a65;
-  --select: #f4f6fa;
-  --grid: rgba(255, 255, 255, 0.04);
-  --grid-strong: rgba(255, 255, 255, 0.08);
-  --band: rgba(232, 180, 76, 0.13);
-  color-scheme: dark;
+  --bg: #f2f4f8;
+  --panel: #ffffff;
+  --panel-2: #f1f3f7;
+  --line: #e4e7ee;
+  --line-strong: #cdd3de;
+  --fg: #0f172a;
+  --label: #4b5565;
+  --muted: #7b8494;
+  /* Brand (buttons, links, active tab, header band) */
+  --signal: #2741c9;
+  --brand-ink: #ffffff;
+  /* One colour per metric */
+  --hr: #e5484d;
+  --spo2: #0e9ae9;
+  --temp: #e8740c;
+  --rhythm: #7c3aed;
+  --turmeric: #2741c9;
+  /* Text-safe warning on white */
+  --amber: #b45309;
+  --alert: #d92d20;
+  --select: #2741c9;
+  --grid: rgba(15, 23, 42, 0.05);
+  --grid-strong: rgba(15, 23, 42, 0.1);
+  --band: rgba(180, 83, 9, 0.1);
+  color-scheme: light;
 }
 
 @theme inline {
@@ -38,6 +43,8 @@
   --color-muted: var(--muted);
   --color-label: var(--label);
   --color-signal: var(--signal);
+  --color-brand-ink: var(--brand-ink);
+  --color-hr: var(--hr);
   --color-spo2: var(--spo2);
   --color-temp: var(--temp);
   --color-rhythm: var(--rhythm);
@@ -45,10 +52,9 @@
   --color-amber: var(--amber);
   --color-alert: var(--alert);
   --color-select: var(--select);
-  --font-sans: "Inter", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
+  --font-sans: "Roboto", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
     "Noto Sans Malayalam", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
-  /* Figures use Inter with tabular numerals rather than a separate monospace face. */
-  --font-mono: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Roboto", ui-sans-serif, system-ui, sans-serif;
 }
 
 html,
@@ -59,29 +65,25 @@ body {
 
 body {
   font-family: var(--font-sans);
-  font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  /* A faint teal glow at the top, like light from the ring. */
-  background-image: radial-gradient(900px 480px at 50% -160px, rgba(46, 196, 182, 0.13), transparent 70%);
-  background-repeat: no-repeat;
   min-height: 100dvh;
 }
 
 :focus-visible {
   outline: 2px solid var(--select);
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
-/* Quiet sentence-case label used above cards and fields. */
+/* Section heading above cards and fields. */
 .label {
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--label);
 }
 
-/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
+/* Letter-spacing breaks the joined letters of Indic scripts. */
 html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   letter-spacing: normal;
 }
@@ -99,32 +101,31 @@ html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   animation: live-pulse 1.6s ease-in-out infinite;
 }
 
-/* Screens fade up gently on navigation. */
+/* Screens slide in a little on navigation. */
 @keyframes screen-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
 }
 .screen-in {
-  animation: screen-in 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: screen-in 0.22s ease-out both;
 }
 
 /* One pop per real beat from the ring (the element is re-keyed on every beat). */
 @keyframes beat-pop {
-  0% { transform: scale(1); opacity: 0.85; }
-  18% { transform: scale(1.18); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.85; }
+  0% { transform: scale(1); }
+  18% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 .beat-pop {
   animation: beat-pop 0.6s ease-out;
 }
 
-/* Slow glow while pairing. */
 @keyframes breathe {
-  0%, 100% { opacity: 0.45; transform: scale(0.97); }
-  50% { opacity: 1; transform: scale(1.03); }
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 .breathe {
-  animation: breathe 2.4s ease-in-out infinite;
+  animation: breathe 1.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

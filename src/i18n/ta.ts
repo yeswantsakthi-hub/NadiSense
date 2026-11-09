@@ -56,7 +56,6 @@ export const ta: Messages = {
 
   'pulse.aria': 'மோதிரத்தின் அகச்சிவப்பு உணரியிலிருந்து நேரலை நாடி அலைவடிவம். நிழலிட்ட பகுதிகள் அசைவுக்காகக் குறிக்கப்பட்டவை.',
 
-  'vitals.aria': 'உயிர்க்குறிகள்',
   'vital.hr': 'இதயத் துடிப்பு',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'தோல் வெப்பம்',
@@ -184,7 +183,6 @@ export const ta: Messages = {
   'reading.hold': 'அசையாமல் இருங்கள்…',
   'pulse.beatTiming': 'மோதிரத்திலிருந்து துடிப்பு நேரம்',
   'vital.rhythm': 'தாளம்',
-  'vital.fromRing': 'மோதிரத்திலிருந்து',
   'session.packets': 'பாக்கெட்டுகள்',
   'session.lastPacket': 'கடைசி பாக்கெட்',
 
@@ -193,7 +191,6 @@ export const ta: Messages = {
   'rhythm.tagIrregular': 'சீரற்றதாக இருக்கலாம்',
   'rhythm.regular': 'சீரற்ற தாளம் கண்டறியப்படவில்லை',
   'rhythm.irregular': 'சீரற்ற தாளம் இருக்கலாம் — மருத்துவரிடம் சரிபார்க்கவும்',
-  'rhythm.progress': '2 நிமிட அசைவற்ற துடிப்புகள் தேவை · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% துடிப்பு மாற்றங்கள் > 50 ms',
   'rhythm.window': 'கடைசி 2 நிமிடங்கள், அசைவு தவிர்க்கப்பட்டது',
   'v2.tag': 'v2-இல் வரும்',
@@ -256,17 +253,9 @@ export const ta: Messages = {
   'home.live': 'உங்கள் மோதிரத்திலிருந்து நேரலை',
   'home.sim': 'உருவகப்படுத்திய மோதிரம் · {scenario}',
   'home.signal': 'சமிக்ஞைத் தரம் {pct}%',
-  'home.measuring': 'அளக்கிறது',
-  'home.steady': 'சீரானது',
-  'home.vsBaseline': 'உங்கள் அடிப்படையுடன்',
   'home.baselineProgress': 'அடிப்படை {n}/3',
   'home.details': 'அமர்வு விவரங்கள்',
-  'insight.noData': 'மோதிரம் தரவு அனுப்பக் காத்திருக்கிறது…',
-  'insight.place': 'அளக்கத் தொடங்க மோதிரத்தை விரலில் அணியுங்கள்.',
-  'insight.hold': 'சில விநாடிகள் அசையாமல் இருங்கள். அசையும்போது அளவீடுகள் நிற்கும்.',
   'insight.collecting': 'அசையாமல் இருங்கள்: தாளத்தைச் சரிபார்க்க இன்னும் சுமார் {secs} விநாடிகள்.',
-  'insight.regular': 'கடைசி 2 நிமிடங்களில் தாளம் சீராக இருந்தது.',
-  'insight.irregular': 'கடைசி 2 நிமிடங்கள் சீரற்றதாகத் தெரிந்தது. இது பரிசோதனைக் குறி, நோயறிதல் அல்ல; மருத்துவரிடம் சரிபார்க்கலாம்.',
   'pair.title': 'உங்கள் மோதிரத்தை இணையுங்கள்',
   'pair.subtitle': 'மூன்று சிறு சரிபார்ப்புகள், பின் இணை என்பதைத் தட்டவும்.',
   'pair.searching': 'உங்கள் மோதிரத்தைத் தேடுகிறது…',
@@ -298,4 +287,11 @@ export const ta: Messages = {
   'val.within': '±{tol} {unit}-க்குள்',
   'val.outside': '±{tol} {unit}-க்கு வெளியே',
   'history.hrChart': 'சராசரி இதயத் துடிப்பு',
+
+  'home.services': 'சேவைகள்',
+  'home.recent': 'சமீபத்திய செயல்பாடு',
+  'svc.doctor': 'மருத்துவர் இணைப்பு',
+  'svc.ring': 'என் மோதிரம்',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'விரைவில்',
 };

@@ -56,7 +56,6 @@ export const mr: Messages = {
 
   'pulse.aria': 'अंगठीच्या इन्फ्रारेड सेन्सरमधून लाइव्ह नाडी लहर. छायांकित भाग हालचालीसाठी चिन्हांकित आहेत.',
 
-  'vitals.aria': 'जीवनचिन्हे',
   'vital.hr': 'हृदय गती',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'त्वचेचे तापमान',
@@ -184,7 +183,6 @@ export const mr: Messages = {
   'reading.hold': 'स्थिर राहा…',
   'pulse.beatTiming': 'अंगठीकडून ठोक्यांची वेळ',
   'vital.rhythm': 'लय',
-  'vital.fromRing': 'अंगठीकडून',
   'session.packets': 'पॅकेट्स',
   'session.lastPacket': 'शेवटचे पॅकेट',
 
@@ -193,7 +191,6 @@ export const mr: Messages = {
   'rhythm.tagIrregular': 'कदाचित अनियमित',
   'rhythm.regular': 'अनियमित लय आढळली नाही',
   'rhythm.irregular': 'कदाचित अनियमित लय — डॉक्टरांकडून तपासा',
-  'rhythm.progress': '2 मिनिटांचे स्थिर ठोके हवेत · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% ठोक्यांतील बदल > 50 ms',
   'rhythm.window': 'शेवटची 2 मिनिटे, हालचाल वगळून',
   'v2.tag': 'v2 मध्ये येईल',
@@ -256,17 +253,9 @@ export const mr: Messages = {
   'home.live': 'तुमच्या अंगठीतून लाइव्ह',
   'home.sim': 'सिम्युलेटेड अंगठी · {scenario}',
   'home.signal': 'सिग्नल गुणवत्ता {pct}%',
-  'home.measuring': 'मोजत आहे',
-  'home.steady': 'स्थिर',
-  'home.vsBaseline': 'तुमच्या आधाररेषेच्या तुलनेत',
   'home.baselineProgress': 'आधाररेषा {n}/3',
   'home.details': 'सत्र तपशील',
-  'insight.noData': 'अंगठीकडून डेटाची प्रतीक्षा…',
-  'insight.place': 'मोजणी सुरू करण्यासाठी अंगठी बोटात घाला.',
-  'insight.hold': 'काही सेकंद स्थिर राहा. हालचाल करताना रीडिंग थांबते.',
   'insight.collecting': 'स्थिर राहा: तुमची लय तपासण्यास आणखी सुमारे {secs} सेकंद.',
-  'insight.regular': 'शेवटच्या 2 मिनिटांत लय स्थिर होती.',
-  'insight.irregular': 'शेवटची 2 मिनिटे अनियमित दिसली. हा स्क्रीनिंग संकेत आहे, निदान नाही; डॉक्टरांकडून तपासण्याचा विचार करा.',
   'pair.title': 'तुमची अंगठी जोडा',
   'pair.subtitle': 'तीन छोट्या तपासण्या, मग जोडा दाबा.',
   'pair.searching': 'तुमची अंगठी शोधत आहे…',
@@ -298,4 +287,11 @@ export const mr: Messages = {
   'val.within': '±{tol} {unit} आत',
   'val.outside': '±{tol} {unit} बाहेर',
   'history.hrChart': 'सरासरी हृदय गती',
+
+  'home.services': 'सेवा',
+  'home.recent': 'अलीकडील घडामोडी',
+  'svc.doctor': 'डॉक्टर लिंक',
+  'svc.ring': 'माझी अंगठी',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'लवकरच',
 };

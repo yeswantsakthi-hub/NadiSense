@@ -56,7 +56,6 @@ export const ml: Messages = {
 
   'pulse.aria': 'മോതിരത്തിന്റെ ഇൻഫ്രാറെഡ് സെൻസറിൽ നിന്നുള്ള ലൈവ് നാഡീ തരംഗം. നിഴലിട്ട ഭാഗങ്ങൾ ചലനത്തിനായി അടയാളപ്പെടുത്തിയവയാണ്.',
 
-  'vitals.aria': 'ജീവസൂചകങ്ങൾ',
   'vital.hr': 'ഹൃദയമിടിപ്പ്',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'ചർമ താപം',
@@ -184,7 +183,6 @@ export const ml: Messages = {
   'reading.hold': 'അനങ്ങാതിരിക്കുക…',
   'pulse.beatTiming': 'മോതിരത്തിൽ നിന്നുള്ള മിടിപ്പ് സമയം',
   'vital.rhythm': 'താളം',
-  'vital.fromRing': 'മോതിരത്തിൽ നിന്ന്',
   'session.packets': 'പാക്കറ്റുകൾ',
   'session.lastPacket': 'അവസാന പാക്കറ്റ്',
 
@@ -193,7 +191,6 @@ export const ml: Messages = {
   'rhythm.tagIrregular': 'ക്രമരഹിതമാകാം',
   'rhythm.regular': 'ക്രമരഹിത താളം കണ്ടെത്തിയില്ല',
   'rhythm.irregular': 'ക്രമരഹിത താളം ഉണ്ടാകാം — ഡോക്ടറെ കാണിക്കുക',
-  'rhythm.progress': '2 മിനിറ്റ് നിശ്ചല മിടിപ്പുകൾ വേണം · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% മിടിപ്പ് മാറ്റങ്ങൾ > 50 ms',
   'rhythm.window': 'അവസാന 2 മിനിറ്റ്, ചലനം ഒഴിവാക്കി',
   'v2.tag': 'v2-ൽ വരും',
@@ -256,17 +253,9 @@ export const ml: Messages = {
   'home.live': 'നിങ്ങളുടെ മോതിരത്തിൽ നിന്ന് ലൈവ്',
   'home.sim': 'സിമുലേറ്റഡ് മോതിരം · {scenario}',
   'home.signal': 'സിഗ്നൽ ഗുണനിലവാരം {pct}%',
-  'home.measuring': 'അളക്കുന്നു',
-  'home.steady': 'സ്ഥിരം',
-  'home.vsBaseline': 'നിങ്ങളുടെ അടിസ്ഥാനരേഖയുമായി',
   'home.baselineProgress': 'അടിസ്ഥാനരേഖ {n}/3',
   'home.details': 'സെഷൻ വിശദാംശങ്ങൾ',
-  'insight.noData': 'മോതിരത്തിൽ നിന്ന് ഡാറ്റയ്ക്കായി കാത്തിരിക്കുന്നു…',
-  'insight.place': 'അളക്കാൻ തുടങ്ങാൻ മോതിരം വിരലിൽ ധരിക്കുക.',
-  'insight.hold': 'കുറച്ച് സെക്കൻഡ് അനങ്ങാതിരിക്കുക. അനങ്ങുമ്പോൾ റീഡിംഗുകൾ നിൽക്കും.',
   'insight.collecting': 'അനങ്ങാതിരിക്കുക: നിങ്ങളുടെ താളം പരിശോധിക്കാൻ ഏകദേശം {secs} സെക്കൻഡ് കൂടി.',
-  'insight.regular': 'കഴിഞ്ഞ 2 മിനിറ്റിൽ താളം സ്ഥിരമായിരുന്നു.',
-  'insight.irregular': 'കഴിഞ്ഞ 2 മിനിറ്റ് ക്രമരഹിതമായി തോന്നി. ഇതൊരു സ്ക്രീനിംഗ് സൂചനയാണ്, രോഗനിർണയമല്ല; ഡോക്ടറെ കാണിക്കുന്നത് പരിഗണിക്കുക.',
   'pair.title': 'നിങ്ങളുടെ മോതിരം ജോടിയാക്കുക',
   'pair.subtitle': 'മൂന്ന് ചെറിയ പരിശോധനകൾ, പിന്നെ കണക്റ്റ് അമർത്തുക.',
   'pair.searching': 'നിങ്ങളുടെ മോതിരം തിരയുന്നു…',
@@ -298,4 +287,11 @@ export const ml: Messages = {
   'val.within': '±{tol} {unit}-നുള്ളിൽ',
   'val.outside': '±{tol} {unit}-ന് പുറത്ത്',
   'history.hrChart': 'ശരാശരി ഹൃദയമിടിപ്പ്',
+
+  'home.services': 'സേവനങ്ങൾ',
+  'home.recent': 'സമീപകാല പ്രവർത്തനം',
+  'svc.doctor': 'ഡോക്ടർ ലിങ്ക്',
+  'svc.ring': 'എന്റെ മോതിരം',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'ഉടൻ',
 };

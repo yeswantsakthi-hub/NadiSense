@@ -35,7 +35,7 @@ export function Settings() {
           <button
             type="button"
             onClick={signOut}
-            className="mt-3 h-10 w-full rounded-full border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
+            className="mt-3 h-10 w-full rounded-xl border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
           >
             {account ? t('settings.signOut') : t('auth.signIn')}
           </button>

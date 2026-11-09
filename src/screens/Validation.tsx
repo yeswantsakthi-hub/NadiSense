@@ -99,7 +99,7 @@ export function Validation() {
       <Stepper current={STEP_INDEX[phase.step]} />
 
       {phase.step === 'setup' && (
-        <section className="rounded-3xl border border-line bg-panel p-5">
+        <section className="rounded-2xl border border-line bg-panel p-5">
           {kind === 'sim' && source && (
             <p className="mb-3 rounded-2xl bg-amber/10 px-3 py-2 text-xs text-amber">{t('val.simWarning')}</p>
           )}
@@ -132,7 +132,7 @@ export function Validation() {
                 aria-checked={s === plannedS}
                 onClick={() => setPlannedS(s)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                  s === plannedS ? 'bg-fg text-bg' : 'bg-panel-2 text-label hover:text-fg'
+                  s === plannedS ? 'bg-signal text-brand-ink' : 'bg-panel-2 text-label hover:text-fg'
                 }`}
               >
                 {t('val.minutes', { n: s / 60 })}
@@ -146,14 +146,14 @@ export function Validation() {
             <button
               type="button"
               onClick={start}
-              className="mt-5 h-14 w-full rounded-full bg-signal text-base font-semibold text-bg shadow-[0_8px_30px_rgba(46,196,182,0.3)] transition hover:brightness-110"
+              className="mt-5 h-14 w-full rounded-xl bg-signal text-base font-semibold text-brand-ink transition hover:bg-signal/90"
             >
               {t('val.startFor', { id: code.trim() || '––' })}
             </button>
           ) : (
             <a
               href="#/connect"
-              className="mt-5 flex h-14 w-full items-center justify-center rounded-full border border-signal/60 font-semibold"
+              className="mt-5 flex h-14 w-full items-center justify-center rounded-xl border border-signal/60 font-semibold"
             >
               {t('val.needRing')}
             </a>
@@ -187,7 +187,7 @@ export function Validation() {
           <button
             type="button"
             onClick={nextVolunteer}
-            className="h-14 w-full rounded-full bg-signal text-base font-semibold text-bg shadow-[0_8px_30px_rgba(46,196,182,0.3)] transition hover:brightness-110"
+            className="h-14 w-full rounded-xl bg-signal text-base font-semibold text-brand-ink transition hover:bg-signal/90"
           >
             {t('val.nextVolunteer', { id: nextVolunteerId(sessions[0]?.volunteerId ?? null) })}
           </button>
@@ -202,7 +202,7 @@ export function Validation() {
             <button
               type="button"
               onClick={exportAll}
-              className="mb-3 h-11 w-full rounded-full border border-signal/60 text-sm font-semibold transition hover:bg-signal/10"
+              className="mb-3 h-11 w-full rounded-xl border border-signal/60 text-sm font-semibold transition hover:bg-signal/10"
             >
               {t('val.exportAll')}
             </button>
@@ -273,7 +273,7 @@ function Recorder({ draft, onFinish, onCancel }: { draft: Draft; onFinish(d: Dra
   const vitals = shownVitals(latest, lastPacketAt, now);
   const usable = count.n ? Math.round((100 * count.ok) / count.n) : 0;
   return (
-    <section className="flex flex-col items-center rounded-3xl border border-line bg-panel px-5 pt-6 pb-5">
+    <section className="flex flex-col items-center rounded-2xl border border-line bg-panel px-5 pt-6 pb-5">
       <Tag tone="signal">{draft.volunteerId}</Tag>
       <RingGauge
         value={1 - left / (draft.plannedS * 1000)}
@@ -283,7 +283,7 @@ function Recorder({ draft, onFinish, onCancel }: { draft: Draft; onFinish(d: Dra
         label={`${t('val.running')} ${duration(left + 999)}`}
         className="mt-3"
       >
-        <span className="font-mono text-6xl leading-none font-extralight">{duration(left + 999)}</span>
+        <span className="font-mono text-6xl leading-none font-bold">{duration(left + 999)}</span>
         <span className="mt-2 text-xs text-label">{t('val.running')}</span>
       </RingGauge>
 
@@ -311,14 +311,14 @@ function Recorder({ draft, onFinish, onCancel }: { draft: Draft; onFinish(d: Dra
         <button
           type="button"
           onClick={finish}
-          className="h-12 flex-1 rounded-full bg-panel-2 text-sm font-semibold transition hover:bg-line-strong"
+          className="h-12 flex-1 rounded-xl bg-panel-2 text-sm font-semibold transition hover:bg-line-strong"
         >
           {t('val.stop')}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="h-12 rounded-full px-5 text-sm text-label transition hover:text-fg"
+          className="h-12 rounded-xl px-5 text-sm text-label transition hover:text-fg"
         >
           {t('val.cancel')}
         </button>
@@ -345,7 +345,7 @@ function ReferenceForm({ draft, onSaved, onDiscard }: { draft: Draft; onSaved(id
   };
 
   return (
-    <section className="rounded-3xl border border-line bg-panel p-5">
+    <section className="rounded-2xl border border-line bg-panel p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{t('val.refTitle')}</h2>
         <Tag tone="signal">{draft.volunteerId}</Tag>
@@ -364,14 +364,14 @@ function ReferenceForm({ draft, onSaved, onDiscard }: { draft: Draft; onSaved(id
       <button
         type="button"
         onClick={save}
-        className="mt-5 h-14 w-full rounded-full bg-signal text-base font-semibold text-bg transition hover:brightness-110"
+        className="mt-5 h-14 w-full rounded-xl bg-signal text-base font-semibold text-brand-ink transition hover:bg-signal/90"
       >
         {t('val.save')}
       </button>
       <button
         type="button"
         onClick={() => window.confirm(t('val.confirmDiscard')) && onDiscard()}
-        className="mt-2 h-11 w-full rounded-full text-sm text-label transition hover:text-fg"
+        className="mt-2 h-11 w-full rounded-xl text-sm text-label transition hover:text-fg"
       >
         {t('val.discard')}
       </button>
@@ -394,7 +394,7 @@ function SummaryCard({ session }: { session: ValidationSession }) {
           </p>
         </div>
         <div className="text-right">
-          <p className="font-mono text-lg font-light">
+          <p className="font-mono text-lg font-semibold">
             {signed(c.diff)} <span className="text-xs text-label">{c.diff !== null ? unit : ''}</span>
           </p>
           {a && (
@@ -407,7 +407,7 @@ function SummaryCard({ session }: { session: ValidationSession }) {
     );
   };
   return (
-    <section className={`rounded-3xl border bg-panel px-5 pt-4 pb-3 ${session.source === 'sim' ? 'border-amber/40' : 'border-signal/40'}`}>
+    <section className={`rounded-2xl border bg-panel px-5 pt-4 pb-3 ${session.source === 'sim' ? 'border-amber/40' : 'border-signal/40'}`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{t('val.summary')}</h2>
         <Tag tone={session.source === 'sim' ? 'amber' : 'signal'}>{session.volunteerId}</Tag>
@@ -452,14 +452,14 @@ function SessionRow({ session }: { session: ValidationSession }) {
             <button
               type="button"
               onClick={exportSamples}
-              className="h-10 flex-1 rounded-full bg-panel-2 text-xs font-semibold transition hover:bg-line-strong"
+              className="h-10 flex-1 rounded-xl bg-panel-2 text-xs font-semibold transition hover:bg-line-strong"
             >
               {t('val.exportSamples')}
             </button>
             <button
               type="button"
               onClick={() => window.confirm(t('val.confirmDelete')) && db.validations.delete(session.id)}
-              className="h-10 rounded-full border border-alert/50 px-4 text-xs font-semibold text-alert transition hover:bg-alert/10"
+              className="h-10 rounded-xl border border-alert/50 px-4 text-xs font-semibold text-alert transition hover:bg-alert/10"
             >
               {t('val.delete')}
             </button>

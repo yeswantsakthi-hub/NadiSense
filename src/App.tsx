@@ -106,10 +106,10 @@ function MainApp() {
           {SCREENS[route]()}
         </div>
       ) : (
-        <div className="mx-auto flex min-h-dvh max-w-xl flex-col">
+        <div className="mx-auto flex min-h-dvh max-w-xl flex-col bg-bg">
           <AppHeader />
           {/* Re-keyed per route so each screen fades in. */}
-          <main key={route} className="screen-in flex-1 px-4 pb-32">
+          <main key={route} className="screen-in flex-1 px-4 pb-24">
             {SCREENS[route]()}
           </main>
           <TabBar route={route} />
@@ -121,12 +121,16 @@ function MainApp() {
 
 function AppHeader() {
   return (
-    <header className="flex h-14 items-center justify-between gap-3 px-4">
-      <a href="#/dashboard" className="flex items-center gap-2 text-[15px] font-semibold tracking-tight text-fg">
-        <span aria-hidden className="size-2.5 rounded-full bg-signal shadow-[0_0_12px_var(--signal)]" />
-        NadiSense
-      </a>
-      <LinkChip />
+    <header className="sticky top-0 z-20 -mb-px bg-signal text-brand-ink">
+      <div className="flex h-14 items-center justify-between gap-3 px-4">
+        <a href="#/dashboard" className="flex items-center gap-2 text-[17px] font-bold tracking-tight">
+          <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 13h4l2-6 3.5 11 2.5-8 1.5 3H22" />
+          </svg>
+          NadiSense
+        </a>
+        <LinkChip />
+      </div>
     </header>
   );
 }
@@ -139,15 +143,15 @@ const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
   '/settings': GearIcon,
 };
 
-/** Floating icon tab bar, the same on phones and desktops. */
+/** Bottom navigation, like most Indian super apps: white bar, icon over label, brand colour when active. */
 function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
     <nav
       aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-10 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pb-[env(safe-area-inset-bottom)]"
     >
-      <ul className="mx-auto flex max-w-xl rounded-[1.75rem] border border-line bg-panel/90 p-1.5 shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+      <ul className="mx-auto flex max-w-xl">
         {NAV.map(({ route: r, label }) => {
           const active = isActive(r, route);
           const Icon = TAB_ICON[r]!;
@@ -156,11 +160,12 @@ function TabBar({ route }: { route: Route }) {
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-[1.4rem] px-0.5 text-center text-[11px] leading-tight font-medium transition-colors [overflow-wrap:anywhere] ${
-                  active ? 'bg-panel-2 text-fg' : 'text-muted hover:text-label'
+                className={`relative flex h-16 flex-col items-center justify-center gap-1 px-0.5 text-center text-[11px] leading-tight font-medium [overflow-wrap:anywhere] ${
+                  active ? 'text-signal' : 'text-muted hover:text-label'
                 }`}
               >
-                <Icon className={`size-[22px] ${active ? 'text-signal' : ''}`} />
+                {active && <span aria-hidden className="absolute top-0 h-[3px] w-10 rounded-b bg-signal" />}
+                <Icon className="size-[22px]" />
                 {t(label)}
               </a>
             </li>

@@ -1,23 +1,30 @@
-/** The NadiSense ring, drawn as a glowing band seen at an angle. Decorative. */
+/** The NadiSense ring as a product shot: brushed-metal band, sensor window, soft floor shadow. */
 export function RingArt({ active = false, className = '' }: { active?: boolean; className?: string }) {
   return (
     <svg aria-hidden viewBox="0 0 200 140" className={className}>
       <defs>
-        <radialGradient id="ring-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0" stopColor="var(--signal)" stopOpacity="0.35" />
-          <stop offset="1" stopColor="var(--signal)" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="ring-band" x1="0" x2="1">
-          <stop offset="0" stopColor="#3a404d" />
-          <stop offset="0.5" stopColor="#d9dee7" />
-          <stop offset="1" stopColor="#3a404d" />
+        <linearGradient id="ring-metal" x1="0" x2="1">
+          <stop offset="0" stopColor="#8a93a3" />
+          <stop offset="0.35" stopColor="#eef1f5" />
+          <stop offset="0.6" stopColor="#c3c9d4" />
+          <stop offset="1" stopColor="#6b7384" />
+        </linearGradient>
+        <linearGradient id="ring-inner" x1="0" x2="1">
+          <stop offset="0" stopColor="#3b4252" />
+          <stop offset="0.5" stopColor="#5b6475" />
+          <stop offset="1" stopColor="#2b3140" />
         </linearGradient>
       </defs>
-      <ellipse cx="100" cy="72" rx="96" ry="64" fill="url(#ring-glow)" className={active ? 'breathe' : ''} style={{ transformOrigin: '100px 72px' }} />
-      <ellipse cx="100" cy="70" rx="58" ry="26" fill="none" stroke="url(#ring-band)" strokeWidth="12" />
-      <ellipse cx="100" cy="70" rx="58" ry="26" fill="none" stroke="#0b0d12" strokeWidth="2" strokeOpacity="0.6" />
-      {/* Optical window glowing on the inner side. */}
-      <ellipse cx="100" cy="95" rx="9" ry="3.5" fill="var(--signal)" className={active ? 'live-dot' : ''} />
+      <ellipse cx="100" cy="122" rx="62" ry="7" fill="#0f172a" opacity="0.08" />
+      {/* Back of the band (inside surface) */}
+      <path d="M42 66 A58 26 0 0 1 158 66" fill="none" stroke="url(#ring-inner)" strokeWidth="13" />
+      {/* Front of the band */}
+      <path d="M42 66 A58 26 0 0 0 158 66" fill="none" stroke="url(#ring-metal)" strokeWidth="15" strokeLinecap="round" />
+      <path d="M46 70 A55 22 0 0 0 154 70" fill="none" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="1.5" />
+      {/* Optical sensor window */}
+      <rect x="90" y="86" width="20" height="7" rx="3.5" fill="#1b2130" />
+      <circle cx="96" cy="89.5" r="1.8" fill="#e5484d" className={active ? 'breathe' : ''} />
+      <circle cx="104" cy="89.5" r="1.8" fill="#2741c9" className={active ? 'breathe' : ''} />
     </svg>
   );
 }

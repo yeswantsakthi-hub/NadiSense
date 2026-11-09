@@ -1,19 +1,20 @@
 import type { ReactNode } from 'react';
 import { BeatStrip } from '../components/BeatStrip';
 import { EventLog } from '../components/EventLog';
-import { HeartIcon, InfoIcon } from '../components/icons';
+import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, InfoIcon, SparkIcon, BluetoothIcon, ChevronIcon } from '../components/icons';
 import { Tag } from '../components/Panel';
-import { RingGauge } from '../components/RingGauge';
 import { SessionPanel } from '../components/SessionPanel';
 import { temperatureBaseline, temperatureDrift } from '../dsp/baseline';
 import { analyseRhythm, RHYTHM_WINDOW_MS, type RhythmResult } from '../dsp/rhythm';
 import { useI18n, type MessageKey } from '../i18n';
+import { clockTime } from '../lib/format';
 import { useNow } from '../lib/useNow';
 import { FINGER_ON } from '../ring/contract';
 import { readingState, type ReadingState } from '../ring/readings';
-import { useSessions } from '../store/db';
-import { beatLog, useLiveStore } from '../store/liveStore';
+import { useSessions, useValidations } from '../store/db';
+import { beatLog, useLiveStore, type EventLevel } from '../store/liveStore';
 import { scenarioKey, useSensorStore } from '../store/sensorStore';
+import { nextVolunteerId } from '../validation/model';
 
 const STATE_TEXT: Record<Exclude<ReadingState, 'ok'>, MessageKey> = {
   'no-data': 'reading.noData',
@@ -27,8 +28,9 @@ function greetingKey(hour: number): MessageKey {
   return 'home.evening';
 }
 
-const signedDeg = (d: number) => `${d > 0 ? '+' : ''}${d.toFixed(1)}°`;
+const signedDeg = (d: number) => `${d > 0 ? '+' : ''}${d.toFixed(1)} °C`;
 
+/** Home, laid out like an Indian super app: brand band, live card, services, banners, activity. */
 export function Dashboard() {
   const { t } = useI18n();
   const now = useNow(500);
@@ -39,202 +41,228 @@ export function Dashboard() {
   const fingerOn = latest?.fingerStatus === FINGER_ON && state !== 'no-data';
   const rhythm = analyseRhythm(beatLog, now);
 
-  // Temperature: drift from this person's own baseline (ring and simulator kept apart).
   const sessions = useSessions(kind === 'sim' ? 'mock' : 'ble');
   const baseline = temperatureBaseline(sessions);
   const temp = fingerOn ? (latest?.skinTempC ?? null) : null;
   const drift = temp !== null && baseline.status === 'ready' ? temperatureDrift(temp, baseline.celsius) : null;
+  const stateText = ok ? null : t(STATE_TEXT[state]);
 
   return (
-    <div className="space-y-4 pt-2">
-      <header>
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{t(greetingKey(new Date(now).getHours()))}</h1>
-        <p className="mt-0.5 text-sm text-label">
+    <div className="pb-4">
+      {/* Brand band continues from the header; the live card overlaps it. */}
+      <section className="-mx-4 bg-signal px-4 pt-2 pb-16 text-brand-ink">
+        <h1 className="text-[22px] font-bold">{t(greetingKey(new Date(now).getHours()))}</h1>
+        <p className="mt-0.5 text-sm text-white/80">
           {kind === 'sim' ? t('home.sim', { scenario: t(scenarioKey(scenario)) }) : t('home.live')}
         </p>
-      </header>
+      </section>
 
-      {/* Hero: live heart rate inside the ring; the arc is the pulse-ox confidence. */}
-      <section aria-label={t('vital.hr')} className="flex flex-col items-center pt-2">
-        <RingGauge
-          value={fingerOn && latest ? latest.confidence / 100 : null}
-          color={state === 'hold' ? '--amber' : '--signal'}
-          size={264}
-          stroke={14}
-          sweep={300}
-          label={
-            ok && latest?.hrBpm
-              ? `${t('vital.hr')} ${latest.hrBpm} bpm`
-              : t(STATE_TEXT[state as Exclude<ReadingState, 'ok'>] ?? 'reading.noData')
-          }
-        >
-          {ok && latest?.hrBpm ? (
-            <>
-              <HeartIcon key={latest.beatSeq} className="beat-pop size-7 text-signal" />
-              <span className="mt-1 font-mono text-[76px] leading-none font-extralight tracking-tight">{latest.hrBpm}</span>
-              <span className="mt-1 text-sm text-label">bpm</span>
-            </>
-          ) : (
-            <>
-              <HeartIcon className="size-7 text-muted" />
-              <span
-                role="status"
-                className={`mt-2 max-w-[11rem] text-xl leading-snug font-medium ${state === 'hold' ? 'text-amber' : 'text-fg'}`}
-              >
-                {t(STATE_TEXT[state as Exclude<ReadingState, 'ok'>] ?? 'reading.noData')}
+      <section
+        aria-label={t('vital.hr')}
+        className="relative -mt-12 rounded-2xl border border-line bg-panel shadow-[0_4px_16px_rgba(16,24,40,0.08)]"
+      >
+        <div className="flex items-start justify-between gap-3 px-4 pt-4">
+          <div>
+            <p className="flex items-center gap-1.5 text-sm font-medium text-label">
+              <HeartIcon key={ok ? latest?.beatSeq : 'idle'} className={`size-[18px] text-hr ${ok ? 'beat-pop' : ''}`} />
+              {t('vital.hr')}
+            </p>
+            <p className="mt-1 flex items-baseline gap-1.5">
+              <span className={`font-mono text-[44px] leading-none font-bold ${ok ? 'text-fg' : 'text-line-strong'}`}>
+                {ok && latest?.hrBpm ? latest.hrBpm : '--'}
               </span>
-            </>
-          )}
-        </RingGauge>
-        <p className="-mt-3 text-xs text-muted">
-          {fingerOn && latest ? t('home.signal', { pct: latest.confidence }) : t('vital.hr')}
-        </p>
-      </section>
+              <span className="text-sm font-medium text-muted">bpm</span>
+            </p>
+          </div>
+          <dl className="grid grid-cols-2 gap-x-5 gap-y-1 text-right">
+            <dt className="text-xs text-muted">{t('vital.spo2')}</dt>
+            <dt className="text-xs text-muted">{t('vital.temp')}</dt>
+            <dd className="font-mono text-lg font-bold text-spo2">{ok && latest?.spo2Pct ? `${latest.spo2Pct}%` : '--'}</dd>
+            <dd className="font-mono text-lg font-bold text-temp">
+              {drift !== null ? signedDeg(drift) : temp !== null ? `${temp.toFixed(1)}°` : '--'}
+            </dd>
+          </dl>
+        </div>
 
-      <div className="-mx-4">
-        <BeatStrip label={t('pulse.aria')} className="h-16 opacity-80" />
-        <p className="px-4 pt-1 text-center text-[11px] text-muted">{t('pulse.beatTiming')}</p>
-      </div>
+        {stateText ? (
+          <p
+            role="status"
+            className={`mx-4 mt-3 rounded-lg px-3 py-2 text-sm font-medium ${
+              state === 'hold' ? 'bg-amber/10 text-amber' : 'bg-panel-2 text-label'
+            }`}
+          >
+            {stateText}
+          </p>
+        ) : null}
 
-      <Insight state={state} rhythm={rhythm} />
-
-      <section aria-label={t('vitals.aria')} className="grid grid-cols-3 gap-3">
-        <MiniGauge
-          title={t('vital.spo2')}
-          color="--spo2"
-          value={ok && latest?.spo2Pct ? Math.max(0, (latest.spo2Pct - 85) / 15) : null}
-          big={ok && latest?.spo2Pct ? `${latest.spo2Pct}` : '––'}
-          unit={ok && latest?.spo2Pct ? '%' : ''}
-          sub={ok ? t('vital.fromRing') : t(STATE_TEXT[state as Exclude<ReadingState, 'ok'>] ?? 'reading.noData')}
-        />
-        <MiniGauge
-          title={t('vital.temp')}
-          color="--temp"
-          value={
-            temp === null
-              ? null
-              : drift !== null
-                ? Math.max(0.05, Math.min(1, 0.5 + drift / 2))
-                : baseline.status === 'building'
-                  ? baseline.sessions / 3
-                  : null
-          }
-          big={drift !== null ? signedDeg(drift) : temp !== null ? `${temp.toFixed(1)}°` : '––'}
-          sub={
-            drift !== null
-              ? t('home.vsBaseline')
-              : baseline.status === 'building'
-                ? t('home.baselineProgress', { n: baseline.sessions })
-                : t('reading.place')
-          }
-        />
-        <MiniGauge
-          title={t('vital.rhythm')}
-          color={rhythm.status === 'irregular' ? '--alert' : '--rhythm'}
-          value={rhythm.status === 'collecting' ? rhythm.progress : 1}
-          big={rhythm.status === 'collecting' ? `${Math.round(rhythm.progress * 100)}` : rhythm.status === 'regular' ? '✓' : '!'}
-          unit={rhythm.status === 'collecting' ? '%' : ''}
-          sub={
-            rhythm.status === 'collecting'
-              ? t('home.measuring')
-              : rhythm.status === 'regular'
-                ? t('home.steady')
-                : t('rhythm.tagIrregular')
-          }
-        />
-      </section>
-
-      <RhythmCard rhythm={rhythm} />
-
-      <details className="group rounded-3xl border border-line bg-panel">
-        <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-sm font-medium text-label [&::-webkit-details-marker]:hidden">
-          {t('home.details')}
-          <span aria-hidden className="transition-transform group-open:rotate-90">
-            ›
+        <BeatStrip label={t('pulse.aria')} colorVar="--hr" className="mt-2 h-20" />
+        <div className="flex items-center justify-between border-t border-line px-4 py-2.5 text-xs text-muted">
+          <span>{t('pulse.beatTiming')}</span>
+          <span>
+            {fingerOn && latest ? t('home.signal', { pct: latest.confidence }) : ''}
+            {drift === null && baseline.status === 'building' && temp !== null
+              ? ` · ${t('home.baselineProgress', { n: baseline.sessions })}`
+              : ''}
           </span>
+        </div>
+      </section>
+
+      <Services />
+
+      <RhythmBanner rhythm={rhythm} />
+      <ValidationBanner />
+
+      <RecentActivity />
+
+      <details className="group mt-3 rounded-2xl border border-line bg-panel">
+        <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-medium text-label [&::-webkit-details-marker]:hidden">
+          {t('home.details')}
+          <ChevronIcon className="size-4 transition-transform group-open:rotate-90" />
         </summary>
         <div className="space-y-3 px-3 pb-3">
           <SessionPanel />
           <EventLog />
         </div>
       </details>
+
+      <p className="mt-4 text-center text-[11px] text-muted">{t('app.disclaimer')}</p>
     </div>
   );
 }
 
-function MiniGauge(props: { title: string; color: string; value: number | null; big: string; unit?: string; sub: string }) {
-  return (
-    <div className="flex flex-col items-center rounded-3xl border border-line bg-panel px-2 pt-4 pb-3 text-center">
-      <RingGauge value={props.value} color={props.color} size={84} stroke={7} label={`${props.title} ${props.big}${props.unit ?? ''}`}>
-        <span className="font-mono text-xl leading-none font-light">
-          {props.big}
-          {props.unit && <span className="text-xs text-label">{props.unit}</span>}
-        </span>
-      </RingGauge>
-      <p className="mt-2 text-[13px] font-medium">{props.title}</p>
-      <p className="text-[11px] leading-snug text-muted">{props.sub}</p>
-    </div>
-  );
-}
-
-/** One plain-language sentence about what is happening right now. */
-function Insight({ state, rhythm }: { state: ReadingState; rhythm: RhythmResult }) {
+/** Icon grid of everything the app can do; v2 items carry a "Soon" badge. */
+function Services() {
   const { t } = useI18n();
-  let text: string;
-  let tone = 'text-label';
-  if (state !== 'ok') {
-    text = t(state === 'no-data' ? 'insight.noData' : state === 'place' ? 'insight.place' : 'insight.hold');
-    if (state === 'hold') tone = 'text-amber';
-  } else if (rhythm.status === 'collecting') {
-    text = t('insight.collecting', { secs: Math.max(5, Math.round(((1 - rhythm.progress) * RHYTHM_WINDOW_MS) / 1000)) });
-  } else if (rhythm.status === 'regular') {
-    text = t('insight.regular');
-  } else {
-    text = t('insight.irregular');
-    tone = 'text-alert';
-  }
+  const items: { href: string; label: string; icon: (p: { className?: string }) => ReactNode; tint: string; soon?: boolean }[] = [
+    { href: '#/validate', label: t('nav.validate'), icon: CheckListIcon, tint: 'bg-signal/10 text-signal' },
+    { href: '#/history', label: t('nav.history'), icon: ChartIcon, tint: 'bg-spo2/10 text-spo2' },
+    { href: '#/report', label: t('svc.doctor'), icon: HeartIcon, tint: 'bg-hr/10 text-hr' },
+    { href: '#/settings', label: t('svc.ring'), icon: BluetoothIcon, tint: 'bg-temp/10 text-temp' },
+    { href: '#/nadi', label: t('nav.nadi'), icon: SparkIcon, tint: 'bg-rhythm/10 text-rhythm', soon: true },
+    { href: '#/ecg', label: t('svc.ecg'), icon: HeartIcon, tint: 'bg-hr/10 text-hr', soon: true },
+    { href: '#/settings', label: t('lang.label'), icon: InfoIcon, tint: 'bg-spo2/10 text-spo2' },
+    { href: '#/settings', label: t('nav.settings'), icon: GearIcon, tint: 'bg-panel-2 text-label' },
+  ];
   return (
-    <div aria-live="polite" className="flex items-start gap-3 rounded-3xl bg-panel-2/70 px-4 py-3.5">
-      <InfoIcon className={`mt-0.5 size-5 shrink-0 ${tone}`} />
-      <p className={`text-sm leading-relaxed ${tone === 'text-label' ? 'text-fg' : tone}`}>{text}</p>
-    </div>
+    <section aria-labelledby="services-title" className="mt-4 rounded-2xl border border-line bg-panel px-3 pt-4 pb-3">
+      <h2 id="services-title" className="px-1 text-[15px] font-semibold">
+        {t('home.services')}
+      </h2>
+      <ul className="mt-3 grid grid-cols-4 gap-y-4">
+        {items.map((it) => (
+          <li key={it.label}>
+            <a href={it.href} className="group flex flex-col items-center gap-1.5 rounded-xl px-1 py-1 text-center">
+              <span className={`relative grid size-12 place-items-center rounded-2xl ${it.tint} transition group-hover:scale-105`}>
+                <it.icon className="size-6" />
+                {it.soon && (
+                  <span className="absolute -top-1.5 -right-2 rounded-full bg-amber px-1.5 py-px text-[9px] font-bold text-white">
+                    {t('svc.soon')}
+                  </span>
+                )}
+              </span>
+              <span className="text-[11.5px] leading-tight font-medium text-fg [overflow-wrap:anywhere]">{it.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
-/** Rhythm details: result, the two numbers behind it, and the disclaimer. */
-function RhythmCard({ rhythm }: { rhythm: RhythmResult }) {
+/** Rhythm screen as a banner card: progress while measuring, then the result with the disclaimer. */
+function RhythmBanner({ rhythm }: { rhythm: RhythmResult }) {
   const { t } = useI18n();
   const irregular = rhythm.status === 'irregular';
-  let body: ReactNode;
-  if (rhythm.status === 'collecting') {
-    body = <p className="text-sm text-label">{t('rhythm.progress', { pct: Math.round(rhythm.progress * 100) })}</p>;
-  } else {
-    body = (
-      <>
-        <p className={`text-base font-semibold ${irregular ? 'text-alert' : ''}`}>
-          {irregular ? t('rhythm.irregular') : t('rhythm.regular')}
-        </p>
-        <p className="mt-1 font-mono text-xs text-label">{t('rhythm.metrics', { rmssd: rhythm.rmssdMs, pnn50: rhythm.pnn50 })}</p>
-      </>
-    );
-  }
+  const collecting = rhythm.status === 'collecting';
   return (
     <section
       aria-label={t('vital.rhythm')}
-      className={`rounded-3xl border bg-panel px-5 py-4 ${irregular ? 'border-alert/60' : 'border-line'}`}
+      aria-live="polite"
+      className={`mt-3 rounded-2xl border p-4 ${irregular ? 'border-alert/40 bg-alert/5' : 'border-rhythm/20 bg-rhythm/5'}`}
     >
-      <header className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="label">{t('vital.rhythm')}</h2>
-        {rhythm.status === 'collecting' ? (
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-[15px] font-semibold">{t('vital.rhythm')}</h2>
+        {collecting ? (
           <Tag>{t('tag.pending')}</Tag>
         ) : (
           <Tag tone={irregular ? 'alert' : 'signal'}>{irregular ? t('rhythm.tagIrregular') : t('rhythm.tagRegular')}</Tag>
         )}
-      </header>
-      {body}
-      <p className="mt-3 border-t border-line pt-3 text-[11px] leading-relaxed text-muted">
+      </div>
+      {collecting ? (
+        <>
+          <p className="mt-1 text-sm text-label">
+            {t('insight.collecting', {
+              secs: Math.max(5, Math.round(((1 - rhythm.progress) * RHYTHM_WINDOW_MS) / 1000)),
+            })}
+          </p>
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(rhythm.progress * 100)}
+            aria-label={t('vital.rhythm')}
+            className="mt-3 h-2 overflow-hidden rounded-full bg-white"
+          >
+            <div className="h-full rounded-full bg-rhythm transition-[width]" style={{ width: `${rhythm.progress * 100}%` }} />
+          </div>
+        </>
+      ) : (
+        <>
+          <p className={`mt-1 text-base font-semibold ${irregular ? 'text-alert' : 'text-fg'}`}>
+            {irregular ? t('rhythm.irregular') : t('rhythm.regular')}
+          </p>
+          <p className="mt-0.5 font-mono text-xs text-label">{t('rhythm.metrics', { rmssd: rhythm.rmssdMs, pnn50: rhythm.pnn50 })}</p>
+        </>
+      )}
+      <p className="mt-3 text-[11px] text-muted">
         {t('rhythm.window')} · {t('app.disclaimer')}
       </p>
+    </section>
+  );
+}
+
+/** Shortcut for accuracy testing, with the next volunteer code ready. */
+function ValidationBanner() {
+  const { t } = useI18n();
+  const sessions = useValidations();
+  return (
+    <a
+      href="#/validate"
+      className="mt-3 flex items-center gap-3 rounded-2xl border border-temp/25 bg-temp/5 p-4 transition hover:bg-temp/10"
+    >
+      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-temp/15 text-temp">
+        <CheckListIcon className="size-6" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[15px] font-semibold">{t('val.title')}</span>
+        <span className="block text-sm text-label">{t('val.nextVolunteer', { id: nextVolunteerId(sessions[0]?.volunteerId ?? null) })}</span>
+      </span>
+      <ChevronIcon className="size-5 text-muted" />
+    </a>
+  );
+}
+
+const DOT: Record<EventLevel, string> = { live: 'bg-signal', info: 'bg-line-strong', motion: 'bg-amber', alert: 'bg-alert' };
+
+/** Latest events as a transaction-style list. */
+function RecentActivity() {
+  const { t } = useI18n();
+  const events = useLiveStore((s) => s.events).slice(0, 4);
+  if (!events.length) return null;
+  return (
+    <section aria-labelledby="recent-title" className="mt-3 rounded-2xl border border-line bg-panel px-4 pt-4 pb-1">
+      <h2 id="recent-title" className="text-[15px] font-semibold">
+        {t('home.recent')}
+      </h2>
+      <ul className="mt-1 divide-y divide-line">
+        {events.map((e) => (
+          <li key={e.id} className="flex items-center gap-3 py-3">
+            <span aria-hidden className={`size-2.5 shrink-0 rounded-full ${DOT[e.level]}`} />
+            <span className="min-w-0 flex-1 text-sm">{t(e.key, e.vars?.scenario ? { ...e.vars, scenario: t(scenarioKey(e.vars.scenario as never)) } : e.vars)}</span>
+            <time className="font-mono text-xs text-muted">{clockTime(e.at)}</time>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

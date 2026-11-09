@@ -6,6 +6,8 @@ interface Props {
   label: string;
   windowMs?: number;
   className?: string;
+  /** CSS colour variable for the trace. */
+  colorVar?: string;
 }
 
 /**
@@ -13,7 +15,7 @@ interface Props {
  * reports is drawn as one stylised pulse at its real time. No beats → a flat line; nothing invented.
  * Beats flagged for movement are drawn in the warning colour.
  */
-export function BeatStrip({ label, windowMs = 6000, className = '' }: Props) {
+export function BeatStrip({ label, windowMs = 6000, className = '', colorVar = '--signal' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export function BeatStrip({ label, windowMs = 6000, className = '' }: Props) {
 
     const css = getComputedStyle(document.documentElement);
     const color = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
-    const trace = color('--signal', '#2ec4b6');
+    const trace = color(colorVar, '#e5484d');
     const warn = color('--amber', '#e8b44c');
     const grid = color('--grid', 'rgba(255,255,255,0.05)');
 
@@ -105,7 +107,7 @@ export function BeatStrip({ label, windowMs = 6000, className = '' }: Props) {
       cancelAnimationFrame(frame);
       observer.disconnect();
     };
-  }, [windowMs]);
+  }, [windowMs, colorVar]);
 
   return <canvas ref={canvasRef} role="img" aria-label={label} className={`block w-full ${className}`} />;
 }

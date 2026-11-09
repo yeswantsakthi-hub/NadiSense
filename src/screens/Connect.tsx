@@ -52,29 +52,28 @@ export function Connect() {
   const fix = errorKey ? FIX[errorKey] : undefined;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pt-8 pb-8">
-      <p className="text-center text-[15px] font-semibold tracking-tight">
-        <span aria-hidden className="mr-2 inline-block size-2.5 rounded-full bg-signal shadow-[0_0_12px_var(--signal)]" />
-        NadiSense
-      </p>
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pb-8">
+      {/* Brand band with the product shot sitting on a white card that overlaps it. */}
+      <section className="-mx-4 bg-signal px-5 pt-5 pb-20 text-brand-ink">
+        <p className="flex items-center gap-2 text-[17px] font-bold">
+          <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 13h4l2-6 3.5 11 2.5-8 1.5 3H22" />
+          </svg>
+          NadiSense
+        </p>
+        <h1 className="mt-5 text-[26px] leading-tight font-bold">
+          {connecting && kind === 'ring' ? t('pair.searching') : t('pair.title')}
+        </h1>
+        <p className="mt-1 text-sm text-white/80">{t('pair.subtitle')}</p>
+      </section>
 
-      <RingArt active={connecting} className="mx-auto mt-4 h-40 w-full max-w-xs" />
+      <div className="-mt-14 rounded-2xl border border-line bg-panel px-4 pt-3 pb-1 shadow-[0_4px_16px_rgba(16,24,40,0.08)]">
+        <RingArt active={connecting} className="mx-auto h-32 w-full max-w-[260px]" />
 
-      <h1 className="mt-2 text-center text-[28px] leading-tight font-semibold tracking-tight">
-        {connecting && kind === 'ring' ? t('pair.searching') : t('pair.title')}
-      </h1>
-      <p className="mt-2 text-center text-sm text-label">{t('pair.subtitle')}</p>
-
-      {askConsent && (
-        <div className="mt-5">
-          <ConsentPanel firstTime />
-        </div>
-      )}
-
-      <ol className="mt-6 space-y-2">
+      <ol className="divide-y divide-line">
         {steps.map(({ icon: Icon, title, hint }, i) => (
-          <li key={title} className="flex items-start gap-3 rounded-2xl bg-panel px-4 py-3">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-panel-2 text-signal">
+          <li key={title} className="flex items-start gap-3 py-3">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-signal/10 text-signal">
               <Icon className="size-[18px]" />
             </span>
             <span className="min-w-0">
@@ -87,6 +86,13 @@ export function Connect() {
           </li>
         ))}
       </ol>
+      </div>
+
+      {askConsent && (
+        <div className="mt-4">
+          <ConsentPanel firstTime />
+        </div>
+      )}
 
       {error && (
         <div role="alert" className="mt-4 rounded-2xl border border-alert/50 bg-alert/10 px-4 py-3">
@@ -99,7 +105,7 @@ export function Connect() {
         type="button"
         disabled={connecting || !bluetooth}
         onClick={() => start('ring')}
-        className="mt-5 h-14 w-full rounded-full bg-signal text-base font-semibold text-bg shadow-[0_8px_30px_rgba(46,196,182,0.35)] transition hover:brightness-110 disabled:opacity-50 disabled:shadow-none"
+        className="mt-5 h-14 w-full rounded-xl bg-signal text-base font-semibold text-brand-ink transition hover:bg-signal/90 disabled:opacity-50"
       >
         {connecting && kind === 'ring' ? t('pair.searching') : error ? t('pair.retry') : t('connect.pair')}
       </button>
@@ -115,12 +121,12 @@ export function Connect() {
         <button
           type="button"
           onClick={() => setShowDemo(true)}
-          className="h-12 w-full rounded-full border border-line-strong text-sm font-medium transition hover:border-fg/50"
+          className="h-12 w-full rounded-xl border border-line-strong text-sm font-medium transition hover:border-fg/50"
         >
           {t('pair.tryDemo')}
         </button>
       ) : (
-        <div className="rounded-3xl border border-line bg-panel p-4">
+        <div className="rounded-2xl border border-line bg-panel p-4">
           <p className="text-sm font-medium">{t('connect.demo')}</p>
           <p className="mt-0.5 text-xs text-muted">{t('pair.demoHint')}</p>
           <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label={t('connect.scenario')}>
@@ -132,7 +138,7 @@ export function Connect() {
                 aria-checked={s === scenario}
                 onClick={() => setScenario(s)}
                 className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
-                  s === scenario ? 'bg-signal text-bg' : 'bg-panel-2 text-label hover:text-fg'
+                  s === scenario ? 'bg-signal text-brand-ink' : 'bg-panel-2 text-label hover:text-fg'
                 }`}
               >
                 {t(scenarioKey(s))}
@@ -143,7 +149,7 @@ export function Connect() {
             type="button"
             disabled={connecting}
             onClick={() => start('sim')}
-            className="mt-4 h-12 w-full rounded-full bg-panel-2 text-sm font-semibold transition hover:bg-line-strong disabled:opacity-60"
+            className="mt-4 h-12 w-full rounded-xl bg-panel-2 text-sm font-semibold transition hover:bg-line-strong disabled:opacity-60"
           >
             {connecting && kind === 'sim' ? t('connect.starting') : t('connect.useDemo')}
           </button>

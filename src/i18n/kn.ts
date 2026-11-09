@@ -56,7 +56,6 @@ export const kn: Messages = {
 
   'pulse.aria': 'ಉಂಗುರದ ಇನ್‌ಫ್ರಾರೆಡ್ ಸೆನ್ಸರ್‌ನಿಂದ ಲೈವ್ ನಾಡಿ ತರಂಗ. ಛಾಯೆಯ ಭಾಗಗಳು ಚಲನೆಗಾಗಿ ಗುರುತಿಸಲ್ಪಟ್ಟಿವೆ.',
 
-  'vitals.aria': 'ಜೀವಸೂಚಕಗಳು',
   'vital.hr': 'ಹೃದಯ ಬಡಿತ',
   'vital.spo2': 'SpO₂',
   'vital.temp': 'ಚರ್ಮದ ತಾಪ',
@@ -184,7 +183,6 @@ export const kn: Messages = {
   'reading.hold': 'ಸ್ಥಿರವಾಗಿರಿ…',
   'pulse.beatTiming': 'ಉಂಗುರದಿಂದ ಬಡಿತದ ಸಮಯ',
   'vital.rhythm': 'ಲಯ',
-  'vital.fromRing': 'ಉಂಗುರದಿಂದ',
   'session.packets': 'ಪ್ಯಾಕೆಟ್‌ಗಳು',
   'session.lastPacket': 'ಕೊನೆಯ ಪ್ಯಾಕೆಟ್',
 
@@ -193,7 +191,6 @@ export const kn: Messages = {
   'rhythm.tagIrregular': 'ಅನಿಯಮಿತವಿರಬಹುದು',
   'rhythm.regular': 'ಅನಿಯಮಿತ ಲಯ ಕಂಡುಬಂದಿಲ್ಲ',
   'rhythm.irregular': 'ಅನಿಯಮಿತ ಲಯ ಇರಬಹುದು — ವೈದ್ಯರಲ್ಲಿ ಪರೀಕ್ಷಿಸಿ',
-  'rhythm.progress': '2 ನಿಮಿಷ ಸ್ಥಿರ ಬಡಿತಗಳು ಬೇಕು · {pct}%',
   'rhythm.metrics': 'RMSSD {rmssd} ms · {pnn50}% ಬಡಿತ ಬದಲಾವಣೆಗಳು > 50 ms',
   'rhythm.window': 'ಕೊನೆಯ 2 ನಿಮಿಷಗಳು, ಚಲನೆ ಬಿಟ್ಟು',
   'v2.tag': 'v2 ನಲ್ಲಿ ಬರುತ್ತದೆ',
@@ -256,17 +253,9 @@ export const kn: Messages = {
   'home.live': 'ನಿಮ್ಮ ಉಂಗುರದಿಂದ ಲೈವ್',
   'home.sim': 'ಸಿಮ್ಯುಲೇಟೆಡ್ ಉಂಗುರ · {scenario}',
   'home.signal': 'ಸಿಗ್ನಲ್ ಗುಣಮಟ್ಟ {pct}%',
-  'home.measuring': 'ಅಳೆಯುತ್ತಿದೆ',
-  'home.steady': 'ಸ್ಥಿರ',
-  'home.vsBaseline': 'ನಿಮ್ಮ ಮೂಲರೇಖೆಗೆ ಹೋಲಿಸಿ',
   'home.baselineProgress': 'ಮೂಲರೇಖೆ {n}/3',
   'home.details': 'ಸೆಷನ್ ವಿವರಗಳು',
-  'insight.noData': 'ಉಂಗುರದಿಂದ ಡೇಟಾಗಾಗಿ ಕಾಯುತ್ತಿದೆ…',
-  'insight.place': 'ಅಳೆಯಲು ಪ್ರಾರಂಭಿಸಲು ಉಂಗುರವನ್ನು ಬೆರಳಿಗೆ ಧರಿಸಿ.',
-  'insight.hold': 'ಕೆಲವು ಸೆಕೆಂಡು ಸ್ಥಿರವಾಗಿರಿ. ಚಲಿಸುವಾಗ ರೀಡಿಂಗ್ ನಿಲ್ಲುತ್ತದೆ.',
   'insight.collecting': 'ಸ್ಥಿರವಾಗಿರಿ: ನಿಮ್ಮ ಲಯ ಪರಿಶೀಲಿಸಲು ಇನ್ನೂ ಸುಮಾರು {secs} ಸೆಕೆಂಡು.',
-  'insight.regular': 'ಕೊನೆಯ 2 ನಿಮಿಷಗಳಲ್ಲಿ ಲಯ ಸ್ಥಿರವಾಗಿತ್ತು.',
-  'insight.irregular': 'ಕೊನೆಯ 2 ನಿಮಿಷಗಳು ಅನಿಯಮಿತವಾಗಿ ಕಂಡವು. ಇದು ಸ್ಕ್ರೀನಿಂಗ್ ಸೂಚನೆ, ರೋಗನಿರ್ಣಯವಲ್ಲ; ವೈದ್ಯರಲ್ಲಿ ಪರೀಕ್ಷಿಸಿಕೊಳ್ಳಬಹುದು.',
   'pair.title': 'ನಿಮ್ಮ ಉಂಗುರ ಜೋಡಿಸಿ',
   'pair.subtitle': 'ಮೂರು ಸಣ್ಣ ಪರಿಶೀಲನೆಗಳು, ನಂತರ ಸಂಪರ್ಕಿಸಿ ಒತ್ತಿ.',
   'pair.searching': 'ನಿಮ್ಮ ಉಂಗುರ ಹುಡುಕುತ್ತಿದೆ…',
@@ -298,4 +287,11 @@ export const kn: Messages = {
   'val.within': '±{tol} {unit} ಒಳಗೆ',
   'val.outside': '±{tol} {unit} ಹೊರಗೆ',
   'history.hrChart': 'ಸರಾಸರಿ ಹೃದಯ ಬಡಿತ',
+
+  'home.services': 'ಸೇವೆಗಳು',
+  'home.recent': 'ಇತ್ತೀಚಿನ ಚಟುವಟಿಕೆ',
+  'svc.doctor': 'ವೈದ್ಯರ ಲಿಂಕ್',
+  'svc.ring': 'ನನ್ನ ಉಂಗುರ',
+  'svc.ecg': 'ECG',
+  'svc.soon': 'ಶೀಘ್ರದಲ್ಲಿ',
 };
