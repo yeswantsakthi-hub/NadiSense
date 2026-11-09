@@ -24,7 +24,7 @@ describe('dictionaries', () => {
 
 describe('translate', () => {
   it('fills placeholders', () => {
-    expect(translate('en', 'ev.still', { secs: 3 })).toBe('Hand still again · 3 s of signal flagged');
+    expect(translate('en', 'ev.lowBattery', { pct: 12 })).toBe('Ring battery low (12%)');
     expect(translate('ta', 'auth.welcome', { name: 'Meena' })).toBe('வணக்கம், Meena');
   });
 

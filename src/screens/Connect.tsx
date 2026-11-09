@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
 import { useAuthStore } from '../auth/authStore';
 import { useCloudStore } from '../cloud/cloudStore';
 import { ConsentPanel } from '../components/CloudPanels';
 import { Masthead } from '../components/Masthead';
 import { Panel, Tag } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
-import { isWebBluetoothAvailable } from '../data/BleSource';
-import { SCENARIOS } from '../data/mockModel';
+import { browserBluetooth } from '../ring/webBluetooth';
+import { SIM_SCENARIOS } from '../ring/SimulatedRing';
 import { isMessageKey, useI18n } from '../i18n';
 import { navigate } from '../lib/route';
 import { scenarioKey, useSensorStore, type SourceKind } from '../store/sensorStore';
@@ -18,11 +19,19 @@ export function Connect() {
   // Ask once, right after the first sign-in, what may be stored in the cloud.
   const askConsent = useCloudStore((s) => s.loaded && s.consent.decidedAt === null) && account !== null;
   const connecting = status === 'connecting';
-  const bluetooth = isWebBluetoothAvailable();
+  const bluetooth = browserBluetooth() !== undefined;
 
   const start = async (k: SourceKind) => {
     if (await connect(k)) navigate('/dashboard');
   };
+
+  // A ring paired earlier can often reconnect without the chooser.
+  useEffect(() => {
+    useSensorStore
+      .getState()
+      .restore()
+      .then((ok) => ok && navigate('/dashboard'));
+  }, []);
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 pt-10 pb-8">
@@ -43,7 +52,7 @@ export function Connect() {
           <button
             type="button"
             disabled={connecting}
-            onClick={() => start('ble')}
+            onClick={() => start('ring')}
             className="group flex w-full items-center gap-3 rounded-[3px] border border-signal/60 bg-signal/10 p-3 text-left transition-colors hover:bg-signal/15 disabled:opacity-60"
           >
             <span className="min-w-0 flex-1">
@@ -56,7 +65,7 @@ export function Connect() {
               </span>
             </span>
             <span aria-hidden className="font-mono text-signal">
-              {connecting && kind === 'ble' ? '···' : '→'}
+              {connecting && kind === 'ring' ? '···' : '→'}
             </span>
           </button>
 
@@ -68,16 +77,16 @@ export function Connect() {
             <Segmented
               legend={t('connect.scenario')}
               value={scenario}
-              options={SCENARIOS.map((s) => ({ value: s, label: t(scenarioKey(s)) }))}
+              options={SIM_SCENARIOS.map((s) => ({ value: s, label: t(scenarioKey(s)) }))}
               onChange={setScenario}
             />
             <button
               type="button"
               disabled={connecting}
-              onClick={() => start('mock')}
+              onClick={() => start('sim')}
               className="mt-3 h-11 w-full rounded-[3px] border border-line-strong font-semibold transition-colors hover:border-fg/60 disabled:opacity-60"
             >
-              {connecting && kind === 'mock' ? t('connect.starting') : t('connect.useDemo')}
+              {connecting && kind === 'sim' ? t('connect.starting') : t('connect.useDemo')}
             </button>
           </div>
 

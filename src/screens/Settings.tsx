@@ -3,19 +3,20 @@ import { ConsentPanel, DataPanel, ProfilePanel } from '../components/CloudPanels
 import { LanguagePicker } from '../components/LanguagePicker';
 import { Panel, Tag, type Tone } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
-import { SCENARIOS } from '../data/mockModel';
+import { SIM_SCENARIOS } from '../ring/SimulatedRing';
 import { isMessageKey, useI18n, type MessageKey } from '../i18n';
 import { scenarioKey, useSensorStore, type ConnectionStatus, type SourceKind } from '../store/sensorStore';
 
 const STATUS: Record<ConnectionStatus, { key: MessageKey; tone: Tone }> = {
   connected: { key: 'settings.connected', tone: 'signal' },
   connecting: { key: 'settings.connecting', tone: 'label' },
+  reconnecting: { key: 'link.reconnecting', tone: 'amber' },
   disconnected: { key: 'settings.offline', tone: 'muted' },
 };
 
 export function Settings() {
   const { t } = useI18n();
-  const { kind, scenario, status, error, setKind, setScenario, connect, disconnect } = useSensorStore();
+  const { kind, scenario, status, error, source, setKind, setScenario, connect, disconnect } = useSensorStore();
   const { account, signOut } = useAuthStore();
 
   return (
@@ -64,30 +65,30 @@ export function Settings() {
               legend={t('settings.source')}
               value={kind}
               options={[
-                { value: 'mock', label: t('settings.demo') },
-                { value: 'ble', label: t('settings.ring') },
+                { value: 'ring', label: t('settings.ring') },
+                { value: 'sim', label: t('settings.demo') },
               ]}
               onChange={setKind}
             />
-            {kind === 'mock' && (
+            {kind === 'sim' && (
               <Segmented
                 legend={t('settings.scenario')}
                 value={scenario}
-                options={SCENARIOS.map((s) => ({ value: s, label: t(scenarioKey(s)) }))}
+                options={SIM_SCENARIOS.map((s) => ({ value: s, label: t(scenarioKey(s)) }))}
                 onChange={setScenario}
               />
             )}
             <button
               type="button"
               disabled={status === 'connecting'}
-              onClick={() => (status === 'connected' ? disconnect() : connect())}
+              onClick={() => (source ? disconnect() : connect())}
               className={`h-11 w-full rounded-[3px] border font-semibold transition-colors disabled:opacity-60 ${
-                status === 'connected'
+                source
                   ? 'border-line-strong hover:border-fg/60'
                   : 'border-signal/60 bg-signal/10 text-fg hover:bg-signal/15'
               }`}
             >
-              {status === 'connected' ? t('settings.disconnect') : t('settings.connect')}
+              {source ? t('settings.disconnect') : t('settings.connect')}
             </button>
             {error && (
               <p role="alert" className="border-l-2 border-alert pl-3 text-sm text-alert">

@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useAuthStore } from './auth/authStore';
+import { LinkChip } from './components/LinkChip';
 import { SessionMonitor } from './components/SessionMonitor';
 import { useDocumentLang, useI18n, type MessageKey } from './i18n';
-import { clockTime } from './lib/format';
+
 import { readShareToken, type Route } from './lib/route';
-import { useNow } from './lib/useNow';
+
 import { Connect } from './screens/Connect';
 import { Dashboard } from './screens/Dashboard';
 import { EcgCheck } from './screens/EcgCheck';
@@ -14,7 +15,7 @@ import { Report } from './screens/Report';
 import { Settings } from './screens/Settings';
 import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
-import { scenarioKey, useSensorStore } from './store/sensorStore';
+import { useSensorStore } from './store/sensorStore';
 
 const SCREENS: Record<Route, () => ReactNode> = {
   '/signin': () => <SignIn />,
@@ -48,7 +49,8 @@ function readRoute(): Route | null {
 /** Hash routing keeps the app a static bundle that works offline and from any path. */
 function useRoute(): Route {
   const authStatus = useAuthStore((s) => s.status);
-  const connected = useSensorStore((s) => s.status === 'connected');
+  // A ring that is reconnecting still counts: keep the person on their screen.
+  const connected = useSensorStore((s) => s.source !== null);
   const [route, setRoute] = useState<Route | null>(readRoute);
 
   useEffect(() => {
@@ -111,20 +113,10 @@ function MainApp() {
 
 function AppHeader({ route }: { route: Route }) {
   const { t } = useI18n();
-  const now = useNow();
-  const { kind, scenario, status } = useSensorStore();
-  const context =
-    status !== 'connected'
-      ? t('header.noRing')
-      : kind === 'mock'
-        ? t('header.demoRing', { scenario: t(scenarioKey(scenario)) })
-        : t('header.ring');
-
   return (
-    <header className="grid h-12 grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 lg:h-14 lg:px-4">
-      <div className="min-w-0">
-        <p className="hidden truncate text-[11px] text-label sm:block lg:hidden">{context}</p>
-        <nav aria-label={t('nav.main')} className="hidden lg:block">
+    <header className="flex h-12 items-center justify-between gap-3 px-3 lg:grid lg:h-14 lg:grid-cols-[1fr_auto_1fr] lg:px-4">
+      <div className="hidden min-w-0 lg:block">
+        <nav aria-label={t('nav.main')}>
           <ul className="flex gap-5">
             {NAV.map(({ route: r, label }) => {
               const active = isActive(r, route);
@@ -148,9 +140,8 @@ function AppHeader({ route }: { route: Route }) {
       <a href="#/dashboard" className="keep-tracking font-mono text-sm font-semibold tracking-[0.42em] text-fg lg:text-base">
         NADI<span className="text-signal">SENSE</span>
       </a>
-      <div className="flex items-center justify-end gap-4 text-[11px] text-label">
-        <span className="hidden truncate lg:inline">{context}</span>
-        <time className="font-mono text-muted tabular-nums">{clockTime(now)}</time>
+      <div className="flex justify-end">
+        <LinkChip />
       </div>
     </header>
   );

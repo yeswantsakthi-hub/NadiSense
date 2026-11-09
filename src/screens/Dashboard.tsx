@@ -1,178 +1,103 @@
+import { BeatStrip } from '../components/BeatStrip';
 import { EventLog } from '../components/EventLog';
-import { Panel } from '../components/Panel';
-import { RecordButton } from '../components/RecordButton';
-import { NadiPanel, SessionPanel } from '../components/SessionPanel';
-import { StatusBanner } from '../components/StatusBanner';
+import { Tag } from '../components/Panel';
+import { SessionPanel } from '../components/SessionPanel';
 import { VitalCard } from '../components/VitalCard';
-import { WaveformCanvas } from '../components/WaveformCanvas';
-import { PPG_RATE_HZ } from '../data/SensorSource';
-import { useI18n } from '../i18n';
+import { useI18n, type MessageKey } from '../i18n';
+import { readingState, type ReadingState } from '../ring/readings';
 import { useNow } from '../lib/useNow';
-import { imuBuffer, ppgBuffer, useLiveStore } from '../store/liveStore';
-import { scenarioKey, useSensorStore } from '../store/sensorStore';
+import { useLiveStore } from '../store/liveStore';
+import { useSensorStore } from '../store/sensorStore';
 
-const WINDOW_MS = 5000;
-const getMotionBands = () => useLiveStore.getState().motionSegments;
+const STATE_TEXT: Record<Exclude<ReadingState, 'ok'>, MessageKey> = {
+  'no-data': 'reading.noData',
+  place: 'reading.place',
+  hold: 'reading.hold',
+};
 
 export function Dashboard() {
-  const { t, ago } = useI18n();
-  const now = useNow();
+  const { t } = useI18n();
+  const now = useNow(500);
   const kind = useSensorStore((s) => s.kind);
-  const scenario = useSensorStore((s) => s.scenario);
-  const { connectedAt, moving, movingSince, streams, temp, battery } = useLiveStore();
-
+  const { latest, lastPacketAt } = useLiveStore();
+  const state = readingState(latest, lastPacketAt, now);
+  const ok = state === 'ok';
   const pending = { text: t('tag.pending'), tone: 'muted' } as const;
-  const sourceName = kind === 'mock' ? t('source.demo') : t('source.ring');
-  const liveCount = Object.values(streams).filter(Boolean).length;
-  const kpis = [
-    { label: t('kpi.streams'), value: `${liveCount}/4` },
-    {
-      label: t('kpi.battery'),
-      value: battery === null ? '––' : `${battery}%`,
-      tone: battery !== null && battery < 20 ? ('amber' as const) : ('signal' as const),
-    },
-  ];
-  const connected = t('banner.connected', { ago: ago(connectedAt ?? now, now) });
+  const stateTag = ok
+    ? ({ text: t('tag.live'), tone: 'signal' } as const)
+    : ({ text: t(STATE_TEXT[state]), tone: state === 'hold' ? 'amber' : 'muted' } as const);
 
   return (
     <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_340px]">
-      <div className="lg:col-span-2">
-        {moving ? (
-          <StatusBanner
-            status={t('status.movement')}
-            tone="amber"
-            title={t('banner.moveTitle')}
-            subtitle={t('banner.moveSub', { ago: ago(movingSince ?? now, now) })}
-            lead={t('banner.moveLead')}
-            points={[t('banner.move1'), t('banner.move2'), t('banner.move3')]}
-            kpis={kpis}
-          />
-        ) : (
-          <StatusBanner
-            status={t('status.live')}
-            tone="signal"
-            title={t('banner.liveTitle', { source: sourceName })}
-            subtitle={
-              kind === 'mock'
-                ? `${connected} · ${t('banner.scenario', { scenario: t(scenarioKey(scenario)) })}`
-                : connected
-            }
-            lead={t('banner.liveLead')}
-            points={[t('banner.live1', { hz: PPG_RATE_HZ }), t('banner.live2'), t('banner.live3')]}
-            kpis={kpis}
-          />
-        )}
-      </div>
-
       <div className="min-w-0 space-y-3">
-        <Panel
-          flush
-          label={t('pulse.title')}
-          className="-mx-3 rounded-none border-x-0 sm:mx-0 sm:rounded-[3px] sm:border-x"
-          aside={
-            <>
-              <span className="flex items-center gap-1.5">
-                <span aria-hidden className="size-2 rounded-full bg-signal" />
-                {t('pulse.clean')}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span aria-hidden className="size-2 rounded-[1px] border border-amber bg-amber/20" />
-                {t('pulse.motion')}
-              </span>
-            </>
-          }
+        <section
+          aria-label={t('vital.hr')}
+          className="-mx-3 border-y border-line bg-panel sm:mx-0 sm:rounded-[3px] sm:border-x"
         >
-          <WaveformCanvas
-            buffer={ppgBuffer}
-            windowMs={WINDOW_MS}
-            invert
-            getBands={getMotionBands}
-            excludeBandsFromScale
-            label={t('pulse.aria')}
-            className="h-60 sm:h-72 lg:h-80"
-          />
-          <div className="flex items-center justify-between border-t border-line px-3 pt-2">
-            <span className="label">{t('pulse.accel')}</span>
-            <span className={`font-mono text-[11px] ${moving ? 'text-amber' : 'text-muted'}`}>
-              {moving ? t('pulse.moving') : t('pulse.still')}
-            </span>
-          </div>
-          <WaveformCanvas
-            buffer={imuBuffer}
-            windowMs={WINDOW_MS}
-            colorVar="--label"
-            minSpan={0.25}
-            grid={false}
-            getBands={getMotionBands}
-            label={t('pulse.accelAria')}
-            className="h-14"
-          />
-          <p className="flex justify-between px-3 py-1.5 font-mono text-[11px] text-muted">
-            <span>−{WINDOW_MS / 1000} s</span>
-            <span>{t('pulse.now')}</span>
-          </p>
-          <RecordButton />
-        </Panel>
+          <header className="flex items-start justify-between gap-3 px-3 pt-3">
+            <div>
+              <h2 className="label">{t('vital.hr')}</h2>
+              <p className="mt-1 flex items-baseline gap-2">
+                <span className={`font-mono text-5xl font-semibold tabular-nums ${ok ? '' : 'text-muted/60'}`}>
+                  {ok && latest?.hrBpm ? latest.hrBpm : '––'}
+                </span>
+                <span className="text-sm text-muted">bpm</span>
+              </p>
+              {!ok && (
+                <p role="status" className={`mt-1 text-sm font-semibold ${state === 'hold' ? 'text-amber' : 'text-label'}`}>
+                  {t(STATE_TEXT[state])}
+                </p>
+              )}
+            </div>
+            <Tag tone={stateTag.tone}>{stateTag.text}</Tag>
+          </header>
+          <BeatStrip label={t('pulse.aria')} className="mt-2 h-36 sm:h-44" />
+          <footer className="flex justify-between gap-3 border-t border-line px-3 py-2 text-[11px] text-label">
+            <span>{t('pulse.beatTiming')}</span>
+            {latest && latest.fingerStatus === 3 && (
+              <span className="font-mono tabular-nums">{t('pulse.confidence', { pct: latest.confidence })}</span>
+            )}
+          </footer>
+        </section>
 
-        <section aria-label={t('vitals.aria')} className="grid grid-cols-2 gap-3 xl:grid-cols-3">
-          <VitalCard
-            label={t('vital.hr')}
-            unit="bpm"
-            tag={pending}
-            detail={t('vital.baseline')}
-            footer={t('vital.hrSource')}
-            footerAside={t('vital.beatToBeat')}
-          />
+        <section aria-label={t('vitals.aria')} className="grid grid-cols-2 gap-3">
           <VitalCard
             label={t('vital.spo2')}
+            value={ok && latest?.spo2Pct ? String(latest.spo2Pct) : undefined}
             unit="%"
-            tag={pending}
-            detail={t('vital.baseline')}
-            footer={t('vital.spo2Source')}
-            footerAside={t('vital.per10s')}
-          />
-          <VitalCard
-            label={t('vital.hrv')}
-            unit="ms"
-            tag={pending}
-            detail={t('vital.rmssdBaseline')}
-            footer={t('vital.hrvSource')}
-            footerAside="RMSSD"
-          />
-          <VitalCard
-            label={t('vital.resp')}
-            unit="/min"
-            tag={pending}
-            detail={t('vital.baseline')}
-            footer={t('vital.respSource')}
-            footerAside={t('vital.per30s')}
+            tag={stateTag}
+            detail={ok ? t('vital.spo2Source') : t(STATE_TEXT[state as Exclude<ReadingState, 'ok'>] ?? 'reading.noData')}
+            footer={t('vital.fromRing')}
           />
           <VitalCard
             label={t('vital.temp')}
-            value={temp ? temp.celsius.toFixed(1) : undefined}
+            value={latest?.skinTempC != null && latest.fingerStatus === 3 ? latest.skinTempC.toFixed(1) : undefined}
             unit="°C"
-            tag={temp ? { text: t('tag.live'), tone: 'signal' } : pending}
-            tone={temp ? 'signal' : 'default'}
-            detail={temp ? t('vital.baseline') : t('vital.waiting')}
+            tag={latest?.skinTempC != null && latest.fingerStatus === 3 ? { text: t('tag.live'), tone: 'signal' } : pending}
+            detail={t('vital.baseline')}
             footer={t('vital.tempSource')}
-            footerAside={t('vital.every60s')}
           />
           <VitalCard
-            label={t('vital.signal')}
-            value={moving ? t('vital.motion') : streams.ppg ? t('vital.clean') : undefined}
+            label={t('vital.rhythm')}
             unit=""
-            tag={moving ? { text: t('tag.flagged'), tone: 'amber' } : { text: t('tag.ok'), tone: 'signal' }}
-            detail={moving ? t('vital.excluded') : t('vital.usable')}
-            footer={t('vital.signalSource')}
-            footerAside={t('vital.imuCheck')}
+            tag={pending}
+            detail={t('rhythm.collecting')}
+            footer={t('vital.fromBeats')}
+          />
+          <VitalCard
+            label={t('vital.source')}
+            value={latest ? String(latest.batteryPct) : undefined}
+            unit="%"
+            tag={{ text: kind === 'sim' ? t('link.sim') : t('link.ringShort'), tone: latest && latest.batteryPct <= 15 ? 'amber' : 'label' }}
+            detail={latest?.motion ? t('vital.motion') : t('vital.usable')}
+            footer={t('kpi.battery')}
           />
         </section>
       </div>
 
       <div className="min-w-0 space-y-3">
+        <SessionPanel />
         <EventLog />
-        <SessionPanel sourceTag={kind === 'mock' ? t('tag.demo') : t('tag.ring')} />
-        <NadiPanel />
       </div>
     </div>
   );
