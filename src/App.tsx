@@ -15,12 +15,14 @@ import { Report } from './screens/Report';
 import { Settings } from './screens/Settings';
 import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
+import { Validation } from './screens/Validation';
 import { useSensorStore } from './store/sensorStore';
 
 const SCREENS: Record<Route, () => ReactNode> = {
   '/signin': () => <SignIn />,
   '/connect': () => <Connect />,
   '/dashboard': () => <Dashboard />,
+  '/validate': () => <Validation />,
   '/ecg': () => <EcgCheck />,
   '/nadi': () => <NadiInsights />,
   '/history': () => <History />,
@@ -30,7 +32,7 @@ const SCREENS: Record<Route, () => ReactNode> = {
 
 const NAV: { route: Route; label: MessageKey }[] = [
   { route: '/dashboard', label: 'nav.pulse' },
-  { route: '/ecg', label: 'nav.ecg' },
+  { route: '/validate', label: 'nav.validate' },
   { route: '/nadi', label: 'nav.nadi' },
   { route: '/history', label: 'nav.history' },
   { route: '/settings', label: 'nav.settings' },
@@ -137,7 +139,7 @@ function AppHeader({ route }: { route: Route }) {
           </ul>
         </nav>
       </div>
-      <a href="#/dashboard" className="keep-tracking font-mono text-sm font-semibold tracking-[0.42em] text-fg lg:text-base">
+      <a href="#/dashboard" className="keep-tracking font-mono text-sm font-semibold tracking-[0.3em] text-fg lg:text-base">
         NADI<span className="text-signal">SENSE</span>
       </a>
       <div className="flex justify-end">

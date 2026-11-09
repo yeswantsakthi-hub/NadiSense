@@ -12,11 +12,11 @@ export function Masthead({ caption }: { caption: string }) {
   return (
     <>
       <header className="text-center">
-        <h1 className="keep-tracking font-mono text-2xl font-semibold tracking-[0.42em] pl-[0.42em]">NADISENSE</h1>
+        <h1 className="keep-tracking font-mono text-2xl font-semibold tracking-[0.3em] pl-[0.3em]">NADISENSE</h1>
         <p className="mt-2 text-sm text-label">{t('app.tagline')}</p>
       </header>
 
-      <figure aria-hidden className="relative mt-6 overflow-hidden rounded-[3px] border border-line bg-panel">
+      <figure aria-hidden className="relative mt-6 overflow-hidden rounded-xl border border-line bg-panel">
         <svg viewBox="0 0 400 100" className="block h-24 w-full" preserveAspectRatio="none">
           <defs>
             <pattern id="grid-minor" width="20" height="20" patternUnits="userSpaceOnUse">

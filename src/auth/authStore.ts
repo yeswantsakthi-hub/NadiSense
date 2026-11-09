@@ -30,8 +30,27 @@ interface AuthState {
   signUp(name: string, email: string, password: string): Promise<MessageKey | null>;
   resetPassword(email: string): Promise<MessageKey | null>;
   signOut(): Promise<void>;
-  /** Only possible while Firebase isn't configured, so the app stays usable during setup. */
+  /** Use the app on this phone only, no account. Remembered, so it opens offline next time. */
   continueAsGuest(): void;
+}
+
+const GUEST_KEY = 'nadisense.guest';
+
+function guestChosen(): boolean {
+  try {
+    return localStorage.getItem(GUEST_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function rememberGuest(on: boolean): void {
+  try {
+    if (on) localStorage.setItem(GUEST_KEY, '1');
+    else localStorage.removeItem(GUEST_KEY);
+  } catch {
+    // storage blocked: the choice lasts for this visit
+  }
 }
 
 const toAccount = (u: User): Account => ({ uid: u.uid, email: u.email ?? '', name: u.displayName ?? '' });
@@ -43,7 +62,7 @@ function syncEmailLanguage(): void {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  status: firebaseConfigured ? 'loading' : 'unconfigured',
+  status: guestChosen() ? 'guest' : firebaseConfigured ? 'loading' : 'unconfigured',
   account: null,
 
   async signIn(email, password) {
@@ -87,13 +106,15 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   async signOut() {
     await useSensorStore.getState().disconnect();
+    rememberGuest(false);
     const auth = firebaseAuth();
-    if (auth) await firebaseSignOut(auth);
-    else set({ status: 'unconfigured', account: null });
+    if (auth?.currentUser) await firebaseSignOut(auth);
+    set({ status: auth ? 'signedOut' : 'unconfigured', account: null });
   },
 
   continueAsGuest() {
-    if (!firebaseConfigured) set({ status: 'guest' });
+    rememberGuest(true);
+    set({ status: 'guest', account: null });
   },
 }));
 
@@ -105,6 +126,7 @@ if (auth) {
     stopUserDoc = null;
     resetCloudStore();
     if (user) stopUserDoc = watchUserDoc(user.uid);
-    useAuthStore.setState(user ? { status: 'signedIn', account: toAccount(user) } : { status: 'signedOut', account: null });
+    if (user) useAuthStore.setState({ status: 'signedIn', account: toAccount(user) });
+    else useAuthStore.setState({ status: guestChosen() ? 'guest' : 'signedOut', account: null });
   });
 }

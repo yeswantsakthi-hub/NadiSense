@@ -16,7 +16,7 @@ interface Props {
 export function Panel({ label, aside, children, className = '', flush, labelClassName = '', as = 'section' }: Props) {
   const Tag = as;
   return (
-    <Tag className={`rounded-[3px] border border-line bg-panel ${className}`}>
+    <Tag className={`rounded-xl border border-line bg-panel ${className}`}>
       <header className="flex min-h-10 items-center justify-between gap-3 px-3 pt-2.5 pb-1.5">
         <h2 className={`label ${labelClassName}`}>{label}</h2>
         {aside && <div className="flex items-center gap-3 text-[11px] text-muted">{aside}</div>}
@@ -26,13 +26,13 @@ export function Panel({ label, aside, children, className = '', flush, labelClas
   );
 }
 
-/** Outlined status tag, like EMERGENCY / ADVISORY in an ops console. */
+/** Small outlined status tag; tone "alert" is a filled badge with ⚠ for screening flags. */
 export function Tag({ children, tone = 'muted' }: { children: ReactNode; tone?: Tone }) {
   return (
     <span
-      className={`shrink-0 rounded-[2px] border px-1.5 py-px text-[10px] font-semibold tracking-[0.08em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
+      className={`shrink-0 rounded-md border px-1.5 py-px text-[10px] font-semibold tracking-[0.08em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
     >
-      {/* Brand red is everywhere, so real warnings also carry a symbol, not just colour. */}
+      {/* Warnings share the accent palette, so they also carry a symbol, not just colour. */}
       {tone === 'alert' && <span aria-hidden>⚠ </span>}
       {children}
     </span>

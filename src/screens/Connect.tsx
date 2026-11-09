@@ -53,7 +53,7 @@ export function Connect() {
             type="button"
             disabled={connecting}
             onClick={() => start('ring')}
-            className="group flex w-full items-center gap-3 rounded-[3px] border border-signal/60 bg-signal/10 p-3 text-left transition-colors hover:bg-signal/15 disabled:opacity-60"
+            className="group flex w-full items-center gap-3 rounded-xl border border-signal/60 bg-signal/10 p-3 text-left transition-colors hover:bg-signal/15 disabled:opacity-60"
           >
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-center gap-2">
@@ -69,7 +69,7 @@ export function Connect() {
             </span>
           </button>
 
-          <div className="rounded-[3px] border border-line p-3">
+          <div className="rounded-xl border border-line p-3">
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <span className="font-semibold">{t('connect.demo')}</span>
               <Tag tone="label">{t('connect.noRingNeeded')}</Tag>
@@ -84,7 +84,7 @@ export function Connect() {
               type="button"
               disabled={connecting}
               onClick={() => start('sim')}
-              className="mt-3 h-11 w-full rounded-[3px] border border-line-strong font-semibold transition-colors hover:border-fg/60 disabled:opacity-60"
+              className="mt-3 h-11 w-full rounded-xl border border-line-strong font-semibold transition-colors hover:border-fg/60 disabled:opacity-60"
             >
               {connecting && kind === 'sim' ? t('connect.starting') : t('connect.useDemo')}
             </button>

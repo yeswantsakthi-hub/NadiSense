@@ -35,7 +35,7 @@ export function Settings() {
           <button
             type="button"
             onClick={signOut}
-            className="mt-3 h-10 w-full rounded-[3px] border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
+            className="mt-3 h-10 w-full rounded-xl border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
           >
             {account ? t('settings.signOut') : t('auth.signIn')}
           </button>
@@ -43,6 +43,11 @@ export function Settings() {
 
         <Panel label={t('lang.label')}>
           <LanguagePicker compact />
+        </Panel>
+
+        <Panel label={t('settings.about')} className="border-amber/40">
+          <p className="text-sm font-semibold">{t('app.disclaimer')}</p>
+          <p className="mt-1 text-xs text-label">{t('settings.aboutBody')}</p>
         </Panel>
 
         {account ? (
@@ -82,7 +87,7 @@ export function Settings() {
               type="button"
               disabled={status === 'connecting'}
               onClick={() => (source ? disconnect() : connect())}
-              className={`h-11 w-full rounded-[3px] border font-semibold transition-colors disabled:opacity-60 ${
+              className={`h-11 w-full rounded-xl border font-semibold transition-colors disabled:opacity-60 ${
                 source
                   ? 'border-line-strong hover:border-fg/60'
                   : 'border-signal/60 bg-signal/10 text-fg hover:bg-signal/15'

@@ -3,22 +3,37 @@ import { useAuthStore } from '../auth/authStore';
 import { saveSession } from '../cloud/api';
 import { useCloudStore } from '../cloud/cloudStore';
 import { SessionStats } from '../cloud/SessionStats';
+import { analyseRhythm } from '../dsp/rhythm';
 import { FINGER_ON } from '../ring/contract';
+import { readingState } from '../ring/readings';
 import type { LinkStatus } from '../ring/RingSource';
-import { addBeat, useLiveStore } from '../store/liveStore';
+import { saveLocalSession } from '../store/db';
+import { addBeat, beatLog, useLiveStore } from '../store/liveStore';
 import { useSensorStore } from '../store/sensorStore';
 
 const LOW_BATTERY = 15;
 const TEMP_SAMPLE_MS = 30_000;
-const SAVE_EVERY_MS = 5 * 60_000;
+const LOCAL_SAVE_MS = 60_000;
+const CLOUD_SAVE_MS = 5 * 60_000;
 const announced = new WeakSet<object>();
 /** One stats object per source, so StrictMode's effect re-run keeps counting the same session. */
 const sessionStats = new WeakMap<object, SessionStats>();
 
-/** Upload the session summary if the person is signed in and has turned on cloud backup. */
-function persist(stats: SessionStats): void {
-  if (useAuthStore.getState().status !== 'signedIn' || !useCloudStore.getState().consent.summaries) return;
-  saveSession(stats.summary(Date.now())).catch(() => {
+/** Latest 2-minute rhythm result goes into the summary once there is one. */
+function withRhythm(stats: SessionStats): SessionStats {
+  const r = analyseRhythm(beatLog, Date.now());
+  if (r.status !== 'collecting') stats.rhythm({ status: r.status, rmssdMs: r.rmssdMs, pnn50: r.pnn50 });
+  return stats;
+}
+
+/** Always keep the session on the phone; upload only if signed in with cloud backup on. */
+function persist(stats: SessionStats, cloud: boolean): void {
+  const summary = withRhythm(stats).summary(Date.now());
+  saveLocalSession(summary).catch(() => {
+    // Storage full or blocked: the live screens still work.
+  });
+  if (!cloud || useAuthStore.getState().status !== 'signedIn' || !useCloudStore.getState().consent.summaries) return;
+  saveSession(summary).catch(() => {
     // Offline writes are queued by Firestore; anything else is retried at the next save.
   });
 }
@@ -59,6 +74,7 @@ export function SessionMonitor() {
       const log = useLiveStore.getState().log;
 
       if (p.rrMs !== null) addBeat({ at, rrMs: p.rrMs, beatSeq: p.beatSeq, motion: p.motion });
+      if (readingState(p, at, at) === 'ok') session.reading(p.hrBpm, p.spo2Pct);
 
       const on = p.fingerStatus === FINGER_ON;
       if (on !== fingerOn) {
@@ -97,16 +113,18 @@ export function SessionMonitor() {
       previous = status;
     });
 
-    const saveTimer = setInterval(() => persist(session), SAVE_EVERY_MS);
+    const localTimer = setInterval(() => persist(session, false), LOCAL_SAVE_MS);
+    const cloudTimer = setInterval(() => persist(session, true), CLOUD_SAVE_MS);
 
     return () => {
       offPacket();
       offStatus();
-      clearInterval(saveTimer);
+      clearInterval(localTimer);
+      clearInterval(cloudTimer);
       // React StrictMode re-runs effects in development; only treat a real disconnect as the end.
       if (useSensorStore.getState().source !== source) {
         session.motionEnd(Date.now());
-        persist(session);
+        persist(session, true);
         useLiveStore.getState().log('SYSTEM', 'info', 'ev.disconnected');
       }
     };

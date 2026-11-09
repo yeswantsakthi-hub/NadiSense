@@ -127,3 +127,22 @@ describe('beatsBetween', () => {
     expect(beatsBetween(7, 7)).toBe(0);
   });
 });
+
+describe('FIRMWARE.md test vector', () => {
+  it('decodes the documented bytes', () => {
+    const hex = '15 cd 5b 07 48 62 5f 03 54 0d 41 03 00 57 92 10';
+    const bytes = Uint8Array.from(hex.split(' ').map((h) => parseInt(h, 16)));
+    expect(parseLivePacket(bytes)).toEqual({
+      timestampMs: 123456789,
+      hrBpm: 72,
+      spo2Pct: 98,
+      confidence: 95,
+      fingerStatus: 3,
+      skinTempC: 34.12,
+      rrMs: 833,
+      motion: false,
+      batteryPct: 87,
+      beatSeq: 4242,
+    });
+  });
+});
