@@ -17,6 +17,8 @@ export interface RrBeat {
 export const RHYTHM_WINDOW_MS = 120_000;
 /** Below this many clean successive differences the result would be noise. */
 export const MIN_DIFFS = 60;
+/** No beat for this long (finger off, link lost): the old result no longer describes now. */
+export const STALE_MS = 5000;
 const RR_MIN_MS = 300; // 200 bpm
 const RR_MAX_MS = 2000; // 30 bpm
 
@@ -69,6 +71,10 @@ export function cleanDiffs(beats: readonly RrBeat[]): { diffs: number[]; clean: 
 /** Rhythm over the last 2 minutes of beats (oldest first) ending at `now`. */
 export function analyseRhythm(beats: readonly RrBeat[], now: number): RhythmResult {
   const windowBeats = beats.filter((b) => b.at > now - RHYTHM_WINDOW_MS && b.at <= now);
+  const lastBeat = windowBeats[windowBeats.length - 1];
+  if (!lastBeat || now - lastBeat.at > STALE_MS) {
+    return { status: 'collecting', progress: 0, cleanBeats: 0 };
+  }
   const { diffs, clean } = cleanDiffs(windowBeats);
   const span = windowBeats.length ? now - windowBeats[0]!.at : 0;
   const progress = Math.min(1, Math.min(span / RHYTHM_WINDOW_MS, diffs.length / MIN_DIFFS));

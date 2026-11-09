@@ -60,6 +60,13 @@ describe('analyseRhythm', () => {
     }
   });
 
+  it('drops the result once beats stop arriving (finger off, link lost)', () => {
+    const beats = series(steady);
+    const last = beats.at(-1)!.at;
+    expect(analyseRhythm(beats, last + 4000).status).toBe('regular');
+    expect(analyseRhythm(beats, last + 6000)).toEqual({ status: 'collecting', progress: 0, cleanBeats: 0 });
+  });
+
   it('flags highly irregular intervals', () => {
     const beats = series(chaotic);
     const r = analyseRhythm(beats, beats.at(-1)!.at);
