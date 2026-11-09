@@ -62,7 +62,7 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
           type="button"
           disabled={busy}
           onClick={() => save({ summaries, raw: false })}
-          className="h-10 flex-1 rounded-xl bg-signal px-3 text-sm font-semibold text-bg hover:bg-signal/85 disabled:opacity-60"
+          className="h-10 flex-1 rounded-full bg-signal px-3 text-sm font-semibold text-bg hover:bg-signal/85 disabled:opacity-60"
         >
           {t('cloud.save')}
         </button>
@@ -71,7 +71,7 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
             type="button"
             disabled={busy}
             onClick={() => save({ summaries: false, raw: false })}
-            className="h-10 rounded-xl border border-line-strong px-4 text-sm font-semibold hover:border-fg/60 disabled:opacity-60"
+            className="h-10 rounded-full border border-line-strong px-4 text-sm font-semibold hover:border-fg/60 disabled:opacity-60"
           >
             {t('cloud.notNow')}
           </button>
@@ -161,7 +161,7 @@ export function ProfilePanel() {
         type="button"
         disabled={busy}
         onClick={save}
-        className="mt-4 h-10 w-full rounded-xl bg-signal text-sm font-semibold text-bg hover:bg-signal/85 disabled:opacity-60"
+        className="mt-4 h-10 w-full rounded-full bg-signal text-sm font-semibold text-bg hover:bg-signal/85 disabled:opacity-60"
       >
         {t('profile.save')}
       </button>
@@ -203,7 +203,7 @@ export function DataPanel() {
       URL.revokeObjectURL(url);
     });
 
-  const button = 'h-10 w-full rounded-xl border text-sm font-semibold disabled:opacity-60';
+  const button = 'h-10 w-full rounded-full border text-sm font-semibold disabled:opacity-60';
   return (
     <Panel label={t('cloud.dataTitle')}>
       <div className="space-y-2">

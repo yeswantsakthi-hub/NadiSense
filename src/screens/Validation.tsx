@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { Field } from '../components/Field';
 import { Panel, Tag } from '../components/Panel';
-import { Segmented } from '../components/Segmented';
+import { RingGauge } from '../components/RingGauge';
 import { useI18n, type MessageKey } from '../i18n';
 import { duration } from '../lib/format';
 import { shareFile } from '../lib/shareFile';
 import { useNow } from '../lib/useNow';
+import { shownVitals } from '../ring/readings';
 import { db, useValidations } from '../store/db';
+import { useLiveStore } from '../store/liveStore';
 import { useSensorStore } from '../store/sensorStore';
 import {
   DEFAULT_DURATION_S,
   DURATIONS_S,
+  TOLERANCE,
+  agreement,
   isTrustworthy,
+  nextVolunteerId,
   samplesCsv,
   summarize,
   summaryCsv,
@@ -25,6 +30,8 @@ import {
 
 type Draft = Omit<ValidationSession, 'reference' | 'endedAt'> & { endedAt: number | null };
 type Phase = { step: 'setup' } | { step: 'running'; draft: Draft } | { step: 'reference'; draft: Draft } | { step: 'done'; id: string };
+const STEP_INDEX: Record<Phase['step'], number> = { setup: 0, running: 1, reference: 2, done: 3 };
+const STEP_KEYS: MessageKey[] = ['val.step1', 'val.step2', 'val.step3', 'val.step4'];
 
 const num = (s: string): number | null => (s.trim() === '' ? null : Number(s.replace(',', '.')));
 const fmt = (v: number | null, digits = 0) => (v === null ? '––' : v.toFixed(digits));
@@ -35,28 +42,33 @@ const signed = (v: number | null, digits = 1) => {
   return `${r > 0 ? '+' : ''}${(Object.is(r, -0) ? 0 : r).toFixed(digits)}`;
 };
 
-/** Stage 3 accuracy testing: ring vs fingertip oximeter and thermometer, stored on the phone. */
+/** Stage 3 accuracy testing, built for running many volunteers in a row. */
 export function Validation() {
   const { t } = useI18n();
   const { source, kind } = useSensorStore();
   const sessions = useValidations();
   const [phase, setPhase] = useState<Phase>({ step: 'setup' });
   const [volunteer, setVolunteer] = useState('');
+  const [touched, setTouched] = useState(false);
   const [plannedS, setPlannedS] = useState<number>(DEFAULT_DURATION_S);
   const [idError, setIdError] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Suggest the next code after the last saved session (V01 → V02), until the person types.
+  const suggested = nextVolunteerId(sessions[0]?.volunteerId ?? null);
+  const code = touched ? volunteer : suggested;
+
   const start = () => {
     if (!source) return;
-    if (!validVolunteerId(volunteer)) return setIdError(true);
+    if (!validVolunteerId(code)) return setIdError(true);
     setIdError(false);
     setMessage(null);
     const startedAt = Date.now();
     setPhase({
       step: 'running',
       draft: {
-        id: `${startedAt}-${volunteer.trim()}`,
-        volunteerId: volunteer.trim(),
+        id: `${startedAt}-${code.trim()}`,
+        volunteerId: code.trim(),
         startedAt,
         endedAt: null,
         plannedS,
@@ -66,6 +78,11 @@ export function Validation() {
     });
   };
 
+  const nextVolunteer = () => {
+    setTouched(false);
+    setPhase({ step: 'setup' });
+  };
+
   const exportAll = async () => {
     const all = await db.validations.orderBy('startedAt').toArray();
     const r = await shareFile(`nadisense-accuracy-${new Date().toISOString().slice(0, 10)}.csv`, summaryCsv(all));
@@ -73,55 +90,75 @@ export function Validation() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-3 pt-2">
-      <h1 className="text-xl font-semibold">{t('val.title')}</h1>
+    <div className="space-y-4 pt-2">
+      <header>
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{t('val.title')}</h1>
+        <p className="mt-0.5 text-sm text-label">{t('val.subtitle')}</p>
+      </header>
+
+      <Stepper current={STEP_INDEX[phase.step]} />
 
       {phase.step === 'setup' && (
-        <Panel label={t('val.new')} aside={kind === 'sim' && source ? <Tag tone="amber">{t('val.simTag')}</Tag> : undefined}>
-          <p className="text-sm text-label">{t('val.intro')}</p>
-          <div className="mt-3 space-y-3">
-            <Field
-              label={t('val.volunteer')}
-              value={volunteer}
-              onChange={(v) => {
-                setVolunteer(v);
-                setIdError(false);
-              }}
-              hint={t('val.volunteerHint')}
-              autoCapitalize="characters"
-              autoComplete="off"
-              maxLength={20}
-            />
-            {idError && (
-              <p role="alert" className="text-sm text-alert">
-                {t('val.invalidId')}
-              </p>
-            )}
-            <Segmented<string>
-              legend={t('val.duration')}
-              value={String(plannedS)}
-              options={DURATIONS_S.map((s) => ({ value: String(s), label: t('val.minutes', { n: s / 60 }) }))}
-              onChange={(v) => setPlannedS(Number(v))}
-            />
-            {kind === 'sim' && source && <p className="text-xs text-amber">{t('val.simWarning')}</p>}
-            {source ? (
+        <section className="rounded-3xl border border-line bg-panel p-5">
+          {kind === 'sim' && source && (
+            <p className="mb-3 rounded-2xl bg-amber/10 px-3 py-2 text-xs text-amber">{t('val.simWarning')}</p>
+          )}
+          <Field
+            label={t('val.volunteer')}
+            value={code}
+            onChange={(v) => {
+              setTouched(true);
+              setVolunteer(v);
+              setIdError(false);
+            }}
+            hint={t('val.volunteerHint')}
+            autoCapitalize="characters"
+            autoComplete="off"
+            maxLength={20}
+          />
+          {idError && (
+            <p role="alert" className="mt-2 text-sm text-alert">
+              {t('val.invalidId')}
+            </p>
+          )}
+
+          <p className="label mt-4 mb-2">{t('val.duration')}</p>
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('val.duration')}>
+            {DURATIONS_S.map((s) => (
               <button
+                key={s}
                 type="button"
-                onClick={start}
-                className="h-11 w-full rounded-xl bg-signal font-semibold text-bg hover:bg-signal/85"
+                role="radio"
+                aria-checked={s === plannedS}
+                onClick={() => setPlannedS(s)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  s === plannedS ? 'bg-fg text-bg' : 'bg-panel-2 text-label hover:text-fg'
+                }`}
               >
-                {t('val.start')}
+                {t('val.minutes', { n: s / 60 })}
               </button>
-            ) : (
-              <a
-                href="#/connect"
-                className="flex h-11 w-full items-center justify-center rounded-xl border border-signal/60 font-semibold"
-              >
-                {t('val.needRing')}
-              </a>
-            )}
+            ))}
           </div>
-        </Panel>
+
+          <p className="mt-4 text-xs leading-relaxed text-muted">{t('val.intro')}</p>
+
+          {source ? (
+            <button
+              type="button"
+              onClick={start}
+              className="mt-5 h-14 w-full rounded-full bg-signal text-base font-semibold text-bg shadow-[0_8px_30px_rgba(46,196,182,0.3)] transition hover:brightness-110"
+            >
+              {t('val.startFor', { id: code.trim() || '––' })}
+            </button>
+          ) : (
+            <a
+              href="#/connect"
+              className="mt-5 flex h-14 w-full items-center justify-center rounded-full border border-signal/60 font-semibold"
+            >
+              {t('val.needRing')}
+            </a>
+          )}
+        </section>
       )}
 
       {phase.step === 'running' && (
@@ -149,10 +186,10 @@ export function Validation() {
             ))}
           <button
             type="button"
-            onClick={() => setPhase({ step: 'setup' })}
-            className="h-11 w-full rounded-xl bg-signal font-semibold text-bg hover:bg-signal/85"
+            onClick={nextVolunteer}
+            className="h-14 w-full rounded-full bg-signal text-base font-semibold text-bg shadow-[0_8px_30px_rgba(46,196,182,0.3)] transition hover:brightness-110"
           >
-            {t('val.newSession')}
+            {t('val.nextVolunteer', { id: nextVolunteerId(sessions[0]?.volunteerId ?? null) })}
           </button>
         </>
       )}
@@ -165,7 +202,7 @@ export function Validation() {
             <button
               type="button"
               onClick={exportAll}
-              className="mb-2 h-10 w-full rounded-xl border border-signal/60 text-sm font-semibold hover:bg-signal/10"
+              className="mb-3 h-11 w-full rounded-full border border-signal/60 text-sm font-semibold transition hover:bg-signal/10"
             >
               {t('val.exportAll')}
             </button>
@@ -186,10 +223,27 @@ export function Validation() {
   );
 }
 
-/** Records every packet for the planned time; shows a countdown and live usable-sample count. */
+function Stepper({ current }: { current: number }) {
+  const { t } = useI18n();
+  return (
+    <ol className="grid grid-cols-4 gap-2" aria-label={t('val.steps')}>
+      {STEP_KEYS.map((key, i) => (
+        <li key={key} aria-current={i === current ? 'step' : undefined} className="min-w-0">
+          <span className={`block h-1 rounded-full ${i <= current ? 'bg-signal' : 'bg-panel-2'}`} />
+          <span className={`mt-1.5 block truncate text-[11px] ${i === current ? 'font-medium text-fg' : 'text-muted'}`}>
+            {t(key)}
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/** Records every packet for the planned time, inside a countdown ring with the live readings. */
 function Recorder({ draft, onFinish, onCancel }: { draft: Draft; onFinish(d: Draft): void; onCancel(): void }) {
   const { t } = useI18n();
   const source = useSensorStore((s) => s.source);
+  const { latest, lastPacketAt } = useLiveStore();
   const now = useNow(250);
   const samples = useRef<ValidationSample[]>([]);
   const [count, setCount] = useState({ n: 0, ok: 0 });
@@ -216,46 +270,60 @@ function Recorder({ draft, onFinish, onCancel }: { draft: Draft; onFinish(d: Dra
     if (left === 0) finish();
   });
 
-  const pct = 100 - (100 * left) / (draft.plannedS * 1000);
+  const vitals = shownVitals(latest, lastPacketAt, now);
+  const usable = count.n ? Math.round((100 * count.ok) / count.n) : 0;
   return (
-    <Panel label={t('val.running')} aside={<Tag tone="signal">{draft.volunteerId}</Tag>}>
-      <p className="font-mono text-5xl font-semibold">{duration(left + 999)}</p>
-      <div
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(pct)}
-        aria-label={t('val.running')}
-        className="mt-3 h-1.5 overflow-hidden rounded-full bg-bg"
+    <section className="flex flex-col items-center rounded-3xl border border-line bg-panel px-5 pt-6 pb-5">
+      <Tag tone="signal">{draft.volunteerId}</Tag>
+      <RingGauge
+        value={1 - left / (draft.plannedS * 1000)}
+        size={220}
+        stroke={12}
+        sweep={300}
+        label={`${t('val.running')} ${duration(left + 999)}`}
+        className="mt-3"
       >
-        <div className="h-full rounded-full bg-signal" style={{ width: `${pct}%` }} />
-      </div>
-      <p className="mt-2 text-sm text-label">
-        {t('val.samples', { n: count.n, valid: count.n ? Math.round((100 * count.ok) / count.n) : 0 })}
-      </p>
-      <p className="mt-1 text-xs text-muted">{t('val.hold')}</p>
+        <span className="font-mono text-6xl leading-none font-extralight">{duration(left + 999)}</span>
+        <span className="mt-2 text-xs text-label">{t('val.running')}</span>
+      </RingGauge>
+
+      <dl className="mt-2 grid w-full grid-cols-3 gap-2 text-center">
+        <div className="rounded-2xl bg-panel-2 py-2">
+          <dt className="text-[11px] text-muted">{t('val.hr')}</dt>
+          <dd className="font-mono text-lg">{vitals.hrBpm ?? '––'}</dd>
+        </div>
+        <div className="rounded-2xl bg-panel-2 py-2">
+          <dt className="text-[11px] text-muted">SpO₂</dt>
+          <dd className="font-mono text-lg">{vitals.spo2Pct ?? '––'}</dd>
+        </div>
+        <div className="rounded-2xl bg-panel-2 py-2">
+          <dt className="text-[11px] text-muted">{t('val.usable')}</dt>
+          <dd className={`font-mono text-lg ${usable < 60 && count.n > 10 ? 'text-amber' : ''}`}>{usable}%</dd>
+        </div>
+      </dl>
+      <p className="mt-3 text-center text-xs leading-relaxed text-muted">{t('val.hold')}</p>
       {!source && (
         <p role="alert" className="mt-2 text-sm text-alert">
           {t('reading.noData')}
         </p>
       )}
-      <div className="mt-4 flex gap-2">
+      <div className="mt-4 flex w-full gap-2">
         <button
           type="button"
           onClick={finish}
-          className="h-10 flex-1 rounded-xl border border-line-strong text-sm font-semibold hover:border-fg/60"
+          className="h-12 flex-1 rounded-full bg-panel-2 text-sm font-semibold transition hover:bg-line-strong"
         >
           {t('val.stop')}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="h-10 rounded-xl border border-line px-4 text-sm text-label hover:border-line-strong"
+          className="h-12 rounded-full px-5 text-sm text-label transition hover:text-fg"
         >
           {t('val.cancel')}
         </button>
       </div>
-    </Panel>
+    </section>
   );
 }
 
@@ -277,85 +345,82 @@ function ReferenceForm({ draft, onSaved, onDiscard }: { draft: Draft; onSaved(id
   };
 
   return (
-    <Panel label={t('val.refTitle')} aside={<Tag tone="signal">{draft.volunteerId}</Tag>}>
-      <p className="text-sm text-label">{t('val.refHint')}</p>
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <Field label={t('val.refHr')} value={form.hr} onChange={set('hr')} inputMode="numeric" />
-        <Field label={t('val.refSpo2')} value={form.spo2} onChange={set('spo2')} inputMode="numeric" />
-        <Field label={t('val.refTemp')} value={form.temp} onChange={set('temp')} inputMode="decimal" />
+    <section className="rounded-3xl border border-line bg-panel p-5">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{t('val.refTitle')}</h2>
+        <Tag tone="signal">{draft.volunteerId}</Tag>
+      </div>
+      <p className="mt-1 text-sm text-label">{t('val.refHint')}</p>
+      <div className="mt-4 space-y-3">
+        <Field label={t('val.refHr')} value={form.hr} onChange={set('hr')} inputMode="numeric" placeholder="72" />
+        <Field label={t('val.refSpo2')} value={form.spo2} onChange={set('spo2')} inputMode="numeric" placeholder="98" />
+        <Field label={t('val.refTemp')} value={form.temp} onChange={set('temp')} inputMode="decimal" placeholder="36.6" />
       </div>
       {error && (
-        <p role="alert" className="mt-2 text-sm text-alert">
+        <p role="alert" className="mt-3 text-sm text-alert">
           {t(error)}
         </p>
       )}
-      <div className="mt-4 flex gap-2">
-        <button type="button" onClick={save} className="h-11 flex-1 rounded-xl bg-signal font-semibold text-bg hover:bg-signal/85">
-          {t('val.save')}
-        </button>
-        <button
-          type="button"
-          onClick={() => window.confirm(t('val.confirmDiscard')) && onDiscard()}
-          className="h-11 rounded-xl border border-line px-4 text-sm text-label hover:border-line-strong"
-        >
-          {t('val.discard')}
-        </button>
-      </div>
-    </Panel>
+      <button
+        type="button"
+        onClick={save}
+        className="mt-5 h-14 w-full rounded-full bg-signal text-base font-semibold text-bg transition hover:brightness-110"
+      >
+        {t('val.save')}
+      </button>
+      <button
+        type="button"
+        onClick={() => window.confirm(t('val.confirmDiscard')) && onDiscard()}
+        className="mt-2 h-11 w-full rounded-full text-sm text-label transition hover:text-fg"
+      >
+        {t('val.discard')}
+      </button>
+    </section>
   );
 }
 
-/** Ring mean vs reference, and the difference, for one session. */
+/** Ring mean vs reference, the difference, and whether it is within the display tolerance. */
 function SummaryCard({ session }: { session: ValidationSession }) {
   const { t } = useI18n();
   const s = summarize(session);
-  const row = (label: string, c: Comparison, unit: string, digits: number) => (
-    <tr>
-      <th scope="row" className="py-2 pr-3 text-left font-medium">
-        {label}
-      </th>
-      <td className="py-2 pr-3 text-right font-mono">{fmt(c.ring, digits)}</td>
-      <td className="py-2 pr-3 text-right font-mono">{fmt(c.reference, digits)}</td>
-      <td className="py-2 text-right font-mono font-semibold">
-        {signed(c.diff)} {c.diff !== null ? unit : ''}
-      </td>
-    </tr>
-  );
+  const row = (label: string, c: Comparison, unit: string, digits: number, tolerance: number | null) => {
+    const a = tolerance === null ? null : agreement(c, tolerance);
+    return (
+      <li className="flex items-center gap-3 py-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium">{label}</p>
+          <p className="font-mono text-xs text-label">
+            {t('val.ringVsRef', { ring: fmt(c.ring, digits), ref: fmt(c.reference, digits) })}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-mono text-lg font-light">
+            {signed(c.diff)} <span className="text-xs text-label">{c.diff !== null ? unit : ''}</span>
+          </p>
+          {a && (
+            <p className={`text-[11px] ${a === 'within' ? 'text-signal' : 'text-amber'}`}>
+              {t(a === 'within' ? 'val.within' : 'val.outside', { tol: tolerance!, unit })}
+            </p>
+          )}
+        </div>
+      </li>
+    );
+  };
   return (
-    <Panel
-      label={t('val.summary')}
-      aside={<Tag tone={session.source === 'sim' ? 'amber' : 'signal'}>{session.volunteerId}</Tag>}
-      className="border-signal/50"
-    >
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[300px] text-sm">
-          <thead className="border-b border-line">
-            <tr>
-              <th scope="col" className="label py-2 pr-3 text-left">
-                {t('val.colMeasure')}
-              </th>
-              <th scope="col" className="label py-2 pr-3 text-right">
-                {t('val.colRing')}
-              </th>
-              <th scope="col" className="label py-2 pr-3 text-right">
-                {t('val.colRef')}
-              </th>
-              <th scope="col" className="label py-2 text-right">
-                {t('val.colDiff')}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {row(t('val.hr'), s.hr, 'bpm', 0)}
-            {row('SpO₂', s.spo2, '%', 0)}
-            {row(t('val.temp'), s.temp, '°C', 1)}
-          </tbody>
-        </table>
+    <section className={`rounded-3xl border bg-panel px-5 pt-4 pb-3 ${session.source === 'sim' ? 'border-amber/40' : 'border-signal/40'}`}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{t('val.summary')}</h2>
+        <Tag tone={session.source === 'sim' ? 'amber' : 'signal'}>{session.volunteerId}</Tag>
       </div>
-      <p className="mt-2 text-xs text-label">{t('val.valid', { valid: s.validPct, n: s.samples })}</p>
-      {s.temp.diff !== null && <p className="mt-1 text-xs text-muted">{t('val.tempNote')}</p>}
-      {session.source === 'sim' && <p className="mt-1 text-xs text-amber">{t('val.simWarning')}</p>}
-    </Panel>
+      <ul className="mt-1 divide-y divide-line">
+        {row(t('val.hr'), s.hr, 'bpm', 0, TOLERANCE.hr)}
+        {row('SpO₂', s.spo2, '%', 0, TOLERANCE.spo2)}
+        {row(t('val.temp'), s.temp, '°C', 1, null)}
+      </ul>
+      <p className="mt-1 text-xs text-label">{t('val.valid', { valid: s.validPct, n: s.samples })}</p>
+      {s.temp.diff !== null && <p className="mt-1 text-[11px] text-muted">{t('val.tempNote')}</p>}
+      {session.source === 'sim' && <p className="mt-1 text-[11px] text-amber">{t('val.simWarning')}</p>}
+    </section>
   );
 }
 
@@ -370,10 +435,10 @@ function SessionRow({ session }: { session: ValidationSession }) {
 
   return (
     <li className="py-2">
-      <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex w-full items-center gap-2 text-left">
-        <span className="font-semibold">{session.volunteerId}</span>
+      <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex w-full items-center gap-2 py-1 text-left">
+        <span className="font-medium">{session.volunteerId}</span>
         {session.source === 'sim' && <Tag tone="amber">{t('link.sim')}</Tag>}
-        <span className="text-xs text-label">
+        <span className="text-xs text-muted">
           {date(session.startedAt)} · {time}
         </span>
         <span className="ml-auto font-mono text-xs text-label">
@@ -387,14 +452,14 @@ function SessionRow({ session }: { session: ValidationSession }) {
             <button
               type="button"
               onClick={exportSamples}
-              className="h-9 flex-1 rounded-xl border border-line-strong text-xs font-semibold hover:border-fg/60"
+              className="h-10 flex-1 rounded-full bg-panel-2 text-xs font-semibold transition hover:bg-line-strong"
             >
               {t('val.exportSamples')}
             </button>
             <button
               type="button"
               onClick={() => window.confirm(t('val.confirmDelete')) && db.validations.delete(session.id)}
-              className="h-9 rounded-xl border border-alert/60 px-3 text-xs font-semibold text-alert hover:bg-alert/10"
+              className="h-10 rounded-full border border-alert/50 px-4 text-xs font-semibold text-alert transition hover:bg-alert/10"
             >
               {t('val.delete')}
             </button>

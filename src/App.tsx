@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useAuthStore } from './auth/authStore';
+import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, SparkIcon } from './components/icons';
 import { LinkChip } from './components/LinkChip';
 import { SessionMonitor } from './components/SessionMonitor';
 import { useDocumentLang, useI18n, type MessageKey } from './i18n';
@@ -40,7 +41,7 @@ const NAV: { route: Route; label: MessageKey }[] = [
 
 /** Screens that need a live connection; without one we send people to Connect. */
 const NEEDS_SOURCE: Route[] = ['/dashboard', '/ecg', '/nadi'];
-/** Full-screen pages without the console header and tabs. */
+/** Full-screen pages without the header and tab bar. */
 const BARE: Route[] = ['/signin', '/connect'];
 
 function readRoute(): Route | null {
@@ -101,79 +102,65 @@ function MainApp() {
     <>
       <SessionMonitor />
       {BARE.includes(route) ? (
-        SCREENS[route]()
+        <div key={route} className="screen-in">
+          {SCREENS[route]()}
+        </div>
       ) : (
-        <div className="mx-auto flex min-h-dvh max-w-[1440px] flex-col">
-          <AppHeader route={route} />
-          <main className="flex-1 px-3 pb-24 lg:px-4 lg:pb-6">{SCREENS[route]()}</main>
-          <BottomNav route={route} />
+        <div className="mx-auto flex min-h-dvh max-w-xl flex-col">
+          <AppHeader />
+          {/* Re-keyed per route so each screen fades in. */}
+          <main key={route} className="screen-in flex-1 px-4 pb-32">
+            {SCREENS[route]()}
+          </main>
+          <TabBar route={route} />
         </div>
       )}
     </>
   );
 }
 
-function AppHeader({ route }: { route: Route }) {
-  const { t } = useI18n();
+function AppHeader() {
   return (
-    <header className="flex h-12 items-center justify-between gap-3 px-3 lg:grid lg:h-14 lg:grid-cols-[1fr_auto_1fr] lg:px-4">
-      <div className="hidden min-w-0 lg:block">
-        <nav aria-label={t('nav.main')}>
-          <ul className="flex gap-5">
-            {NAV.map(({ route: r, label }) => {
-              const active = isActive(r, route);
-              return (
-                <li key={r}>
-                  <a
-                    href={`#${r}`}
-                    aria-current={active ? 'page' : undefined}
-                    className={`label !text-[11px] transition-colors ${
-                      active ? (r === '/nadi' ? '!text-turmeric' : '!text-fg') : '!text-muted hover:!text-fg'
-                    }`}
-                  >
-                    {t(label)}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </div>
-      <a href="#/dashboard" className="keep-tracking font-mono text-sm font-semibold tracking-[0.3em] text-fg lg:text-base">
-        NADI<span className="text-signal">SENSE</span>
+    <header className="flex h-14 items-center justify-between gap-3 px-4">
+      <a href="#/dashboard" className="flex items-center gap-2 text-[15px] font-semibold tracking-tight text-fg">
+        <span aria-hidden className="size-2.5 rounded-full bg-signal shadow-[0_0_12px_var(--signal)]" />
+        NadiSense
       </a>
-      <div className="flex justify-end">
-        <LinkChip />
-      </div>
+      <LinkChip />
     </header>
   );
 }
 
-function BottomNav({ route }: { route: Route }) {
+const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
+  '/dashboard': HeartIcon,
+  '/validate': CheckListIcon,
+  '/nadi': SparkIcon,
+  '/history': ChartIcon,
+  '/settings': GearIcon,
+};
+
+/** Floating icon tab bar, the same on phones and desktops. */
+function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
     <nav
       aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-10 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
     >
-      <ul className="mx-auto flex max-w-[600px]">
+      <ul className="mx-auto flex max-w-xl rounded-[1.75rem] border border-line bg-panel/90 p-1.5 shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
         {NAV.map(({ route: r, label }) => {
           const active = isActive(r, route);
+          const Icon = TAB_ICON[r]!;
           return (
             <li key={r} className="min-w-0 flex-1">
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex h-14 items-center justify-center px-0.5 text-center text-[11px] leading-tight [overflow-wrap:anywhere] font-semibold tracking-[0.1em] uppercase ${
-                  active ? 'text-fg' : 'text-muted'
+                className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-[1.4rem] px-0.5 text-center text-[11px] leading-tight font-medium transition-colors [overflow-wrap:anywhere] ${
+                  active ? 'bg-panel-2 text-fg' : 'text-muted hover:text-label'
                 }`}
               >
-                {active && (
-                  <span
-                    aria-hidden
-                    className={`absolute top-0 h-0.5 w-8 ${r === '/nadi' ? 'bg-turmeric' : 'bg-signal'}`}
-                  />
-                )}
+                <Icon className={`size-[22px] ${active ? 'text-signal' : ''}`} />
                 {t(label)}
               </a>
             </li>

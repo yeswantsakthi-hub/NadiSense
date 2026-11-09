@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  agreement,
+  nextVolunteerId,
   samplesCsv,
   summarize,
   summaryCsv,
@@ -95,5 +97,25 @@ describe('CSV export', () => {
     const [header, row] = text.trimEnd().split('\r\n');
     expect(header!.startsWith('volunteer_id,session_id,source,started_at_utc,duration_s')).toBe(true);
     expect(row).toBe('"V,02",s1,ring,2026-11-09T10:00:00.000Z,120,2,100,72,72,0,2,97,98,-1,2,34,36.6,-2.6,2');
+  });
+});
+
+describe('nextVolunteerId', () => {
+  it('counts up and keeps the padding', () => {
+    expect(nextVolunteerId(null)).toBe('V01');
+    expect(nextVolunteerId('V01')).toBe('V02');
+    expect(nextVolunteerId('V09')).toBe('V10');
+    expect(nextVolunteerId('V99')).toBe('V100');
+    expect(nextVolunteerId('team-9')).toBe('team-10');
+    expect(nextVolunteerId('ABC')).toBe('ABC-2');
+  });
+});
+
+describe('agreement', () => {
+  it('compares the difference with the tolerance', () => {
+    expect(agreement({ ring: 74, reference: 72, diff: 2, n: 10 }, 5)).toBe('within');
+    expect(agreement({ ring: 64, reference: 72, diff: -8, n: 10 }, 5)).toBe('outside');
+    expect(agreement({ ring: 77, reference: 72, diff: 5, n: 10 }, 5)).toBe('within');
+    expect(agreement({ ring: null, reference: 72, diff: null, n: 0 }, 5)).toBeNull();
   });
 });

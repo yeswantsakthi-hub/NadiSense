@@ -199,3 +199,24 @@ export function summaryCsv(sessions: readonly ValidationSession[]): string {
   });
   return csv([header, ...rows]);
 }
+
+/** V01 → V02, team-9 → team-10, ABC → ABC-2. Keeps zero padding. */
+export function nextVolunteerId(last: string | null): string {
+  if (!last) return 'V01';
+  const m = /^(.*?)(\d+)$/.exec(last.trim());
+  if (!m) return `${last.trim()}-2`;
+  const [, prefix, digits] = m;
+  const next = String(Number(digits) + 1).padStart(digits!.length, '0');
+  return `${prefix}${next}`.slice(0, 20);
+}
+
+/**
+ * Display tolerances for a single session (not an accuracy claim; the accuracy table is computed
+ * from all sessions): heart rate ±5 bpm, SpO₂ ±3 percentage points.
+ */
+export const TOLERANCE = { hr: 5, spo2: 3 } as const;
+
+export function agreement(c: Comparison, tolerance: number): 'within' | 'outside' | null {
+  if (c.diff === null) return null;
+  return Math.abs(c.diff) <= tolerance ? 'within' : 'outside';
+}

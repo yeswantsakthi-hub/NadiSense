@@ -25,11 +25,11 @@ describe('dictionaries', () => {
 describe('translate', () => {
   it('fills placeholders', () => {
     expect(translate('en', 'ev.lowBattery', { pct: 12 })).toBe('Ring battery low (12%)');
-    expect(translate('ta', 'auth.welcome', { name: 'Meena' })).toBe('வணக்கம், Meena');
+    expect(translate('ta', 'val.nextVolunteer', { id: 'V02' })).toBe('அடுத்த தன்னார்வலர்: V02');
   });
 
   it('leaves unknown placeholders visible rather than dropping them', () => {
-    expect(translate('en', 'auth.welcome')).toBe('Welcome, {name}');
+    expect(translate('en', 'val.nextVolunteer')).toBe('Next volunteer: {id}');
   });
 });
 

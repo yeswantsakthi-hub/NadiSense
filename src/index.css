@@ -1,23 +1,29 @@
 @import "tailwindcss";
 
-/* Stage 3 theme: dark navy, rounded cards, teal accent (matches the Stage 3 report). */
+/*
+ * Wellness look (Oura / Whoop style): near-black, soft raised surfaces, thin oversized numbers,
+ * one colour per metric. Screening flags are a filled badge with ⚠, never colour alone.
+ */
 :root {
-  --bg: #0d1729;
-  --panel: #15233b;
-  --panel-2: #1b2c49;
-  --line: #263a5c;
-  --line-strong: #36507c;
-  --fg: #f2f5fb;
-  --label: #c3cde0;
-  --muted: #93a3bf;
+  --bg: #07090d;
+  --panel: #11141b;
+  --panel-2: #191d26;
+  --line: #20242e;
+  --line-strong: #2e3441;
+  --fg: #f4f6fa;
+  --label: #aab2c0;
+  --muted: #7d8696;
+  /* Brand + heart rate */
   --signal: #2ec4b6;
+  --spo2: #5ab8ff;
+  --temp: #ffb27a;
+  --rhythm: #a78bfa;
   --turmeric: #2ec4b6;
   --amber: #e8b44c;
-  /* Screening flags and errors: shown as a filled badge with ⚠, never by colour alone. */
-  --alert: #e8b44c;
-  --select: #f2f5fb;
-  --grid: rgba(46, 196, 182, 0.07);
-  --grid-strong: rgba(46, 196, 182, 0.16);
+  --alert: #ff8a65;
+  --select: #f4f6fa;
+  --grid: rgba(255, 255, 255, 0.04);
+  --grid-strong: rgba(255, 255, 255, 0.08);
   --band: rgba(232, 180, 76, 0.13);
   color-scheme: dark;
 }
@@ -32,6 +38,9 @@
   --color-muted: var(--muted);
   --color-label: var(--label);
   --color-signal: var(--signal);
+  --color-spo2: var(--spo2);
+  --color-temp: var(--temp);
+  --color-rhythm: var(--rhythm);
   --color-turmeric: var(--turmeric);
   --color-amber: var(--amber);
   --color-alert: var(--alert);
@@ -53,36 +62,69 @@ body {
   font-feature-settings: "cv11", "ss01";
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  /* A faint teal glow at the top, like light from the ring. */
+  background-image: radial-gradient(900px 480px at 50% -160px, rgba(46, 196, 182, 0.13), transparent 70%);
+  background-repeat: no-repeat;
+  min-height: 100dvh;
 }
 
 :focus-visible {
   outline: 2px solid var(--select);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 8px;
 }
 
-/* Small uppercase section label used across the console. */
+/* Quiet sentence-case label used above cards and fields. */
 .label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--label);
 }
 
 /* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
-html:not([lang="en"]) .label,
 html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   letter-spacing: normal;
+}
+
+/* Every number is tabular so live values don't jitter sideways. */
+.font-mono {
+  font-variant-numeric: tabular-nums;
 }
 
 @keyframes live-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
-
 .live-dot {
   animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+/* Screens fade up gently on navigation. */
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.screen-in {
+  animation: screen-in 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* One pop per real beat from the ring (the element is re-keyed on every beat). */
+@keyframes beat-pop {
+  0% { transform: scale(1); opacity: 0.85; }
+  18% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.85; }
+}
+.beat-pop {
+  animation: beat-pop 0.6s ease-out;
+}
+
+/* Slow glow while pairing. */
+@keyframes breathe {
+  0%, 100% { opacity: 0.45; transform: scale(0.97); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+.breathe {
+  animation: breathe 2.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -93,9 +135,4 @@ html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Every number is tabular so live values don't jitter sideways. */
-.font-mono {
-  font-variant-numeric: tabular-nums;
 }
