@@ -20,7 +20,7 @@ that sends the exact same packets.
 - Own tiny i18n in `src/i18n/`: English source in `en.ts`, plus Hindi, Tamil, Telugu, Kannada,
   Malayalam, Bengali, Marathi. Every UI string goes through `t()`. Tests enforce that every
   language has every key with the same `{placeholders}`. Translations need native-speaker review.
-- Hosted on Vercel (`nadisense-app.vercel.app`). Source also lives in `app/` of
+- Hosted on Vercel (`nadisense-app-phi.vercel.app`, project `nadisense-app` in the Vercel team "Yeswant"). Source also lives in `app/` of
   github.com/yeswantsakthi-hub/NadiSense.
 
 ## Ring v1 and the data path
