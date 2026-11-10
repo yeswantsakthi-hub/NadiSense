@@ -346,6 +346,14 @@ export const en = {
   'acc.needTwo': 'Limits of agreement need at least 2 sessions.',
   'acc.tempNote': 'Skin temperature reads below body temperature, so look at the spread (SD) more than the bias.',
   'acc.chartAria': '{metric}: difference between ring and reference for each session',
+
+  'scenario.tour': 'Demo tour (2 min)',
+  'tour.label': 'Demo tour',
+  'tour.step': 'Step {n} of {total}',
+  'tour.s1': 'Steady reading — numbers shown only when trusted',
+  'tour.s2': 'Hand moving — readings pause',
+  'tour.s3': 'Ring off the finger — no numbers shown',
+  'tour.s4': 'Irregular beats — result after the full 2-minute window',
 } as const;
 
 export type MessageKey = keyof typeof en;
