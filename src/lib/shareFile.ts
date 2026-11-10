@@ -3,8 +3,8 @@
  * Falls back to a normal download where sharing files isn't supported (most desktops).
  * Returns 'shared', 'downloaded' or 'cancelled'.
  */
-export async function shareFile(name: string, text: string, mime = 'text/csv'): Promise<'shared' | 'downloaded' | 'cancelled'> {
-  const file = new File([text], name, { type: mime });
+export async function shareFile(name: string, content: BlobPart, mime = 'text/csv'): Promise<'shared' | 'downloaded' | 'cancelled'> {
+  const file = new File([content], name, { type: mime });
   const nav = navigator as Navigator & { canShare?: (data: { files: File[] }) => boolean };
   if (nav.share && nav.canShare?.({ files: [file] })) {
     try {

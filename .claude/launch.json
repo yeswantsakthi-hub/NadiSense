@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "nadisense-dev",
-      "runtimeExecutable": "C:\Program Files\nodejs\node.exe",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
       "runtimeArgs": ["node_modules/vite/bin/vite.js", "--port", "5173", "--strictPort"],
       "port": 5173
     }

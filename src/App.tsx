@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { useAuthStore } from './auth/authStore';
 import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, SparkIcon } from './components/icons';
 import { LinkChip } from './components/LinkChip';
@@ -21,11 +21,19 @@ import { scenarioKey, useSensorStore } from './store/sensorStore';
 import { clockTime } from './lib/format';
 import { useNow } from './lib/useNow';
 
+// Chart-heavy screens load on demand so the live screens open fast.
+const Accuracy = lazy(() => import('./screens/Accuracy').then((m) => ({ default: m.Accuracy })));
+
 const SCREENS: Record<Route, () => ReactNode> = {
   '/signin': () => <SignIn />,
   '/connect': () => <Connect />,
   '/dashboard': () => <Dashboard />,
   '/validate': () => <Validation />,
+  '/accuracy': () => (
+    <Suspense fallback={null}>
+      <Accuracy />
+    </Suspense>
+  ),
   '/ecg': () => <EcgCheck />,
   '/nadi': () => <NadiInsights />,
   '/history': () => <History />,
@@ -72,7 +80,7 @@ function useRoute(): Route {
 }
 
 function isActive(navRoute: Route, route: Route): boolean {
-  return navRoute === route || (navRoute === '/history' && route === '/report');
+  return navRoute === route || (navRoute === '/history' && route === '/report') || (navRoute === '/validate' && route === '/accuracy');
 }
 
 /** Doctor links (#/share/<token>) are public pages outside the sign-in gate. */
