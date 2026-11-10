@@ -24,7 +24,7 @@ export function ShareView({ token }: { token: string }) {
   return (
     <div className="mx-auto min-h-dvh max-w-3xl px-4 pt-8 pb-10">
       <header className="flex items-center justify-between">
-        <p className="keep-tracking font-mono text-sm font-semibold tracking-[0.42em]">
+        <p className="keep-tracking font-mono text-sm font-semibold tracking-[0.3em]">
           NADI<span className="text-signal">SENSE</span>
         </p>
       </header>
@@ -60,7 +60,7 @@ export function ShareView({ token }: { token: string }) {
           </>
         )}
         <p className="border-l-2 border-amber pl-3 text-xs text-label">{t('share.disclaimer')}</p>
-        <div className="rounded-[3px] border border-line bg-panel p-3">
+        <div className="rounded-[3px] border border-line bg-panel p-4">
           <LanguagePicker compact />
         </div>
       </div>

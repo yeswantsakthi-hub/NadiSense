@@ -49,7 +49,10 @@ export interface SessionSummary {
   temp: { min: number; max: number; avg: number; n: number } | null;
   battery: { start: number; end: number } | null;
   /** Filled in once the signal-processing phases land. */
+  /** Means over trustworthy readings only (finger on, confidence ≥ 80, still); hrv = RMSSD in ms. */
   vitals: { hr: number | null; spo2: number | null; hrv: number | null; resp: number | null };
+  /** Rhythm screen over the last 2 minutes of the session, if it got that far. */
+  rhythm?: { status: 'regular' | 'irregular'; rmssdMs: number; pnn50: number } | null;
 }
 
 export interface DayRow {
@@ -59,6 +62,11 @@ export interface DayRow {
   /** Share of monitored time flagged for movement, 0–100. */
   motionPct: number;
   tempAvg: number | null;
+  /** Duration-weighted means of the sessions' trustworthy readings. */
+  hrAvg: number | null;
+  spo2Avg: number | null;
+  /** Sessions that ended with a possible-irregular-rhythm flag. */
+  irregular: number;
 }
 
 export interface Recording {
@@ -133,9 +141,32 @@ export function recordingBytes(r: Pick<Recording, 'data'>): number {
 
 /** Group session summaries into one row per day, newest first. */
 export function rollupByDay(sessions: readonly SessionSummary[]): DayRow[] {
-  const byDay = new Map<string, { sessions: number; seconds: number; flagged: number; tempSum: number; tempN: number }>();
+  type Acc = {
+    sessions: number;
+    seconds: number;
+    flagged: number;
+    tempSum: number;
+    tempN: number;
+    hrSum: number;
+    hrW: number;
+    spo2Sum: number;
+    spo2W: number;
+    irregular: number;
+  };
+  const byDay = new Map<string, Acc>();
   for (const s of sessions) {
-    const row = byDay.get(s.day) ?? { sessions: 0, seconds: 0, flagged: 0, tempSum: 0, tempN: 0 };
+    const row = byDay.get(s.day) ?? {
+      sessions: 0,
+      seconds: 0,
+      flagged: 0,
+      tempSum: 0,
+      tempN: 0,
+      hrSum: 0,
+      hrW: 0,
+      spo2Sum: 0,
+      spo2W: 0,
+      irregular: 0,
+    };
     row.sessions += 1;
     row.seconds += s.durationS;
     row.flagged += s.flaggedS;
@@ -143,6 +174,16 @@ export function rollupByDay(sessions: readonly SessionSummary[]): DayRow[] {
       row.tempSum += s.temp.avg * s.temp.n;
       row.tempN += s.temp.n;
     }
+    const w = Math.max(1, s.durationS);
+    if (s.vitals.hr !== null) {
+      row.hrSum += s.vitals.hr * w;
+      row.hrW += w;
+    }
+    if (s.vitals.spo2 !== null) {
+      row.spo2Sum += s.vitals.spo2 * w;
+      row.spo2W += w;
+    }
+    if (s.rhythm?.status === 'irregular') row.irregular += 1;
     byDay.set(s.day, row);
   }
   return [...byDay.entries()]
@@ -153,6 +194,9 @@ export function rollupByDay(sessions: readonly SessionSummary[]): DayRow[] {
       minutes: Math.round(r.seconds / 60),
       motionPct: r.seconds ? Math.round((100 * r.flagged) / r.seconds) : 0,
       tempAvg: r.tempN ? Math.round((r.tempSum / r.tempN) * 100) / 100 : null,
+      hrAvg: r.hrW ? Math.round(r.hrSum / r.hrW) : null,
+      spo2Avg: r.spo2W ? Math.round(r.spo2Sum / r.spo2W) : null,
+      irregular: r.irregular,
     }));
 }
 

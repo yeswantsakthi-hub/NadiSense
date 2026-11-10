@@ -1,10 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useAuthStore } from './auth/authStore';
+import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, SparkIcon } from './components/icons';
+import { LinkChip } from './components/LinkChip';
 import { SessionMonitor } from './components/SessionMonitor';
 import { useDocumentLang, useI18n, type MessageKey } from './i18n';
-import { clockTime } from './lib/format';
+
 import { readShareToken, type Route } from './lib/route';
-import { useNow } from './lib/useNow';
+
 import { Connect } from './screens/Connect';
 import { Dashboard } from './screens/Dashboard';
 import { EcgCheck } from './screens/EcgCheck';
@@ -14,12 +16,16 @@ import { Report } from './screens/Report';
 import { Settings } from './screens/Settings';
 import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
+import { Validation } from './screens/Validation';
 import { scenarioKey, useSensorStore } from './store/sensorStore';
+import { clockTime } from './lib/format';
+import { useNow } from './lib/useNow';
 
 const SCREENS: Record<Route, () => ReactNode> = {
   '/signin': () => <SignIn />,
   '/connect': () => <Connect />,
   '/dashboard': () => <Dashboard />,
+  '/validate': () => <Validation />,
   '/ecg': () => <EcgCheck />,
   '/nadi': () => <NadiInsights />,
   '/history': () => <History />,
@@ -29,7 +35,7 @@ const SCREENS: Record<Route, () => ReactNode> = {
 
 const NAV: { route: Route; label: MessageKey }[] = [
   { route: '/dashboard', label: 'nav.pulse' },
-  { route: '/ecg', label: 'nav.ecg' },
+  { route: '/validate', label: 'nav.validate' },
   { route: '/nadi', label: 'nav.nadi' },
   { route: '/history', label: 'nav.history' },
   { route: '/settings', label: 'nav.settings' },
@@ -37,7 +43,7 @@ const NAV: { route: Route; label: MessageKey }[] = [
 
 /** Screens that need a live connection; without one we send people to Connect. */
 const NEEDS_SOURCE: Route[] = ['/dashboard', '/ecg', '/nadi'];
-/** Full-screen pages without the console header and tabs. */
+/** Full-screen pages without the header and tab bar. */
 const BARE: Route[] = ['/signin', '/connect'];
 
 function readRoute(): Route | null {
@@ -48,7 +54,8 @@ function readRoute(): Route | null {
 /** Hash routing keeps the app a static bundle that works offline and from any path. */
 function useRoute(): Route {
   const authStatus = useAuthStore((s) => s.status);
-  const connected = useSensorStore((s) => s.status === 'connected');
+  // A ring that is reconnecting still counts: keep the person on their screen.
+  const connected = useSensorStore((s) => s.source !== null);
   const [route, setRoute] = useState<Route | null>(readRoute);
 
   useEffect(() => {
@@ -97,12 +104,17 @@ function MainApp() {
     <>
       <SessionMonitor />
       {BARE.includes(route) ? (
-        SCREENS[route]()
+        <div key={route} className="screen-in">
+          {SCREENS[route]()}
+        </div>
       ) : (
-        <div className="mx-auto flex min-h-dvh max-w-[1440px] flex-col">
+        <div className="mx-auto flex min-h-dvh max-w-[1320px] flex-col">
           <AppHeader route={route} />
-          <main className="flex-1 px-3 pb-24 lg:px-4 lg:pb-6">{SCREENS[route]()}</main>
-          <BottomNav route={route} />
+          {/* The console uses the full width; other screens sit in a readable column. */}
+          <main key={route} className="screen-in flex-1 px-3 pb-24 lg:px-4 lg:pb-6">
+            {route === '/dashboard' ? SCREENS[route]() : <div className="mx-auto max-w-3xl">{SCREENS[route]()}</div>}
+          </main>
+          <TabBar route={route} />
         </div>
       )}
     </>
@@ -112,75 +124,75 @@ function MainApp() {
 function AppHeader({ route }: { route: Route }) {
   const { t } = useI18n();
   const now = useNow();
-  const { kind, scenario, status } = useSensorStore();
-  const context =
-    status !== 'connected'
-      ? t('header.noRing')
-      : kind === 'mock'
-        ? t('header.demoRing', { scenario: t(scenarioKey(scenario)) })
-        : t('header.ring');
-
+  const { kind, scenario, source } = useSensorStore();
+  const context = !source
+    ? t('link.offline')
+    : kind === 'sim'
+      ? t('home.sim', { scenario: t(scenarioKey(scenario)) })
+      : t('home.live');
   return (
-    <header className="grid h-12 grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 lg:h-14 lg:px-4">
+    <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 lg:h-12 lg:px-4">
       <div className="min-w-0">
-        <p className="hidden truncate text-[11px] text-label sm:block lg:hidden">{context}</p>
+        <p className="hidden truncate text-[11px] text-muted sm:block lg:hidden">{context}</p>
         <nav aria-label={t('nav.main')} className="hidden lg:block">
-          <ul className="flex gap-5">
-            {NAV.map(({ route: r, label }) => {
-              const active = isActive(r, route);
-              return (
-                <li key={r}>
-                  <a
-                    href={`#${r}`}
-                    aria-current={active ? 'page' : undefined}
-                    className={`label !text-[11px] transition-colors ${
-                      active ? (r === '/nadi' ? '!text-turmeric' : '!text-fg') : '!text-muted hover:!text-fg'
-                    }`}
-                  >
-                    {t(label)}
-                  </a>
-                </li>
-              );
-            })}
+          <ul className="flex gap-4">
+            {NAV.map(({ route: r, label }) => (
+              <li key={r}>
+                <a
+                  href={`#${r}`}
+                  aria-current={isActive(r, route) ? 'page' : undefined}
+                  className={`label transition-colors ${isActive(r, route) ? '!text-fg' : '!text-muted hover:!text-fg'}`}
+                >
+                  {t(label)}
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
-      <a href="#/dashboard" className="keep-tracking font-mono text-sm font-semibold tracking-[0.42em] text-fg lg:text-base">
-        NADI<span className="text-signal">SENSE</span>
+      <a href="#/dashboard" className="keep-tracking text-[13px] font-medium tracking-[0.32em] text-fg lg:text-[15px]">
+        NADISENSE
       </a>
-      <div className="flex items-center justify-end gap-4 text-[11px] text-label">
-        <span className="hidden truncate lg:inline">{context}</span>
-        <time className="font-mono text-muted tabular-nums">{clockTime(now)}</time>
+      <div className="flex items-center justify-end gap-3">
+        <span className="hidden truncate text-[11px] text-muted lg:inline">{context}</span>
+        <LinkChip />
+        <time className="hidden font-mono text-[11px] text-muted sm:inline">{clockTime(now)}</time>
       </div>
     </header>
   );
 }
 
-function BottomNav({ route }: { route: Route }) {
+const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
+  '/dashboard': HeartIcon,
+  '/validate': CheckListIcon,
+  '/nadi': SparkIcon,
+  '/history': ChartIcon,
+  '/settings': GearIcon,
+};
+
+/** Phone navigation: dark bar, icon over a small uppercase label. Hidden on desktop (tabs in the header). */
+function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
     <nav
       aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
-      <ul className="mx-auto flex max-w-[600px]">
+      <ul className="mx-auto flex max-w-xl">
         {NAV.map(({ route: r, label }) => {
           const active = isActive(r, route);
+          const Icon = TAB_ICON[r]!;
           return (
             <li key={r} className="min-w-0 flex-1">
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex h-14 items-center justify-center px-0.5 text-center text-[11px] leading-tight [overflow-wrap:anywhere] font-semibold tracking-[0.1em] uppercase ${
+                className={`relative flex h-14 flex-col items-center justify-center gap-0.5 px-0.5 text-center text-[10px] leading-tight font-medium tracking-[0.06em] uppercase [overflow-wrap:anywhere] ${
                   active ? 'text-fg' : 'text-muted'
                 }`}
               >
-                {active && (
-                  <span
-                    aria-hidden
-                    className={`absolute top-0 h-0.5 w-8 ${r === '/nadi' ? 'bg-turmeric' : 'bg-signal'}`}
-                  />
-                )}
+                {active && <span aria-hidden className="absolute top-0 h-0.5 w-8 bg-signal" />}
+                <Icon className={`size-5 ${active ? 'text-signal' : ''}`} />
                 {t(label)}
               </a>
             </li>

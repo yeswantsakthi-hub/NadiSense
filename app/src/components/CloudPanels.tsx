@@ -25,14 +25,12 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
   const { t } = useI18n();
   const consent = useCloudStore((s) => s.consent);
   const [summaries, setSummaries] = useState(consent.summaries);
-  const [raw, setRaw] = useState(consent.raw);
   const [message, setMessage] = useState<{ text: string; tone: 'ok' | 'error' } | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     setSummaries(consent.summaries);
-    setRaw(consent.raw);
-  }, [consent.summaries, consent.raw]);
+  }, [consent.summaries]);
 
   const save = async (next: { summaries: boolean; raw: boolean }) => {
     setBusy(true);
@@ -58,20 +56,13 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
           hint={t('cloud.summariesHint')}
           aside={firstTime ? undefined : onOff(consent.summaries)}
         />
-        <Toggle
-          checked={raw}
-          onChange={setRaw}
-          title={t('cloud.raw')}
-          hint={t('cloud.rawHint')}
-          aside={firstTime ? undefined : onOff(consent.raw)}
-        />
       </div>
       <div className="mt-3 flex gap-2">
         <button
           type="button"
           disabled={busy}
-          onClick={() => save({ summaries, raw })}
-          className="h-10 flex-1 rounded-[3px] bg-signal px-3 text-sm font-semibold text-white hover:bg-signal/85 disabled:opacity-60"
+          onClick={() => save({ summaries, raw: false })}
+          className="h-10 flex-1 rounded-[3px] bg-signal px-3 text-sm font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-60"
         >
           {t('cloud.save')}
         </button>
@@ -97,11 +88,11 @@ const SEXES: Sex[] = ['female', 'male', 'other', 'unsaid'];
 const num = (s: string): number | null => (s.trim() === '' ? null : Number(s));
 const str = (n: number | null | undefined): string => (n === null || n === undefined ? '' : String(n));
 
-/** Age, sex, body size and the blood-pressure cuff calibration. */
+/** Age, sex and body size. Blood-pressure calibration returns with ring v2. */
 export function ProfilePanel() {
   const { t, date } = useI18n();
   const profile = useCloudStore((s) => s.profile);
-  const [form, setForm] = useState({ age: '', sex: 'unsaid' as Sex, height: '', weight: '', sys: '', dia: '' });
+  const [form, setForm] = useState({ age: '', sex: 'unsaid' as Sex, height: '', weight: '' });
   const [message, setMessage] = useState<{ text: string; tone: 'ok' | 'error' } | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -111,25 +102,21 @@ export function ProfilePanel() {
       sex: profile.sex,
       height: str(profile.heightCm),
       weight: str(profile.weightKg),
-      sys: '',
-      dia: '',
     });
   }, [profile]);
 
   const set = (key: keyof typeof form) => (value: string) => setForm((f) => ({ ...f, [key]: value }));
 
   const save = async () => {
-    const sys = num(form.sys);
-    const dia = num(form.dia);
     const next: Profile = {
       age: num(form.age),
       sex: form.sex,
       heightCm: num(form.height),
       weightKg: num(form.weight),
-      // A new cuff reading replaces the old one; leaving both boxes empty keeps it.
-      cuff: sys !== null && dia !== null ? { sys, dia, at: Date.now() } : profile.cuff,
+      // Cuff calibration is entered again with ring v2; keep any earlier reading as it is.
+      cuff: profile.cuff,
     };
-    if (!validateProfile(next) || (sys === null) !== (dia === null)) {
+    if (!validateProfile(next)) {
       setMessage({ text: t('profile.invalid'), tone: 'error' });
       return;
     }
@@ -159,23 +146,22 @@ export function ProfilePanel() {
         />
       </div>
 
-      <h3 className="label mt-4">{t('profile.cuff')}</h3>
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <h3 className="label">{t('profile.cuff')}</h3>
+        <Tag tone="label">{t('v2.tag')}</Tag>
+      </div>
       {profile.cuff && (
         <p className="mt-1 font-mono text-xs text-fg">
           {t('profile.cuffLast', { sys: profile.cuff.sys, dia: profile.cuff.dia, date: date(profile.cuff.at) })}
         </p>
       )}
-      <div className="mt-2 grid grid-cols-2 gap-3">
-        <Field label={t('profile.systolic')} value={form.sys} onChange={set('sys')} inputMode="numeric" placeholder="mmHg" />
-        <Field label={t('profile.diastolic')} value={form.dia} onChange={set('dia')} inputMode="numeric" placeholder="mmHg" />
-      </div>
-      <p className="mt-1 text-[11px] text-muted">{t('profile.cuffHint')}</p>
+      <p className="mt-1 text-xs text-label">{t('v2.bpWhy')}</p>
 
       <button
         type="button"
         disabled={busy}
         onClick={save}
-        className="mt-4 h-10 w-full rounded-[3px] bg-signal text-sm font-semibold text-white hover:bg-signal/85 disabled:opacity-60"
+        className="mt-4 h-10 w-full rounded-[3px] bg-signal text-sm font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-60"
       >
         {t('profile.save')}
       </button>
@@ -217,7 +203,7 @@ export function DataPanel() {
       URL.revokeObjectURL(url);
     });
 
-  const button = 'h-10 w-full rounded-[3px] border text-sm font-semibold disabled:opacity-60';
+  const button = 'h-10 w-full rounded-full border text-sm font-semibold disabled:opacity-60';
   return (
     <Panel label={t('cloud.dataTitle')}>
       <div className="space-y-2">

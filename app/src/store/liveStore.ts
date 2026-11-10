@@ -1,11 +1,9 @@
 import { create } from 'zustand';
-import { ECG_RATE_HZ, IMU_RATE_HZ, PPG_RATE_HZ, type TempSample } from '../data/SensorSource';
 import type { MessageKey, Vars } from '../i18n';
-import { RingBuffer } from '../lib/RingBuffer';
+import type { LivePacket } from '../ring/packets';
 
-export type StreamId = 'ppg' | 'imu' | 'temp' | 'ecg';
 export type EventLevel = 'live' | 'info' | 'motion' | 'alert';
-export type EventSource = 'SYSTEM' | 'PPG' | 'IMU' | 'ECG' | 'TEMP';
+export type EventSource = 'SYSTEM' | 'RING';
 
 export interface LogEvent {
   id: number;
@@ -18,38 +16,26 @@ export interface LogEvent {
   vars?: Vars;
 }
 
-/** Time range on the ring clock (ms); `to` is null while the movement is still going on. */
-export interface Segment {
-  from: number;
-  to: number | null;
-}
-
 interface LiveState {
   connectedAt: number | null;
   events: LogEvent[];
-  moving: boolean;
-  movingSince: number | null;
-  motionSegments: Segment[];
-  streams: Record<StreamId, boolean>;
-  temp: TempSample | null;
-  battery: number | null;
+  /** Most recent packet from the ring (or simulator), and when it arrived (wall clock). */
+  latest: LivePacket | null;
+  lastPacketAt: number | null;
+  packets: number;
   log(source: EventSource, level: EventLevel, key: MessageKey, vars?: Vars): void;
   reset(): void;
 }
 
 const MAX_EVENTS = 60;
-const IDLE_STREAMS: Record<StreamId, boolean> = { ppg: false, imu: false, temp: false, ecg: false };
 let nextId = 1;
 
 export const useLiveStore = create<LiveState>((set) => ({
   connectedAt: null,
   events: [],
-  moving: false,
-  movingSince: null,
-  motionSegments: [],
-  streams: IDLE_STREAMS,
-  temp: null,
-  battery: null,
+  latest: null,
+  lastPacketAt: null,
+  packets: 0,
 
   log(source, level, key, vars) {
     const event = { id: nextId++, at: Date.now(), source, level, key, vars };
@@ -57,27 +43,28 @@ export const useLiveStore = create<LiveState>((set) => ({
   },
 
   reset() {
-    set({
-      connectedAt: Date.now(),
-      moving: false,
-      movingSince: null,
-      motionSegments: [],
-      streams: IDLE_STREAMS,
-      temp: null,
-      battery: null,
-    });
+    beatLog.length = 0;
+    set({ connectedAt: Date.now(), latest: null, lastPacketAt: null, packets: 0 });
   },
 }));
 
-/** High-rate display buffers live outside React state; the canvas reads them every frame. */
-export const ppgBuffer = new RingBuffer(PPG_RATE_HZ * 8);
-/** Acceleration magnitude in g. */
-export const imuBuffer = new RingBuffer(IMU_RATE_HZ * 8);
-export const ecgBuffer = new RingBuffer(ECG_RATE_HZ * 8);
+/** One detected beat. Kept outside React state; the beat strip reads it every frame. */
+export interface BeatRecord {
+  /** Wall-clock ms when the packet arrived. */
+  at: number;
+  rrMs: number;
+  beatSeq: number;
+  motion: boolean;
+}
 
-export const STREAM_INFO: Record<StreamId, { name: string; detail: MessageKey; hz?: number }> = {
-  ppg: { name: 'PPG', detail: 'stream.ppg', hz: PPG_RATE_HZ },
-  imu: { name: 'IMU', detail: 'stream.imu', hz: IMU_RATE_HZ },
-  temp: { name: 'TEMP', detail: 'stream.temp' },
-  ecg: { name: 'ECG', detail: 'stream.ecg', hz: ECG_RATE_HZ },
-};
+/** Beats from the last few minutes, oldest first (enough for a 2-minute rhythm window). */
+export const beatLog: BeatRecord[] = [];
+const BEAT_HISTORY_MS = 3 * 60_000;
+
+export function addBeat(beat: BeatRecord): void {
+  beatLog.push(beat);
+  const cutoff = beat.at - BEAT_HISTORY_MS;
+  let drop = 0;
+  while (drop < beatLog.length && beatLog[drop]!.at < cutoff) drop++;
+  if (drop) beatLog.splice(0, drop);
+}

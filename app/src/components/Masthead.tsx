@@ -1,40 +1,31 @@
+import type { ReactNode } from 'react';
 import { useI18n } from '../i18n';
+import { RingArt } from './RingArt';
 
-/** One idealised pulse beat, repeated, for the masthead trace. */
-const TRACE =
-  'M0 70 L40 70 C52 70 54 22 62 22 C70 22 72 54 80 56 C84 57 86 48 92 48 C100 48 104 66 120 70 ' +
-  'L160 70 C172 70 174 22 182 22 C190 22 192 54 200 56 C204 57 206 48 212 48 C220 48 224 66 240 70 ' +
-  'L280 70 C292 70 294 22 302 22 C310 22 312 54 320 56 C324 57 326 48 332 48 C340 48 344 66 360 70 L400 70';
+/** Console-style wordmark bar used before the main app (sign-in, pairing). */
+export function Wordmark() {
+  return (
+    <p className="keep-tracking border-b border-line py-3 text-center text-[13px] font-medium tracking-[0.32em]">NADISENSE</p>
+  );
+}
 
-/** Wordmark, tagline and a decorative pulse trace for the sign-in and connect screens. */
-export function Masthead({ caption }: { caption: string }) {
+/** Top of the sign-in and pairing screens: wordmark, title block, product shot in a panel. */
+export function Masthead({ title, subtitle, active }: { title?: ReactNode; subtitle?: ReactNode; active?: boolean }) {
   const { t } = useI18n();
   return (
-    <>
-      <header className="text-center">
-        <h1 className="keep-tracking font-mono text-2xl font-semibold tracking-[0.42em] pl-[0.42em]">NADISENSE</h1>
-        <p className="mt-2 text-sm text-label">{t('app.tagline')}</p>
-      </header>
-
-      <figure aria-hidden className="relative mt-6 overflow-hidden rounded-[3px] border border-line bg-panel">
-        <svg viewBox="0 0 400 100" className="block h-24 w-full" preserveAspectRatio="none">
-          <defs>
-            <pattern id="grid-minor" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M20 0V20H0" fill="none" stroke="var(--grid-strong)" strokeWidth="1" />
-            </pattern>
-            <linearGradient id="fade" x1="0" x2="1">
-              <stop offset="0" stopColor="var(--signal)" stopOpacity="0.15" />
-              <stop offset="1" stopColor="var(--signal)" stopOpacity="1" />
-            </linearGradient>
-          </defs>
-          <rect width="400" height="100" fill="url(#grid-minor)" />
-          <path d={TRACE} fill="none" stroke="url(#fade)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-        </svg>
-        <figcaption className="flex justify-between border-t border-line px-3 py-1.5 font-mono text-[10px] text-muted">
-          <span>PPG · IR</span>
-          <span>{caption}</span>
-        </figcaption>
-      </figure>
-    </>
+    <header>
+      <div className="-mx-4">
+        <Wordmark />
+      </div>
+      <div className="mt-5 rounded-[3px] border border-line bg-panel">
+        <div className="px-3.5 pt-3.5">
+          <h1 className="text-[22px] leading-tight font-medium">{title ?? t('app.tagline')}</h1>
+          {subtitle && <p className="mt-1 text-[12px] text-label">{subtitle}</p>}
+        </div>
+        <div className="mx-3.5 mt-3 mb-3.5 rounded-[2px] bg-panel-2 py-2">
+          <RingArt active={active} className="mx-auto h-28 w-full max-w-[240px]" />
+        </div>
+      </div>
+    </header>
   );
 }

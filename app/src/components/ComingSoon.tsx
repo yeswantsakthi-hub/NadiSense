@@ -1,25 +1,24 @@
-import { Panel } from './Panel';
+import { Panel, Tag } from './Panel';
 
 interface Props {
   title: string;
-  /** Console-style empty state, e.g. "no session registered". */
-  empty: string;
-  children: string;
-  accent?: 'signal' | 'turmeric';
+  tag: string;
+  /** Features this screen will hold, each with why the v1 ring can't measure it yet. */
+  items: { name: string; why: string }[];
+  footnote: string;
 }
 
-/** Holding panel for screens that land in later build phases. */
-export function ComingSoon({ title, empty, children, accent = 'signal' }: Props) {
+/** Placeholder for Stage 2 features the v1 ring can't measure. Shows no numbers, ever. */
+export function ComingSoon({ title, tag, items, footnote }: Props) {
   return (
-    <div className="mx-auto max-w-3xl pt-2">
-      <Panel
-        label={title}
-        labelClassName={accent === 'turmeric' ? '!text-turmeric' : ''}
-        className={accent === 'turmeric' ? 'border-turmeric/25' : ''}
-      >
-        <p className="font-mono text-sm text-muted">{empty}</p>
-        <p className="mt-2 max-w-prose text-sm text-label">{children}</p>
-      </Panel>
+    <div className="mx-auto max-w-3xl space-y-3 pt-2">
+      <h1 className="text-xl font-semibold">{title}</h1>
+      {items.map((item) => (
+        <Panel key={item.name} label={item.name} aside={<Tag tone="label">{tag}</Tag>}>
+          <p className="text-sm text-label">{item.why}</p>
+        </Panel>
+      ))}
+      <p className="text-xs text-muted">{footnote}</p>
     </div>
   );
 }

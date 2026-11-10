@@ -54,8 +54,30 @@ describe('rollupByDay', () => {
       session({ day: '2026-10-03', durationS: 600, flaggedS: 30, temp: { min: 36, max: 37, avg: 36.8, n: 1 } }),
     ]);
     expect(rows.map((r) => r.day)).toEqual(['2026-10-04', '2026-10-03']);
-    expect(rows[1]).toEqual({ day: '2026-10-03', sessions: 2, minutes: 30, motionPct: 5, tempAvg: 36.6 });
+    expect(rows[1]).toEqual({
+      day: '2026-10-03',
+      sessions: 2,
+      minutes: 30,
+      motionPct: 5,
+      tempAvg: 36.6,
+      hrAvg: null,
+      spo2Avg: null,
+      irregular: 0,
+    });
     expect(rows[0]!.tempAvg).toBeNull();
+  });
+
+  it('weights heart rate and SpO2 by session length and counts rhythm flags', () => {
+    const rows = rollupByDay([
+      session({ durationS: 600, vitals: { hr: 60, spo2: 98, hrv: null, resp: null }, rhythm: null }),
+      session({
+        durationS: 1800,
+        vitals: { hr: 80, spo2: 94, hrv: 40, resp: null },
+        rhythm: { status: 'irregular', rmssdMs: 140, pnn50: 70 },
+      }),
+      session({ durationS: 300 }),
+    ]);
+    expect(rows[0]).toMatchObject({ hrAvg: 75, spo2Avg: 95, irregular: 1, sessions: 3 });
   });
 
   it('is empty without sessions', () => {
@@ -110,6 +132,18 @@ describe('SessionStats', () => {
       flaggedS: 6,
       temp: { min: 36.5, max: 36.7, avg: 36.6, n: 2 },
       battery: { start: 86, end: 84 },
+    });
+  });
+
+  it('averages only the readings it is given and keeps the rhythm result', () => {
+    const s = new SessionStats('ble', null, 0, 'r');
+    s.reading(70, 98);
+    s.reading(74, null);
+    s.reading(null, 96);
+    s.rhythm({ status: 'regular', rmssdMs: 32, pnn50: 8 });
+    expect(s.summary(60_000)).toMatchObject({
+      vitals: { hr: 72, spo2: 97, hrv: 32, resp: null },
+      rhythm: { status: 'regular', rmssdMs: 32, pnn50: 8 },
     });
   });
 

@@ -13,6 +13,11 @@ export class SessionStats {
   private tempN = 0;
   private batteryStart: number | null = null;
   private batteryEnd: number | null = null;
+  private hrSum = 0;
+  private hrN = 0;
+  private spo2Sum = 0;
+  private spo2N = 0;
+  private rhythmResult: SessionSummary['rhythm'] = null;
 
   constructor(
     private readonly source: SessionSummary['source'],
@@ -43,6 +48,22 @@ export class SessionStats {
     this.tempN += 1;
   }
 
+  /** Only call with readings that passed the confidence gate. */
+  reading(hrBpm: number | null, spo2Pct: number | null): void {
+    if (hrBpm !== null) {
+      this.hrSum += hrBpm;
+      this.hrN += 1;
+    }
+    if (spo2Pct !== null) {
+      this.spo2Sum += spo2Pct;
+      this.spo2N += 1;
+    }
+  }
+
+  rhythm(result: SessionSummary['rhythm']): void {
+    this.rhythmResult = result;
+  }
+
   battery(percent: number): void {
     this.batteryStart ??= percent;
     this.batteryEnd = percent;
@@ -66,7 +87,13 @@ export class SessionStats {
         ? { min: this.tempMin, max: this.tempMax, avg: round2(this.tempSum / this.tempN), n: this.tempN }
         : null,
       battery: this.batteryStart !== null && this.batteryEnd !== null ? { start: this.batteryStart, end: this.batteryEnd } : null,
-      vitals: { hr: null, spo2: null, hrv: null, resp: null },
+      vitals: {
+        hr: this.hrN ? Math.round(this.hrSum / this.hrN) : null,
+        spo2: this.spo2N ? Math.round(this.spo2Sum / this.spo2N) : null,
+        hrv: this.rhythmResult?.rmssdMs ?? null,
+        resp: null,
+      },
+      rhythm: this.rhythmResult,
     };
   }
 }

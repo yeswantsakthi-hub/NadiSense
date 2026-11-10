@@ -62,7 +62,7 @@ export function Report() {
           type="button"
           disabled={busy || !consent.summaries}
           onClick={() => run(() => createShare(account.name || account.email, profile))}
-          className="mt-3 h-11 w-full rounded-[3px] bg-signal font-semibold text-white hover:bg-signal/85 disabled:opacity-50"
+          className="mt-3 h-11 w-full rounded-[3px] bg-signal font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-50"
         >
           {busy ? t('auth.wait') : t('share.create')}
         </button>

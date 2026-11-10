@@ -10,7 +10,7 @@ export function LanguagePicker({ compact = false }: { compact?: boolean }) {
 
   return (
     <fieldset>
-      <legend className="label mb-2">{t('lang.label')}</legend>
+      <legend className={compact ? 'sr-only' : 'label mb-2'}>{t('lang.label')}</legend>
       <div className={`grid gap-1.5 ${compact ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-4'}`}>
         {LANGUAGES.map((l) => {
           const selected = l.code === lang;
