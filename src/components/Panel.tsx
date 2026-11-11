@@ -12,27 +12,27 @@ interface Props {
   as?: 'section' | 'div';
 }
 
-/** Charcoal console panel with a small uppercase olive label. */
+/** Raised graphite card with a small monospaced label. */
 export function Panel({ label, aside, children, className = '', flush, labelClassName = '', as = 'section' }: Props) {
   const Tag = as;
   return (
-    <Tag className={`rounded-[3px] border border-line bg-panel ${className}`}>
-      <header className="flex min-h-9 items-center justify-between gap-3 px-3.5 pt-2.5 pb-1.5">
+    <Tag className={`surface rounded-2xl ${className}`}>
+      <header className="flex min-h-11 items-center justify-between gap-3 px-4 pt-3.5 pb-2">
         <h2 className={`label ${labelClassName}`}>{label}</h2>
         {aside && <div className="flex items-center gap-3 text-[11px] text-muted">{aside}</div>}
       </header>
-      <div className={flush ? '' : 'px-3.5 pb-3.5'}>{children}</div>
+      <div className={flush ? '' : 'px-4 pb-4'}>{children}</div>
     </Tag>
   );
 }
 
-/** Outlined uppercase status tag, like EMERGENCY / ADVISORY. Alarms also carry ⚠. */
+/** Small status pill. Alarms are filled and carry ⚠. */
 export function Tag({ children, tone = 'muted' }: { children: ReactNode; tone?: Tone }) {
   return (
     <span
-      className={`shrink-0 rounded-[2px] border px-1.5 py-px text-[10px] font-medium tracking-[0.06em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-medium tracking-[0.06em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
     >
-      {tone === 'alert' && <span aria-hidden>⚠ </span>}
+      {tone === 'alert' ? <span aria-hidden>⚠</span> : <span aria-hidden className="size-1.5 rounded-full bg-current" />}
       {children}
     </span>
   );
@@ -50,10 +50,10 @@ export const TONE_TEXT: Record<Tone, string> = {
 };
 
 const TONE_TAG: Record<Tone, string> = {
-  signal: 'border-signal/60 text-signal',
-  amber: 'border-amber/60 text-amber',
-  alert: 'border-alert bg-alert/15 text-alert',
-  muted: 'border-line-strong text-muted',
-  label: 'border-label/50 text-label',
-  turmeric: 'border-turmeric/60 text-turmeric',
+  signal: 'bg-signal/12 text-signal ring-1 ring-signal/25',
+  amber: 'bg-amber/12 text-amber ring-1 ring-amber/25',
+  alert: 'bg-alert text-white',
+  muted: 'bg-white/5 text-muted ring-1 ring-line-strong',
+  label: 'bg-white/5 text-label ring-1 ring-line-strong',
+  turmeric: 'bg-turmeric/12 text-turmeric ring-1 ring-turmeric/25',
 };

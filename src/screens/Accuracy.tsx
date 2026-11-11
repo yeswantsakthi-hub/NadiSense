@@ -70,7 +70,7 @@ export function Accuracy() {
           type="button"
           disabled={busy || sessions.length === 0}
           onClick={exportPdf}
-          className="mt-4 h-11 w-full rounded-[3px] bg-signal text-sm font-semibold text-brand-ink transition hover:bg-signal/90 disabled:opacity-50"
+          className="mt-4 h-11 w-full rounded-xl btn-primary text-sm font-semibold text-brand-ink transition hover:btn-primary/90 disabled:opacity-50"
         >
           {t('acc.pdf')}
         </button>
@@ -156,7 +156,7 @@ function BlandAltman({ a, label }: { a: MetricAccuracy; label: string }) {
   // Round up to a step that gives tidy ticks at ±max and ±max/2.
   const yMax = niceMax(extent * 1.15);
   return (
-    <figure role="img" aria-label={label} className="mt-3 h-56 rounded-[2px] bg-panel-2 pt-2 pr-2">
+    <figure role="img" aria-label={label} className="mt-3 h-56 rounded-lg bg-panel-2 pt-2 pr-2">
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 6, right: 8, bottom: 18, left: 0 }}>
           <CartesianGrid stroke={CHART.grid} />
@@ -189,7 +189,7 @@ function BlandAltman({ a, label }: { a: MetricAccuracy; label: string }) {
               const p = payload?.[0]?.payload as AgreementPoint | undefined;
               if (!p) return null;
               return (
-                <div className="rounded-[3px] border border-line-strong bg-panel px-2 py-1 text-[11px]">
+                <div className="rounded-xl border border-line-strong bg-panel px-2 py-1 text-[11px]">
                   <p className="font-semibold">{p.volunteerId}</p>
                   <p className="font-mono text-label">
                     {t('acc.ringCol')} {p.ring} · {t('acc.reference')} {p.reference} · {t('acc.diff')} {p.diff > 0 ? '+' : ''}

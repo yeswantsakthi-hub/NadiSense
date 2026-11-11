@@ -393,4 +393,6 @@ export const ml: Messages = {
   'history.baselineWait': 'നിങ്ങളുടെ ആദ്യ 3 സെഷനുകൾ അടിസ്ഥാനം നിശ്ചയിച്ച ശേഷം താപനില മാറ്റം കാണാം.',
   'history.trendRhythm': 'താളം · RMSSD ms',
   'history.flaggedDot': 'ചുവന്ന കുത്ത്: ആ സെഷനിലെ താള പരിശോധന ക്രമരഹിത താളം ആകാമെന്ന് കാണിച്ചു.',
+
+  'p.gate': 'റീഡിംഗ് ഗേറ്റ്',
 };

@@ -393,4 +393,6 @@ export const kn: Messages = {
   'history.baselineWait': 'ನಿಮ್ಮ ಮೊದಲ 3 ಅವಧಿಗಳು ಆಧಾರವನ್ನು ನಿಗದಿಪಡಿಸಿದ ನಂತರ ತಾಪಮಾನ ಬದಲಾವಣೆ ಕಾಣಿಸುತ್ತದೆ.',
   'history.trendRhythm': 'ಲಯ · RMSSD ms',
   'history.flaggedDot': 'ಕೆಂಪು ಚುಕ್ಕೆ: ಆ ಅವಧಿಯ ಲಯ ಪರಿಶೀಲನೆ ಅನಿಯಮಿತ ಲಯ ಇರಬಹುದೆಂದು ತೋರಿಸಿತು.',
+
+  'p.gate': 'ಓದುವಿಕೆ ಗೇಟ್',
 };

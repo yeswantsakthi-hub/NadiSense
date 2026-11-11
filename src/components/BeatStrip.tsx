@@ -61,6 +61,7 @@ export function BeatStrip({ label, windowMs = 6000, className = '', colorVar = '
       for (let g = Math.ceil(left / 1000) * 1000; g <= now; g += 1000) {
         ctx.fillRect(Math.round(((g - left) / windowMs) * width), 0, 1, height);
       }
+      for (let r = 1; r < 4; r++) ctx.fillRect(0, Math.round((height * r) / 4), width, 1);
 
       // Only beats that can still be on screen.
       const beats = beatLog.filter((b) => b.at > left - 1500);
@@ -79,8 +80,24 @@ export function BeatStrip({ label, windowMs = 6000, className = '', colorVar = '
         return { y: base - Math.min(1.3, v) * amp, motion };
       };
 
-      ctx.lineWidth = 2;
+      // Soft fill under the trace.
+      const fill = ctx.createLinearGradient(0, height * 0.1, 0, height);
+      fill.addColorStop(0, trace);
+      fill.addColorStop(1, 'transparent');
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      for (let x = 0; x <= width; x += 2) ctx.lineTo(x, yAt(left + (x / width) * windowMs).y);
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.lineWidth = 2.25;
       ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
       let current: boolean | null = null;
       for (let x = 0; x <= width; x += 1) {
         const t = left + (x / width) * windowMs;
@@ -98,8 +115,13 @@ export function BeatStrip({ label, windowMs = 6000, className = '', colorVar = '
       const head = yAt(now);
       ctx.fillStyle = head.motion ? warn : trace;
       ctx.beginPath();
-      ctx.arc(width - 3, head.y, 3, 0, Math.PI * 2);
+      ctx.arc(width - 4, head.y, 3.5, 0, Math.PI * 2);
       ctx.fill();
+      ctx.globalAlpha = 0.25;
+      ctx.beginPath();
+      ctx.arc(width - 4, head.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
     };
     frame = requestAnimationFrame(draw);
 

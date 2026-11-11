@@ -87,3 +87,29 @@ export const ChevronIcon = (p: IconProps) => (
     <path d="m9 6 6 6-6 6" />
   </Svg>
 );
+
+export const DropIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 3.5s6 6.4 6 10.7a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5Z" />
+    <path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5" />
+  </Svg>
+);
+
+export const ThermoIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z" />
+    <path d="M12 9v7" />
+  </Svg>
+);
+
+export const WaveIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M2.5 12h3l2-5 3 10 2.5-7 2 4h6.5" />
+  </Svg>
+);
+
+export const CheckIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m5 12.5 4.5 4.5L19 7.5" />
+  </Svg>
+);

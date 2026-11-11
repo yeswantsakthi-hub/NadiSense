@@ -20,7 +20,7 @@ export function Settings() {
   const { account, signOut } = useAuthStore();
 
   return (
-    <div className="mx-auto grid max-w-4xl gap-3 pt-2 md:grid-cols-2">
+    <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2 [&>*]:min-w-0">
       <div className="space-y-3">
         <Panel label={t('settings.account')}>
           {account ? (
@@ -35,7 +35,7 @@ export function Settings() {
           <button
             type="button"
             onClick={signOut}
-            className="mt-3 h-10 w-full rounded-[3px] border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
+            className="mt-3 h-10 w-full rounded-xl border border-line-strong text-sm font-semibold transition-colors hover:border-fg/60"
           >
             {account ? t('settings.signOut') : t('auth.signIn')}
           </button>
@@ -87,7 +87,7 @@ export function Settings() {
               type="button"
               disabled={status === 'connecting'}
               onClick={() => (source ? disconnect() : connect())}
-              className={`h-11 w-full rounded-[3px] border font-semibold transition-colors disabled:opacity-60 ${
+              className={`h-11 w-full rounded-xl border font-semibold transition-colors disabled:opacity-60 ${
                 source
                   ? 'border-line-strong hover:border-fg/60'
                   : 'border-signal/60 bg-signal/10 text-fg hover:bg-signal/15'
@@ -97,7 +97,7 @@ export function Settings() {
             </button>
             <a
               href="#/diagnostics"
-              className="flex h-11 w-full items-center justify-center rounded-[3px] border border-line-strong text-sm font-semibold transition hover:border-fg/50"
+              className="flex h-11 w-full items-center justify-center rounded-xl bg-white/[0.04] text-sm font-semibold ring-1 ring-line-strong transition hover:bg-white/[0.07]"
             >
               {t('diag.title')} →
             </a>

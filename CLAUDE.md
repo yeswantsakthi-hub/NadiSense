@@ -76,25 +76,27 @@ src/cloud/         optional Firestore backup + doctor links
   reference readings (oximeter HR/SpO₂, thermometer), per-session ring-mean vs reference difference,
   CSV export (samples and accuracy table) through the share sheet.
 
-## Design direction (operations console, like a monitoring dashboard)
-- Dark only. Tokens in `src/index.css`: page `#0c0c0d`, charcoal panels `#232426` with a thin
-  border `#36383c` and almost square corners (`rounded-[3px]`), no shadows. Text `#e9e9e6`;
-  small uppercase olive labels (`.label`, `#a7a47a`); muted `#8d8c86`.
-- Colour means state: green `#4cc06a` (`signal`) = live / trusted, amber `#f0a33f` = changes and
-  "hold still", red `#e2483f` (`alert`) = screening flags only, blue `#4a90d9` (`select`) =
-  focused/selected. Tags are outlined uppercase (`<Tag>`); alert tags are filled with ⚠.
-- Roboto, figures with tabular numerals. No glows, neon or glass effects. Primary buttons are
-  green with black text; selected chips are outlined green.
-- Pulse console (`Dashboard.tsx`): full-width status banner (big status word LIVE / HOLD STILL /
-  PLACE RING / NO DATA / POSSIBLE IRREGULAR, title, gate rule, lead + bullets, KPIs) → beat-timing
-  chart with axes → metric cards (HR, SpO₂, temp drift, rhythm) with state-coloured borders and
-  battery footer. Right column (stacked on phones): event log, rhythm analysis (RMSSD, pNN50
-  vs. flag limits), last validation session, disclaimer.
-- Sign-in and pairing: spaced `NADISENSE` wordmark bar, then panels (title + ring product shot).
-- Shell: header with nav labels (desktop) / context (phone), centred wordmark, link + battery and
-  clock on the right; dark bottom tab bar on phones: Pulse · Validate · Nadi (v2) · History ·
-  Settings. Other screens use a single max-w-3xl column. Motion is minimal and off under
-  prefers-reduced-motion.
+## Design direction (premium medical instrument, dark)
+- Dark only. Tokens in `src/index.css`: ink page `#08090b` with a faint warm glow at the top;
+  raised graphite surfaces (`.surface`: `#111317`, hairline `rgba(255,255,255,.07)`, top highlight,
+  soft depth) with `rounded-2xl` cards and `rounded-3xl` heroes. Text `#eef0f3` / `#9aa3b2` / `#6b7380`.
+- Colour means something: saffron `#ff9a3c` (`brand`) = brand and primary action (`.btn-primary`,
+  active tab, selection); green `#3ddc97` (`signal`) = live / trusted; red `#ff4d5e` (`alert`) =
+  screening flags only (filled `<Tag tone="alert">` with ⚠); amber = hold still; coral heart,
+  cyan SpO₂, gold temperature, violet rhythm.
+- Type: IBM Plex Sans (+ Plex Sans Devanagari, Noto for other scripts); IBM Plex Mono for the small
+  uppercase `.label`s, units and timestamps. Big figures are semibold with tabular numerals.
+- Brand: `components/Logo.tsx` (ring + pulse mark, "Nadi**Sense**" wordmark). No emoji, no generic
+  stock icons; line icons in `components/icons.tsx`.
+- Pulse (`Dashboard.tsx`): hero card with status pill, the heart-rate dial (ticks lit to the HR,
+  heart pops per beat), the filled live waveform, and the reading gate as three check pills →
+  SpO₂ / temperature-drift / rhythm cards with 10-minute sparklines → side column: rhythm analysis
+  bars against the flag limits, event timeline, validation shortcut, disclaimer.
+- Sign-in and pairing: wordmark bar, then a hero card (large headline, ring on a lit stage, the
+  four v1 measurements as chips).
+- Shell: sticky blurred header (wordmark, text tabs on desktop, link/battery pill, clock);
+  floating rounded tab bar on phones with a saffron active pill. Secondary screens have a large
+  page title and sit in a max-w-3xl column. Motion is subtle and off under prefers-reduced-motion.
 
 ## Working rules for Claude Code
 - Keep `dsp/`, `ring/packets.ts`, `ring/readings.ts` and `validation/model.ts` free of React and

@@ -393,4 +393,6 @@ export const bn: Messages = {
   'history.baselineWait': 'আপনার প্রথম 3টি সেশন ভিত্তি ঠিক করার পরে তাপমাত্রার পরিবর্তন দেখা যাবে।',
   'history.trendRhythm': 'ছন্দ · RMSSD ms',
   'history.flaggedDot': 'লাল বিন্দু: সেই সেশনের ছন্দ পরীক্ষায় সম্ভাব্য অনিয়মিত ছন্দ দেখা গেছে।',
+
+  'p.gate': 'রিডিং গেট',
 };
