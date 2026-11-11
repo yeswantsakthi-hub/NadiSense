@@ -85,13 +85,10 @@ body {
   border-radius: 6px;
 }
 
-/* Instrument labels: small, monospaced, uppercase. */
+/* Small secondary label: plain sentence case, easy to read. */
 .label {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--label);
 }
 
@@ -99,9 +96,6 @@ body {
 html:not([lang="en"]) .label,
 html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   letter-spacing: normal;
-}
-html:not([lang="en"]) .label {
-  font-family: var(--font-sans);
 }
 
 /* Raised surface: graphite with a faint top highlight and soft depth. */

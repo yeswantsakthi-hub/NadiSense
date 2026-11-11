@@ -12,16 +12,16 @@ interface Props {
   as?: 'section' | 'div';
 }
 
-/** Raised graphite card with a small monospaced label. */
+/** Raised card with a plain title. */
 export function Panel({ label, aside, children, className = '', flush, labelClassName = '', as = 'section' }: Props) {
   const Tag = as;
   return (
     <Tag className={`surface rounded-2xl ${className}`}>
-      <header className="flex min-h-11 items-center justify-between gap-3 px-4 pt-3.5 pb-2">
-        <h2 className={`label ${labelClassName}`}>{label}</h2>
+      <header className="flex min-h-12 items-center justify-between gap-3 px-5 pt-4 pb-2">
+        <h2 className={`text-[15px] font-semibold text-fg ${labelClassName}`}>{label}</h2>
         {aside && <div className="flex items-center gap-3 text-[11px] text-muted">{aside}</div>}
       </header>
-      <div className={flush ? '' : 'px-4 pb-4'}>{children}</div>
+      <div className={flush ? '' : 'px-5 pb-5'}>{children}</div>
     </Tag>
   );
 }
@@ -30,9 +30,9 @@ export function Panel({ label, aside, children, className = '', flush, labelClas
 export function Tag({ children, tone = 'muted' }: { children: ReactNode; tone?: Tone }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-medium tracking-[0.06em] whitespace-nowrap uppercase ${TONE_TAG[tone]}`}
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-medium whitespace-nowrap ${TONE_TAG[tone]}`}
     >
-      {tone === 'alert' ? <span aria-hidden>⚠</span> : <span aria-hidden className="size-1.5 rounded-full bg-current" />}
+      {tone === 'alert' && <span aria-hidden>⚠</span>}
       {children}
     </span>
   );
