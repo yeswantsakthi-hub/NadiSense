@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { MessageKey, Vars } from '../i18n';
+import type { LoggedPacket } from '../ring/diagnostics';
 import type { LivePacket } from '../ring/packets';
 
 export type EventLevel = 'live' | 'info' | 'motion' | 'alert';
@@ -44,6 +45,7 @@ export const useLiveStore = create<LiveState>((set) => ({
 
   reset() {
     beatLog.length = 0;
+    packetLog.length = 0;
     set({ connectedAt: Date.now(), latest: null, lastPacketAt: null, packets: 0 });
   },
 }));
@@ -67,4 +69,16 @@ export function addBeat(beat: BeatRecord): void {
   let drop = 0;
   while (drop < beatLog.length && beatLog[drop]!.at < cutoff) drop++;
   if (drop) beatLog.splice(0, drop);
+}
+
+/** Every packet from the last few minutes, oldest first, for the ring diagnostics screen. */
+export const packetLog: LoggedPacket[] = [];
+const PACKET_HISTORY_MS = 10 * 60_000;
+
+export function addPacket(entry: LoggedPacket): void {
+  packetLog.push(entry);
+  const cutoff = entry.at - PACKET_HISTORY_MS;
+  let drop = 0;
+  while (drop < packetLog.length && packetLog[drop]!.at < cutoff) drop++;
+  if (drop) packetLog.splice(0, drop);
 }

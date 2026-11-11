@@ -8,7 +8,7 @@ import { FINGER_ON } from '../ring/contract';
 import { readingState } from '../ring/readings';
 import type { LinkStatus } from '../ring/RingSource';
 import { saveLocalSession } from '../store/db';
-import { addBeat, beatLog, useLiveStore } from '../store/liveStore';
+import { addBeat, addPacket, beatLog, useLiveStore } from '../store/liveStore';
 import { useSensorStore } from '../store/sensorStore';
 
 const LOW_BATTERY = 15;
@@ -71,6 +71,7 @@ export function SessionMonitor() {
 
     const offPacket = source.onPacket((p, at) => {
       useLiveStore.setState((s) => ({ latest: p, lastPacketAt: at, packets: s.packets + 1 }));
+      addPacket({ at, p });
       const log = useLiveStore.getState().log;
 
       if (p.rrMs !== null) addBeat({ at, rrMs: p.rrMs, beatSeq: p.beatSeq, motion: p.motion });

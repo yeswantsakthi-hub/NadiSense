@@ -9,6 +9,7 @@ import { readShareToken, type Route } from './lib/route';
 
 import { Connect } from './screens/Connect';
 import { Dashboard } from './screens/Dashboard';
+import { Diagnostics } from './screens/Diagnostics';
 import { EcgCheck } from './screens/EcgCheck';
 import { History } from './screens/History';
 import { NadiInsights } from './screens/NadiInsights';
@@ -39,6 +40,7 @@ const SCREENS: Record<Route, () => ReactNode> = {
   '/history': () => <History />,
   '/report': () => <Report />,
   '/settings': () => <Settings />,
+  '/diagnostics': () => <Diagnostics />,
 };
 
 const NAV: { route: Route; label: MessageKey }[] = [
@@ -80,7 +82,7 @@ function useRoute(): Route {
 }
 
 function isActive(navRoute: Route, route: Route): boolean {
-  return navRoute === route || (navRoute === '/history' && route === '/report') || (navRoute === '/validate' && route === '/accuracy');
+  return navRoute === route || (navRoute === '/history' && route === '/report') || (navRoute === '/validate' && route === '/accuracy') || (navRoute === '/settings' && route === '/diagnostics');
 }
 
 /** Doctor links (#/share/<token>) are public pages outside the sign-in gate. */
