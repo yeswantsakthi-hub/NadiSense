@@ -87,7 +87,7 @@ export function Settings() {
               type="button"
               disabled={status === 'connecting'}
               onClick={() => (source ? disconnect() : connect())}
-              className={`h-11 w-full rounded-full border font-semibold transition-colors disabled:opacity-60 ${
+              className={`h-11 w-full rounded-[3px] border font-semibold transition-colors disabled:opacity-60 ${
                 source
                   ? 'border-line-strong hover:border-fg/60'
                   : 'border-signal/60 bg-signal/10 text-fg hover:bg-signal/15'
@@ -95,6 +95,12 @@ export function Settings() {
             >
               {source ? t('settings.disconnect') : t('settings.connect')}
             </button>
+            <a
+              href="#/diagnostics"
+              className="flex h-11 w-full items-center justify-center rounded-[3px] border border-line-strong text-sm font-semibold transition hover:border-fg/50"
+            >
+              {t('diag.title')} →
+            </a>
             {error && (
               <p role="alert" className="border-l-2 border-alert pl-3 text-sm text-alert">
                 {isMessageKey(error) ? t(error) : error}

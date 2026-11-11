@@ -206,6 +206,12 @@ export function Validation() {
             >
               {t('val.exportAll')}
             </button>
+            <a
+              href="#/accuracy"
+              className="mb-3 flex h-11 w-full items-center justify-center rounded-[3px] border border-line-strong text-sm font-semibold transition hover:border-fg/50"
+            >
+              {t('acc.title')} →
+            </a>
             {message && (
               <p role="status" className="mb-2 text-xs text-signal">
                 {message}

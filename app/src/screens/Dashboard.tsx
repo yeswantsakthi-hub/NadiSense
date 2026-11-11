@@ -8,6 +8,7 @@ import { useI18n, type MessageKey } from '../i18n';
 import { useNow } from '../lib/useNow';
 import { FINGER_ON } from '../ring/contract';
 import { readingState, type ReadingState } from '../ring/readings';
+import { SimulatedRing, TOUR_STEPS } from '../ring/SimulatedRing';
 import { useSessions, useValidations } from '../store/db';
 import { beatLog, useLiveStore } from '../store/liveStore';
 import { useSensorStore } from '../store/sensorStore';
@@ -61,6 +62,7 @@ export function Dashboard() {
 
   return (
     <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <TourStrip rhythm={rhythm} />
       {/* Status banner */}
       <section
         aria-label={t('status.aria')}
@@ -206,6 +208,35 @@ export function Dashboard() {
         <p className="px-1 text-[11px] text-muted">{t('app.disclaimer')}</p>
       </div>
     </div>
+  );
+}
+
+const TOUR_TEXT: MessageKey[] = ['tour.s1', 'tour.s2', 'tour.s3', 'tour.s4'];
+
+/** Labels the demo tour on screen (for the Stage 3 video): which step is running and what it shows. */
+function TourStrip({ rhythm }: { rhythm: RhythmResult }) {
+  const { t } = useI18n();
+  const source = useSensorStore((s) => s.source);
+  useNow(500);
+  const tour = source instanceof SimulatedRing ? source.tourStatus() : null;
+  if (!tour) return null;
+  const last = tour.step === TOUR_STEPS.length;
+  return (
+    <section aria-label={t('tour.label')} className="rounded-[3px] border border-select/60 bg-select/10 px-4 py-2.5 lg:col-span-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <Tag tone="label">{t('tour.label')}</Tag>
+        <span className="font-mono text-[12px] text-label">{t('tour.step', { n: tour.step, total: TOUR_STEPS.length })}</span>
+        <span className="min-w-0 flex-1 text-[13px] font-medium">{t(TOUR_TEXT[tour.step - 1]!)}</span>
+        {last && rhythm.status === 'collecting' && (
+          <span className="font-mono text-[12px] text-label">{Math.round(rhythm.progress * 100)}%</span>
+        )}
+      </div>
+      <ol aria-hidden className="mt-2 grid grid-cols-4 gap-1">
+        {TOUR_STEPS.map((_, i) => (
+          <li key={i} className={`h-1 rounded-full ${i < tour.step ? 'bg-select' : 'bg-line'}`} />
+        ))}
+      </ol>
+    </section>
   );
 }
 
