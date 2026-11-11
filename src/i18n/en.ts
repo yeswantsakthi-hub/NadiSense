@@ -398,6 +398,8 @@ export const en = {
   'diag.cTimestamps': 'The ring’s clock always moves forward',
   'diag.cKeepaliveSeq': 'Idle updates keep the same beat count',
   'diag.cRanges': 'Heart readings are physically possible',
+
+  'c.titleSettle': 'Signal settling — reading paused',
 } as const;
 
 export type MessageKey = keyof typeof en;

@@ -396,4 +396,6 @@ export const mr: Messages = {
   'diag.cTimestamps': 'अंगठीचे घड्याळ नेहमी पुढे जाते',
   'diag.cKeepaliveSeq': 'रिकामे अपडेट ठोक्यांची मोजणी बदलत नाहीत',
   'diag.cRanges': 'हृदय वाचन शक्य मर्यादेत आहे',
+
+  'c.titleSettle': 'सिग्नल स्थिर होत आहे — वाचन थांबले आहे',
 };

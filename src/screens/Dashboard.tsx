@@ -32,6 +32,11 @@ function statusOf(state: ReadingState, rhythm: RhythmResult): Status {
   return state === 'hold' ? 'hold' : 'live';
 }
 
+/** The paused title names the real cause: movement, or a signal that is still settling. */
+function titleKey(status: Status, moving: boolean): MessageKey {
+  return status === 'hold' && !moving ? 'c.titleSettle' : STATUS[status].title;
+}
+
 const signed = (v: number, digits = 1) => `${v > 0 ? '+' : v < 0 ? '−' : '±'}${Math.abs(v).toFixed(digits)}`;
 
 /** Live screen: heart-rate dial and pulse, the reading gate, vitals with trends, and the session. */
@@ -58,14 +63,14 @@ export function Dashboard() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <Hero status={status} now={now} />
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <VitalCard
               icon={DropIcon}
               color="var(--spo2)"
               name={t('vital.spo2')}
               value={ok && latest?.spo2Pct ? `${latest.spo2Pct}` : null}
               unit="%"
-              sub={ok ? t('c.nominal') : t(STATUS[status].title, { hr: '' })}
+              sub={ok ? t('c.nominal') : t(titleKey(status, !!latest?.motion), { hr: '' })}
               series={recent.filter((r) => isTrustworthy(r.p) && r.p.spo2Pct !== null).map((r) => r.p.spo2Pct!)}
             />
             <VitalCard
@@ -121,6 +126,8 @@ function Hero({ status, now }: { status: Status; now: number }) {
     { key: 'c.b3', pass: fingerOn && !latest?.motion },
   ];
 
+  const allPass = gate.every((g) => g.pass);
+
   return (
     <section aria-label={t('status.aria')} className={`surface relative overflow-hidden rounded-3xl ring-1 ${STATUS_RING[status]}`}>
       {status === 'flag' && (
@@ -129,17 +136,17 @@ function Hero({ status, now }: { status: Status; now: number }) {
       <header className="relative flex flex-wrap items-center gap-x-3 gap-y-2 px-5 pt-5 lg:px-6">
         <StatusPill status={status} />
         <p aria-live="polite" className="min-w-0 flex-1 text-[15px] font-medium">
-          {status === 'live' && latest?.hrBpm ? t('c.titleLive', { hr: latest.hrBpm }) : t(s.title, { hr: '' })}
+          {status === 'live' && latest?.hrBpm ? t('c.titleLive', { hr: latest.hrBpm }) : t(titleKey(status, !!latest?.motion), { hr: '' })}
         </p>
         <p className="font-mono text-[11.5px] text-muted">{lastPacketAt ? ago(lastPacketAt, now) : '––'}</p>
       </header>
 
-      <div className="relative grid items-center gap-2 px-3 pt-2 pb-5 md:grid-cols-[250px_minmax(0,1fr)] md:gap-5 md:px-5 lg:px-6">
+      <div className="relative grid items-center gap-1 px-3 pt-1 pb-4 md:gap-2 md:pt-2 md:pb-5 md:grid-cols-[250px_minmax(0,1fr)] md:gap-5 md:px-5 lg:px-6">
         <Dial hr={hr} beat={latest?.beatSeq ?? 0} dim={!ok} />
         <div className="min-w-0">
           <div className="flex items-center justify-between gap-3 px-1 pb-2">
             <span className="label truncate">{t('c.chart')}</span>
-            <span className="flex shrink-0 items-center gap-3 text-[11px] text-muted">
+            <span className="hidden shrink-0 items-center gap-3 text-[11px] text-muted sm:flex">
               <span className="flex items-center gap-1.5">
                 <span aria-hidden className="h-0.5 w-3 rounded-full bg-hr" />
                 {t('c.clean')}
@@ -151,7 +158,7 @@ function Hero({ status, now }: { status: Status; now: number }) {
             </span>
           </div>
           <div className="overflow-hidden rounded-2xl bg-black/35 ring-1 ring-line">
-            <BeatStrip label={t('pulse.aria')} colorVar="--hr" className="h-40 lg:h-48" />
+            <BeatStrip label={t('pulse.aria')} colorVar="--hr" className="h-28 sm:h-40 lg:h-48" />
           </div>
           <div aria-hidden className="mt-1.5 flex justify-between px-1 font-mono text-[10px] text-muted">
             {[-6, -5, -4, -3, -2, -1, 0].map((n) => (
@@ -161,10 +168,15 @@ function Hero({ status, now }: { status: Status; now: number }) {
         </div>
       </div>
 
-      <footer className="relative grid gap-3 border-t border-line bg-black/20 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-6">
+      <footer className="relative grid gap-2.5 border-t border-line bg-black/20 px-5 py-3.5 sm:gap-3 sm:py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-6">
         <div className="min-w-0">
-          <p className="label">{t('p.gate')}</p>
-          <p className={`mt-1 text-[13.5px] font-medium ${status === 'live' ? 'text-fg' : TONE_TEXT[s.tone === 'muted' ? 'label' : s.tone]}`}>
+          <p className="label hidden sm:block">{t('p.gate')}</p>
+          <p className={`flex items-center gap-2 text-[13.5px] font-medium sm:mt-1 ${status === 'live' ? 'text-fg' : TONE_TEXT[s.tone === 'muted' ? 'label' : s.tone]}`}>
+            {status === 'live' && (
+              <span aria-hidden className="grid size-[18px] shrink-0 place-items-center rounded-full bg-signal text-bg sm:hidden">
+                <CheckIcon className="size-3" />
+              </span>
+            )}
             {t(s.lead)}
           </p>
           {status === 'flag' && (
@@ -173,7 +185,7 @@ function Hero({ status, now }: { status: Status; now: number }) {
             </p>
           )}
         </div>
-        <ul className="flex flex-wrap gap-2">
+        <ul className={`flex-wrap gap-2 ${allPass ? 'hidden sm:flex' : 'flex'}`}>
           {gate.map((g) => (
             <li
               key={g.key}
@@ -232,7 +244,7 @@ function Dial({ hr, beat, dim }: { hr: number | null; beat: number; dim: boolean
   const lit = Math.round(frac * (ticks - 1));
   const angle = (f: number) => ((-SWEEP / 2 + SWEEP * f - 90) * Math.PI) / 180;
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[230px]">
+    <div className="relative mx-auto aspect-square w-full max-w-[196px] md:max-w-[230px]">
       <svg viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 size-full" aria-hidden>
         <defs>
           <linearGradient id="dial-lit" x1="0" y1="1" x2="1" y2="0">
@@ -295,7 +307,7 @@ function VitalCard(props: {
 }) {
   const Icon = props.icon;
   return (
-    <article className="surface flex min-w-0 flex-col rounded-2xl p-4">
+    <article className="surface flex min-w-0 flex-col rounded-2xl p-3.5 sm:p-4">
       <header className="flex items-center gap-2.5">
         <span
           className="grid size-8 shrink-0 place-items-center rounded-xl"
@@ -349,13 +361,12 @@ function RhythmCard({ rhythm }: { rhythm: RhythmResult }) {
   const flagged = rhythm.status === 'irregular';
   const pct = rhythm.status === 'collecting' ? Math.round(rhythm.progress * 100) : 100;
   return (
-    <article className={`surface flex min-w-0 flex-col rounded-2xl p-4 ${flagged ? 'ring-1 ring-alert/55' : ''}`}>
+    <article className={`surface col-span-2 flex min-w-0 flex-col rounded-2xl p-3.5 sm:col-span-1 sm:p-4 ${flagged ? 'ring-1 ring-alert/55' : ''}`}>
       <header className="flex items-center gap-2.5">
         <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-rhythm/15 text-rhythm">
           <WaveIcon className="size-[18px]" />
         </span>
         <h3 className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-label">{t('vital.rhythm')}</h3>
-        {rhythm.status !== 'collecting' && <Tag tone={flagged ? 'alert' : 'signal'}>{flagged ? t('rhythm.tagIrregular') : t('rhythm.tagRegular')}</Tag>}
       </header>
       {rhythm.status === 'collecting' ? (
         <div className="mt-3.5 flex items-center gap-3">
@@ -367,11 +378,19 @@ function RhythmCard({ rhythm }: { rhythm: RhythmResult }) {
         </div>
       ) : (
         <>
-          <p className="mt-3.5 flex items-baseline gap-1">
-            <span className={`tabular text-[34px] leading-none font-semibold tracking-[-0.025em] ${flagged ? 'text-alert' : ''}`}>{rhythm.rmssdMs}</span>
-            <span className="text-[13px] text-label">ms RMSSD</span>
+          <p className={`mt-3.5 flex items-center gap-2 text-[22px] leading-tight font-semibold tracking-[-0.015em] ${flagged ? 'text-alert' : 'text-signal'}`}>
+            {flagged ? (
+              <span aria-hidden>⚠</span>
+            ) : (
+              <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-signal/15">
+                <CheckIcon className="size-4" />
+              </span>
+            )}
+            <span className="min-w-0 first-letter:uppercase">{flagged ? t('rhythm.tagIrregular') : t('rhythm.tagRegular')}</span>
           </p>
-          <p className="mt-1.5 text-[12px] text-muted">pNN50 {rhythm.pnn50}%</p>
+          <p className="tabular mt-2 text-[12px] text-muted">
+            RMSSD {rhythm.rmssdMs} ms · pNN50 {rhythm.pnn50}%
+          </p>
         </>
       )}
       <p className="mt-auto pt-3 text-[11px] leading-snug text-muted">{t('app.disclaimer')}</p>
