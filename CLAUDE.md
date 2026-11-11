@@ -16,7 +16,9 @@ that sends the exact same packets.
 - Web Bluetooth (Chrome on Android, Windows, macOS; not iOS). Needs HTTPS (Vercel) or localhost.
 - Dexie (IndexedDB) for on-device sessions and validation data. Works offline.
 - Firebase Auth + Firestore (optional cloud backup and doctor links), config in `.env.local`
-- Vitest for unit tests. Still in the stack list but not used yet: Recharts, vite-plugin-pwa, jsPDF.
+- Vitest for unit tests. Recharts (accuracy and History charts), jsPDF (accuracy PDF) and
+  vite-plugin-pwa (installable, offline). Chart screens, jsPDF and Firebase load on demand:
+  guests never download Firebase (`auth/authImpl.ts`, `cloud/firestoreApi.ts` behind `cloud/api.ts`).
 - Own tiny i18n in `src/i18n/`: English source in `en.ts`, plus Hindi, Tamil, Telugu, Kannada,
   Malayalam, Bengali, Marathi. Every UI string goes through `t()`. Tests enforce that every
   language has every key with the same `{placeholders}`. Translations need native-speaker review.
@@ -42,12 +44,14 @@ src/ring/
   RingSource.ts    interface + PacketSource base: every source hands raw bytes to ONE parser
   BluetoothRing.ts Web Bluetooth: chooser, time sync, start, auto-reconnect with back-off (tested with a fake ring)
   SimulatedRing.ts demo source: beats from data/mockModel.ts encoded as real packets
-                   (scenarios: normal, irregular, finger-off, movement) (tested)
+                   (scenarios: normal, irregular, finger-off, movement, tour = all states in ~2 min
+                   for the demo video) (tested)
+  diagnostics.ts   link/contract checks for firmware bring-up (Settings → Ring diagnostics) (tested)
   readings.ts      the reading gate (tested)
 src/components/SessionMonitor.tsx  packets → live store, beat log, event log, session summary
 src/store/         sensorStore (source choice + link status), liveStore, db.ts (Dexie)
-src/dsp/           pure functions, tested: rhythm.ts, baseline.ts
-src/validation/    validation-mode statistics and CSV (tested)
+src/dsp/           pure functions, tested: rhythm.ts, baseline.ts, trends.ts (History charts)
+src/validation/    validation-mode statistics and CSV; accuracy.ts (Bland–Altman), pdfReport.ts (tested)
 src/cloud/         optional Firestore backup + doctor links
 ```
 
