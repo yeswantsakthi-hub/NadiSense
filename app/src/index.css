@@ -1,35 +1,36 @@
 @import "tailwindcss";
 
 /*
- * Operations-console look (matches the reference monitoring dashboard): near-black page, charcoal
- * panels with thin borders and almost-square corners, small uppercase olive labels, green for live,
- * red only for real alarms, orange for changes, blue for the selected item.
+ * NadiSense "instrument" design: deep ink background, layered graphite surfaces with a faint top
+ * highlight, saffron brand, and colour that always means something:
+ *   saffron = brand / primary action, green = live & trusted, red = screening flag only,
+ *   amber = hold still / change, cyan = SpO₂, coral = heart, violet = rhythm, gold = temperature.
  */
 :root {
-  --bg: #0c0c0d;
-  --panel: #232426;
-  --panel-2: #1a1c21;
-  --line: #36383c;
-  --line-strong: #4b4e54;
-  --fg: #e9e9e6;
-  --label: #a7a47a;
-  --muted: #8d8c86;
-  /* Live / OK */
-  --signal: #4cc06a;
-  --brand-ink: #0c0c0d;
-  --hr: #4cc06a;
-  --spo2: #6fa8dc;
-  --temp: #e8a24a;
-  --rhythm: #b49ce0;
-  --turmeric: #c9b45c;
-  /* Changes / caution */
-  --amber: #f0a33f;
-  /* Alarms only */
-  --alert: #e2483f;
-  --select: #4a90d9;
-  --grid: rgba(167, 164, 122, 0.12);
-  --grid-strong: rgba(167, 164, 122, 0.22);
-  --band: rgba(240, 163, 63, 0.14);
+  --bg: #08090b;
+  --panel: #111317;
+  --panel-2: #171a1f;
+  --panel-3: #1d2127;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+  --fg: #eef0f3;
+  --label: #9aa3b2;
+  --muted: #6b7380;
+  --brand: #ff9a3c;
+  --brand-2: #ffb86b;
+  --brand-ink: #1a0f02;
+  --signal: #3ddc97;
+  --hr: #ff5d6c;
+  --spo2: #3ec6ff;
+  --temp: #ffb547;
+  --rhythm: #a78bfa;
+  --turmeric: #e8c25a;
+  --amber: #ffb020;
+  --alert: #ff4d5e;
+  --select: #6aa8ff;
+  --grid: rgba(255, 255, 255, 0.05);
+  --grid-strong: rgba(255, 255, 255, 0.1);
+  --band: rgba(255, 176, 32, 0.14);
   color-scheme: dark;
 }
 
@@ -37,13 +38,16 @@
   --color-bg: var(--bg);
   --color-panel: var(--panel);
   --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-label: var(--label);
-  --color-signal: var(--signal);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
   --color-brand-ink: var(--brand-ink);
+  --color-signal: var(--signal);
   --color-hr: var(--hr);
   --color-spo2: var(--spo2);
   --color-temp: var(--temp);
@@ -52,9 +56,9 @@
   --color-amber: var(--amber);
   --color-alert: var(--alert);
   --color-select: var(--select);
-  --font-sans: "Roboto", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
+  --font-sans: "IBM Plex Sans", "IBM Plex Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
     "Noto Sans Malayalam", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
 html,
@@ -68,56 +72,95 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   min-height: 100dvh;
+  /* A faint warm glow at the top gives the page depth without decoration. */
+  background-image:
+    radial-gradient(1200px 520px at 50% -220px, rgba(255, 154, 60, 0.09), transparent 70%),
+    radial-gradient(900px 400px at 100% 0, rgba(62, 198, 255, 0.04), transparent 70%);
+  background-repeat: no-repeat;
 }
 
 :focus-visible {
-  outline: 2px solid var(--select);
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
-/* Small uppercase olive label used on every panel. */
+/* Instrument labels: small, monospaced, uppercase. */
 .label {
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--label);
 }
 
-/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English (and the wordmark). */
+/* Letter-spacing breaks the joined letters of Indic scripts; keep it only for English. */
 html:not([lang="en"]) .label,
 html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
   letter-spacing: normal;
 }
+html:not([lang="en"]) .label {
+  font-family: var(--font-sans);
+}
 
-.font-mono {
+/* Raised surface: graphite with a faint top highlight and soft depth. */
+.surface {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 40%), var(--panel);
+  border: 1px solid var(--line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 12px 32px -16px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+  color: var(--brand-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 20px -8px rgba(255, 154, 60, 0.6);
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.font-mono,
+.tabular {
   font-variant-numeric: tabular-nums;
 }
 
 @keyframes live-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+  50% { opacity: 0.55; }
 }
 .live-dot {
   animation: live-pulse 1.6s ease-in-out infinite;
 }
 
+@keyframes ping-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.ping {
+  animation: ping-ring 1.6s ease-out infinite;
+}
+
 @keyframes screen-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
 }
 .screen-in {
-  animation: screen-in 0.18s ease-out both;
+  animation: screen-in 0.22s ease-out both;
 }
 
 @keyframes beat-pop {
   0% { transform: scale(1); }
-  18% { transform: scale(1.25); }
+  15% { transform: scale(1.22); }
   100% { transform: scale(1); }
 }
 .beat-pop {
-  animation: beat-pop 0.6s ease-out;
+  animation: beat-pop 0.55s ease-out;
 }
 
 @keyframes breathe {

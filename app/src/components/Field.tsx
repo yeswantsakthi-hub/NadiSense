@@ -20,7 +20,7 @@ export function Field({ label, value, onChange, hint, className = '', ...input }
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-describedby={hint ? `${id}-hint` : undefined}
-        className="h-11 w-full rounded-[3px] border border-line bg-bg px-3 text-[15px] text-fg placeholder:text-muted focus:border-signal focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-1"
+        className="h-12 w-full rounded-xl border border-line-strong bg-black/30 px-3.5 text-[15px] text-fg transition-colors placeholder:text-muted focus:border-brand/70 focus:bg-black/40 focus:outline-none"
         {...input}
       />
       {hint && (
@@ -62,7 +62,7 @@ export function Toggle({
         htmlFor={id}
         aria-hidden
         className={`relative mt-0.5 h-6 w-11 shrink-0 cursor-pointer rounded-full border transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-select ${
-          checked ? 'border-signal bg-signal' : 'border-line-strong bg-bg'
+          checked ? 'border-brand bg-brand' : 'border-line-strong bg-bg'
         }`}
       >
         <span

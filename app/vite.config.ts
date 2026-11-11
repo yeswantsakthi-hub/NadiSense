@@ -22,8 +22,8 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#0c0c0d',
-        theme_color: '#0c0c0d',
+        background_color: '#08090b',
+        theme_color: '#08090b',
         categories: ['health', 'medical'],
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },

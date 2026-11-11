@@ -155,7 +155,7 @@ function ConfidenceTrace({ now }: { now: number }) {
   const y = (c: number) => H - (c / 100) * H;
   const d = pts.map((r, i) => `${i ? 'L' : 'M'}${x(r.at).toFixed(1)},${y(r.p.confidence).toFixed(1)}`).join('');
   return (
-    <svg role="img" aria-label={t('diag.traceAria')} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="mt-3 h-16 w-full rounded-[2px] bg-panel-2">
+    <svg role="img" aria-label={t('diag.traceAria')} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="mt-3 h-16 w-full rounded-lg bg-panel-2">
       <line x1="0" x2={W} y1={y(80)} y2={y(80)} stroke="var(--amber)" strokeDasharray="4 3" strokeWidth="1" vectorEffect="non-scaling-stroke" />
       <path d={d} fill="none" stroke="var(--signal)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
     </svg>

@@ -395,6 +395,8 @@ export const en = {
   'history.baselineWait': 'Temperature drift appears once your first 3 sessions have set your baseline.',
   'history.trendRhythm': 'Rhythm · RMSSD ms',
   'history.flaggedDot': 'Red dot: that session’s rhythm screen showed a possible irregular rhythm.',
+
+  'p.gate': 'Reading gate',
 } as const;
 
 export type MessageKey = keyof typeof en;

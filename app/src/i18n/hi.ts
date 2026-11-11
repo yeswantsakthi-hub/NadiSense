@@ -393,4 +393,6 @@ export const hi: Messages = {
   'history.baselineWait': 'आपके पहले 3 सत्रों से आधार बनने के बाद तापमान बदलाव दिखेगा।',
   'history.trendRhythm': 'लय · RMSSD ms',
   'history.flaggedDot': 'लाल बिंदु: उस सत्र की लय जाँच में संभावित अनियमित लय दिखी।',
+
+  'p.gate': 'रीडिंग जाँच',
 };

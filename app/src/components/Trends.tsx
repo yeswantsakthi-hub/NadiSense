@@ -46,7 +46,7 @@ export default function Trends({ points }: { points: TrendPoint[] }) {
         const pt = p.payload as TrendPoint;
         const v = p.value as number;
         return (
-          <div className="rounded-[3px] border border-line-strong bg-panel px-2 py-1 text-[11px]">
+          <div className="rounded-xl border border-line-strong bg-panel px-2 py-1 text-[11px]">
             <p className="text-label">{time.format(pt.at)}</p>
             <p className="font-mono">
               {v > 0 && unit === '°C' ? '+' : ''}
@@ -145,7 +145,7 @@ function Chart({ title, label, children }: { title: string; label: string; child
   return (
     <figure>
       <figcaption className="label mb-2">{title}</figcaption>
-      <div role="img" aria-label={label} className="h-36 rounded-[2px] bg-panel-2 pt-2 pr-1">
+      <div role="img" aria-label={label} className="h-36 rounded-lg bg-panel-2 pt-2 pr-1">
         <ResponsiveContainer width="100%" height="100%">
           {children}
         </ResponsiveContainer>

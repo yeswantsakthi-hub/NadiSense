@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { useAuthStore } from './auth/authStore';
 import { ChartIcon, CheckListIcon, GearIcon, HeartIcon, SparkIcon } from './components/icons';
 import { LinkChip } from './components/LinkChip';
+import { Wordmark } from './components/Logo';
 import { SessionMonitor } from './components/SessionMonitor';
 import { useDocumentLang, useI18n, type MessageKey } from './i18n';
 
@@ -18,7 +19,7 @@ import { Settings } from './screens/Settings';
 import { ShareView } from './screens/ShareView';
 import { SignIn } from './screens/SignIn';
 import { Validation } from './screens/Validation';
-import { scenarioKey, useSensorStore } from './store/sensorStore';
+import { useSensorStore } from './store/sensorStore';
 import { clockTime } from './lib/format';
 import { useNow } from './lib/useNow';
 
@@ -118,11 +119,18 @@ function MainApp() {
           {SCREENS[route]()}
         </div>
       ) : (
-        <div className="mx-auto flex min-h-dvh max-w-[1320px] flex-col">
+        <div className="flex min-h-dvh flex-col">
           <AppHeader route={route} />
-          {/* The console uses the full width; other screens sit in a readable column. */}
-          <main key={route} className="screen-in flex-1 px-3 pb-24 lg:px-4 lg:pb-6">
-            {route === '/dashboard' ? SCREENS[route]() : <div className="mx-auto max-w-3xl">{SCREENS[route]()}</div>}
+          {/* The live screen uses the full width; other screens sit in a readable column. */}
+          <main key={route} className="screen-in mx-auto w-full max-w-[1280px] flex-1 px-4 pt-4 pb-28 lg:px-6 lg:pt-6 lg:pb-10">
+            {route === '/dashboard' ? (
+              SCREENS[route]()
+            ) : (
+              <div className="mx-auto max-w-3xl">
+                <PageTitle route={route} />
+                {SCREENS[route]()}
+              </div>
+            )}
           </main>
           <TabBar route={route} />
         </div>
@@ -131,42 +139,55 @@ function MainApp() {
   );
 }
 
+/** Large page title for screens that don't draw their own. */
+const TITLES: Partial<Record<Route, MessageKey>> = {
+  '/history': 'nav.history',
+  '/settings': 'nav.settings',
+  '/accuracy': 'acc.title',
+  '/diagnostics': 'diag.title',
+  '/report': 'report.title',
+};
+
+function PageTitle({ route }: { route: Route }) {
+  const { t } = useI18n();
+  const key = TITLES[route];
+  if (!key) return null;
+  return <h1 className="mb-4 text-[28px] leading-tight font-semibold tracking-[-0.02em]">{t(key)}</h1>;
+}
+
 function AppHeader({ route }: { route: Route }) {
   const { t } = useI18n();
   const now = useNow();
-  const { kind, scenario, source } = useSensorStore();
-  const context = !source
-    ? t('link.offline')
-    : kind === 'sim'
-      ? t('home.sim', { scenario: t(scenarioKey(scenario)) })
-      : t('home.live');
   return (
-    <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 lg:h-12 lg:px-4">
-      <div className="min-w-0">
-        <p className="hidden truncate text-[11px] text-muted sm:block lg:hidden">{context}</p>
+    <header className="sticky top-0 z-20 -mx-0 border-b border-line bg-bg/75 backdrop-blur-xl">
+      <div className="flex h-14 items-center gap-6 px-4 lg:h-16 lg:px-6">
+        <a href="#/dashboard" aria-label="NadiSense" className="shrink-0">
+          <Wordmark />
+        </a>
         <nav aria-label={t('nav.main')} className="hidden lg:block">
-          <ul className="flex gap-4">
-            {NAV.map(({ route: r, label }) => (
-              <li key={r}>
-                <a
-                  href={`#${r}`}
-                  aria-current={isActive(r, route) ? 'page' : undefined}
-                  className={`label transition-colors ${isActive(r, route) ? '!text-fg' : '!text-muted hover:!text-fg'}`}
-                >
-                  {t(label)}
-                </a>
-              </li>
-            ))}
+          <ul className="flex gap-1">
+            {NAV.map(({ route: r, label }) => {
+              const active = isActive(r, route);
+              return (
+                <li key={r}>
+                  <a
+                    href={`#${r}`}
+                    aria-current={active ? 'page' : undefined}
+                    className={`rounded-lg px-3 py-2 text-[13.5px] font-medium transition-colors ${
+                      active ? 'bg-white/[0.06] text-fg' : 'text-label hover:text-fg'
+                    }`}
+                  >
+                    {t(label)}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
-      </div>
-      <a href="#/dashboard" className="keep-tracking text-[13px] font-medium tracking-[0.32em] text-fg lg:text-[15px]">
-        NADISENSE
-      </a>
-      <div className="flex items-center justify-end gap-3">
-        <span className="hidden truncate text-[11px] text-muted lg:inline">{context}</span>
-        <LinkChip />
-        <time className="hidden font-mono text-[11px] text-muted sm:inline">{clockTime(now)}</time>
+        <div className="ml-auto flex items-center gap-3">
+          <LinkChip />
+          <time className="hidden font-mono text-[12px] text-muted sm:inline">{clockTime(now)}</time>
+        </div>
       </div>
     </header>
   );
@@ -180,15 +201,12 @@ const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
   '/settings': GearIcon,
 };
 
-/** Phone navigation: dark bar, icon over a small uppercase label. Hidden on desktop (tabs in the header). */
+/** Phone navigation: a floating bar with icons; the active tab gets a saffron pill. */
 function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
-    <nav
-      aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
-    >
-      <ul className="mx-auto flex max-w-xl">
+    <nav aria-label={t('nav.main')} className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
+      <ul className="surface mx-auto flex max-w-md rounded-2xl bg-panel/85 p-1.5 backdrop-blur-xl">
         {NAV.map(({ route: r, label }) => {
           const active = isActive(r, route);
           const Icon = TAB_ICON[r]!;
@@ -197,12 +215,11 @@ function TabBar({ route }: { route: Route }) {
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`relative flex h-14 flex-col items-center justify-center gap-0.5 px-0.5 text-center text-[10px] leading-tight font-medium tracking-[0.06em] uppercase [overflow-wrap:anywhere] ${
-                  active ? 'text-fg' : 'text-muted'
+                className={`flex h-[52px] flex-col items-center justify-center gap-1 rounded-xl px-0.5 text-center text-[10.5px] leading-tight font-medium transition-colors [overflow-wrap:anywhere] ${
+                  active ? 'bg-brand/12 text-brand' : 'text-muted hover:text-label'
                 }`}
               >
-                {active && <span aria-hidden className="absolute top-0 h-0.5 w-8 bg-signal" />}
-                <Icon className={`size-5 ${active ? 'text-signal' : ''}`} />
+                <Icon className="size-[22px]" />
                 {t(label)}
               </a>
             </li>

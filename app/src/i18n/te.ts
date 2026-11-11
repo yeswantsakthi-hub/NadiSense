@@ -393,4 +393,6 @@ export const te: Messages = {
   'history.baselineWait': 'మీ మొదటి 3 సెషన్లు ఆధారాన్ని నిర్ణయించిన తర్వాత ఉష్ణోగ్రత మార్పు కనిపిస్తుంది.',
   'history.trendRhythm': 'లయ · RMSSD ms',
   'history.flaggedDot': 'ఎరుపు చుక్క: ఆ సెషన్ లయ తనిఖీలో అక్రమ లయ ఉండవచ్చని చూపింది.',
+
+  'p.gate': 'రీడింగ్ గేట్',
 };

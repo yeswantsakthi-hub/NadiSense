@@ -62,7 +62,7 @@ export function Report() {
           type="button"
           disabled={busy || !consent.summaries}
           onClick={() => run(() => createShare(account.name || account.email, profile))}
-          className="mt-3 h-11 w-full rounded-[3px] bg-signal font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-50"
+          className="mt-3 h-11 w-full rounded-xl btn-primary font-semibold text-brand-ink hover:btn-primary/85 disabled:opacity-50"
         >
           {busy ? t('auth.wait') : t('share.create')}
         </button>
@@ -87,7 +87,7 @@ export function Report() {
                 <button
                   type="button"
                   onClick={() => copy(l.token)}
-                  className="h-9 rounded-[3px] border border-line-strong px-3 text-xs font-semibold hover:border-fg/60"
+                  className="h-9 rounded-xl border border-line-strong px-3 text-xs font-semibold hover:border-fg/60"
                 >
                   {copied === l.token ? t('share.copied') : t('share.copy')}
                 </button>
@@ -95,7 +95,7 @@ export function Report() {
                   type="button"
                   disabled={busy}
                   onClick={() => run(() => revokeShare(l.token))}
-                  className="h-9 rounded-[3px] border border-alert/60 px-3 text-xs font-semibold text-alert hover:bg-alert/10 disabled:opacity-50"
+                  className="h-9 rounded-xl border border-alert/60 px-3 text-xs font-semibold text-alert hover:bg-alert/10 disabled:opacity-50"
                 >
                   {t('share.revoke')}
                 </button>

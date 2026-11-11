@@ -62,7 +62,7 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
           type="button"
           disabled={busy}
           onClick={() => save({ summaries, raw: false })}
-          className="h-10 flex-1 rounded-[3px] bg-signal px-3 text-sm font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-60"
+          className="h-10 flex-1 rounded-xl btn-primary px-3 text-sm font-semibold text-brand-ink hover:btn-primary/85 disabled:opacity-60"
         >
           {t('cloud.save')}
         </button>
@@ -71,7 +71,7 @@ export function ConsentPanel({ firstTime = false }: { firstTime?: boolean }) {
             type="button"
             disabled={busy}
             onClick={() => save({ summaries: false, raw: false })}
-            className="h-10 rounded-[3px] border border-line-strong px-4 text-sm font-semibold hover:border-fg/60 disabled:opacity-60"
+            className="h-10 rounded-xl border border-line-strong px-4 text-sm font-semibold hover:border-fg/60 disabled:opacity-60"
           >
             {t('cloud.notNow')}
           </button>
@@ -161,7 +161,7 @@ export function ProfilePanel() {
         type="button"
         disabled={busy}
         onClick={save}
-        className="mt-4 h-10 w-full rounded-[3px] bg-signal text-sm font-semibold text-brand-ink hover:bg-signal/85 disabled:opacity-60"
+        className="mt-4 h-10 w-full rounded-xl btn-primary text-sm font-semibold text-brand-ink hover:btn-primary/85 disabled:opacity-60"
       >
         {t('profile.save')}
       </button>
@@ -203,7 +203,7 @@ export function DataPanel() {
       URL.revokeObjectURL(url);
     });
 
-  const button = 'h-10 w-full rounded-full border text-sm font-semibold disabled:opacity-60';
+  const button = 'h-11 w-full rounded-xl border text-sm font-semibold transition disabled:opacity-60';
   return (
     <Panel label={t('cloud.dataTitle')}>
       <div className="space-y-2">
