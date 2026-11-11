@@ -122,7 +122,7 @@ function MainApp() {
         <div className="flex min-h-dvh flex-col">
           <AppHeader route={route} />
           {/* The live screen uses the full width; other screens sit in a readable column. */}
-          <main key={route} className="screen-in mx-auto w-full max-w-[1280px] flex-1 px-4 pt-4 pb-28 lg:px-6 lg:pt-6 lg:pb-10">
+          <main key={route} className="screen-in mx-auto w-full max-w-[1280px] flex-1 px-4 pt-5 pb-28 lg:px-6 lg:pt-6 lg:pb-10">
             {route === '/dashboard' ? (
               SCREENS[route]()
             ) : (
@@ -201,12 +201,15 @@ const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
   '/settings': GearIcon,
 };
 
-/** Phone navigation: a floating bar with icons; the active tab gets a saffron pill. */
+/** Phone navigation: standard bottom bar; the active tab is saffron. */
 function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
-    <nav aria-label={t('nav.main')} className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden">
-      <ul className="surface mx-auto flex max-w-md rounded-2xl bg-panel/85 p-1.5 backdrop-blur-xl">
+    <nav
+      aria-label={t('nav.main')}
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-[#0d0f12]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+    >
+      <ul className="mx-auto flex max-w-xl">
         {NAV.map(({ route: r, label }) => {
           const active = isActive(r, route);
           const Icon = TAB_ICON[r]!;
@@ -215,8 +218,8 @@ function TabBar({ route }: { route: Route }) {
               <a
                 href={`#${r}`}
                 aria-current={active ? 'page' : undefined}
-                className={`flex h-[52px] flex-col items-center justify-center gap-1 rounded-xl px-0.5 text-center text-[10.5px] leading-tight font-medium transition-colors [overflow-wrap:anywhere] ${
-                  active ? 'bg-brand/12 text-brand' : 'text-muted hover:text-label'
+                className={`flex h-16 flex-col items-center justify-center gap-1 px-0.5 text-center text-[11px] leading-tight font-medium transition-colors [overflow-wrap:anywhere] ${
+                  active ? 'text-brand' : 'text-muted hover:text-label'
                 }`}
               >
                 <Icon className="size-[22px]" />

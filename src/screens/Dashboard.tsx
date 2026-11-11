@@ -204,7 +204,7 @@ function StatusPill({ status }: { status: Status }) {
     flag: 'bg-alert text-white ring-alert',
   };
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono text-[11.5px] font-semibold tracking-[0.08em] uppercase ring-1 ${styles[status]}`}>
+    <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[12.5px] font-semibold ring-1 ${styles[status]}`}>
       {status === 'flag' ? (
         <span aria-hidden>⚠</span>
       ) : (
@@ -275,7 +275,7 @@ function Dial({ hr, beat, dim }: { hr: number | null; beat: number; dim: boolean
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
         <HeartIcon key={dim ? 'dim' : beat} className={`size-[22px] ${dim ? 'text-muted' : 'beat-pop text-hr'}`} />
         <p className={`tabular mt-1 text-[62px] leading-none font-semibold tracking-[-0.035em] ${dim ? 'text-muted/50' : 'text-fg'}`}>{hr ?? '––'}</p>
-        <p className="mt-2 font-mono text-[10.5px] tracking-[0.14em] text-label uppercase">bpm</p>
+        <p className="mt-2 text-[13px] font-medium text-label">bpm</p>
         <span className="sr-only">{t('vital.hr')}</span>
       </div>
     </div>
@@ -408,7 +408,7 @@ function TourStrip({ rhythm }: { rhythm: RhythmResult }) {
   return (
     <section aria-label={t('tour.label')} className="surface rounded-2xl px-4 py-3 ring-1 ring-brand/30">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-        <span className="rounded-full bg-brand/15 px-2.5 py-0.5 font-mono text-[10.5px] font-semibold tracking-[0.08em] text-brand uppercase">{t('tour.label')}</span>
+        <span className="rounded-full bg-brand/15 px-2.5 py-0.5 text-[12px] font-semibold text-brand">{t('tour.label')}</span>
         <span className="font-mono text-[12px] text-label">{t('tour.step', { n: tour.step, total: TOUR_STEPS.length })}</span>
         <span className="min-w-0 flex-1 text-[13.5px] font-medium">{t(TOUR_TEXT[tour.step - 1]!)}</span>
         {last && rhythm.status === 'collecting' && <span className="font-mono text-[12px] text-label">{Math.round(rhythm.progress * 100)}%</span>}

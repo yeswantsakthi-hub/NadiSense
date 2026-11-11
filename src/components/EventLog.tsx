@@ -3,7 +3,7 @@ import { useI18n, type Vars } from '../i18n';
 import { clockTime } from '../lib/format';
 import { useLiveStore, type EventLevel } from '../store/liveStore';
 import { scenarioKey } from '../store/sensorStore';
-import { Panel, TONE_TEXT, type Tone } from './Panel';
+import { Panel, type Tone } from './Panel';
 
 const TONE: Record<EventLevel, Tone> = { live: 'signal', info: 'muted', motion: 'amber', alert: 'alert' };
 const DOT: Record<Tone, string> = {
@@ -39,14 +39,16 @@ export function EventLog({ className = '' }: { className?: string }) {
             return (
               <li key={e.id} className="relative flex gap-3 pb-3.5 last:pb-0">
                 {i < events.length - 1 && <span aria-hidden className="absolute top-4 bottom-0 left-[5px] w-px bg-line-strong" />}
-                <span aria-hidden className={`relative mt-1.5 size-[11px] shrink-0 rounded-full ring-[3px] ring-panel ${DOT[tone]}`} />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[13px] font-medium">{e.source === 'SYSTEM' ? t('log.SYSTEM') : e.source}</span>
-                    <span className={`font-mono text-[10px] font-medium tracking-[0.08em] uppercase ${TONE_TEXT[tone]}`}>{t(`level.${e.level}`)}</span>
-                    <time className="ml-auto font-mono text-[11px] text-muted tabular-nums">{clockTime(e.at)}</time>
-                  </div>
-                  <p className="mt-0.5 text-[12.5px] text-label">{t(e.key, localise(e.vars))}</p>
+                <span aria-hidden className={`relative mt-[5px] size-[11px] shrink-0 rounded-full ring-[3px] ring-panel ${DOT[tone]}`} />
+                <div className="flex min-w-0 flex-1 items-baseline gap-3">
+                  <p className="min-w-0 flex-1 text-[13.5px]">
+                    {t(e.key, localise(e.vars))}
+                    <span className="sr-only">
+                      {' · '}
+                      {e.source === 'SYSTEM' ? t('log.SYSTEM') : e.source} {t(`level.${e.level}`)}
+                    </span>
+                  </p>
+                  <time className="shrink-0 font-mono text-[11.5px] text-muted tabular-nums">{clockTime(e.at)}</time>
                 </div>
               </li>
             );
