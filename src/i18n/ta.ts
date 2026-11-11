@@ -274,7 +274,6 @@ export const ta: Messages = {
   'val.ringVsRef': 'மோதிரம் {ring} · ஒப்பீடு {ref}',
   'val.within': '±{tol} {unit}-க்குள்',
   'val.outside': '±{tol} {unit}-க்கு வெளியே',
-  'history.hrChart': 'சராசரி இதயத் துடிப்பு',
 
 
   'c.live': 'நேரலை',
@@ -387,4 +386,11 @@ export const ta: Messages = {
   'diag.lastPacket': 'கடைசி பாக்கெட் (16 பைட், little-endian)',
   'diag.firmware': 'ஃபர்ம்வேர் சோதனைக்கு. எண்கள் கடைசி நிமிடத்திற்கானவை; பேட்டரி பயன்பாட்டுக்கு 5 நிமிட வரலாறு தேவை.',
   'diag.traceAria': 'கடைசி நிமிட சிக்னல் நம்பகம்; கோடிட்ட கோடு 80 இல் உள்ள அளவீட்டு வரம்பு',
+
+  'history.trendMore': 'இரண்டு அமர்வுகளுக்குப் பின் போக்குகள் தெரியும்.',
+  'history.trendAria': 'ஒவ்வொரு அமர்வின் {metric}',
+  'history.trendDrift': 'உங்கள் அடிப்படையுடன் ஒப்பிட்ட தோல் வெப்பநிலை',
+  'history.baselineWait': 'உங்கள் முதல் 3 அமர்வுகள் அடிப்படையை அமைத்த பின் வெப்பநிலை மாற்றம் தெரியும்.',
+  'history.trendRhythm': 'தாளம் · RMSSD ms',
+  'history.flaggedDot': 'சிவப்புப் புள்ளி: அந்த அமர்வின் தாளச் சோதனையில் சீரற்ற தாளம் இருக்கலாம் எனக் காட்டியது.',
 };

@@ -274,7 +274,6 @@ export const bn: Messages = {
   'val.ringVsRef': 'আংটি {ring} · রেফারেন্স {ref}',
   'val.within': '±{tol} {unit}-এর মধ্যে',
   'val.outside': '±{tol} {unit}-এর বাইরে',
-  'history.hrChart': 'গড় হৃদস্পন্দন',
 
 
   'c.live': 'লাইভ',
@@ -387,4 +386,11 @@ export const bn: Messages = {
   'diag.lastPacket': 'শেষ প্যাকেট (16 বাইট, little-endian)',
   'diag.firmware': 'ফার্মওয়্যার পরীক্ষার জন্য। সংখ্যাগুলো শেষ এক মিনিটের; ব্যাটারি খরচের জন্য 5 মিনিটের ইতিহাস লাগে।',
   'diag.traceAria': 'শেষ এক মিনিটের সিগন্যাল আস্থা; ড্যাশ রেখা 80-তে রিডিং সীমা',
+
+  'history.trendMore': 'দুটি সেশনের পরে প্রবণতা দেখা যাবে।',
+  'history.trendAria': 'প্রতিটি সেশনের {metric}',
+  'history.trendDrift': 'আপনার ভিত্তির তুলনায় ত্বকের তাপমাত্রা',
+  'history.baselineWait': 'আপনার প্রথম 3টি সেশন ভিত্তি ঠিক করার পরে তাপমাত্রার পরিবর্তন দেখা যাবে।',
+  'history.trendRhythm': 'ছন্দ · RMSSD ms',
+  'history.flaggedDot': 'লাল বিন্দু: সেই সেশনের ছন্দ পরীক্ষায় সম্ভাব্য অনিয়মিত ছন্দ দেখা গেছে।',
 };

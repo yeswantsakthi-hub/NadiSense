@@ -276,7 +276,6 @@ export const en = {
   'val.ringVsRef': 'Ring {ring} · reference {ref}',
   'val.within': 'Within ±{tol} {unit}',
   'val.outside': 'Outside ±{tol} {unit}',
-  'history.hrChart': 'Average heart rate',
 
 
   'c.live': 'LIVE',
@@ -389,6 +388,13 @@ export const en = {
   'diag.lastPacket': 'Last packet (16 bytes, little-endian)',
   'diag.firmware': 'For firmware bring-up. Figures cover the last minute; battery use needs 5 minutes of history.',
   'diag.traceAria': 'Signal confidence over the last minute; dashed line is the reading gate at 80',
+
+  'history.trendMore': 'Trends appear after two sessions.',
+  'history.trendAria': '{metric} for each session',
+  'history.trendDrift': 'Skin temperature vs. your baseline',
+  'history.baselineWait': 'Temperature drift appears once your first 3 sessions have set your baseline.',
+  'history.trendRhythm': 'Rhythm · RMSSD ms',
+  'history.flaggedDot': 'Red dot: that session’s rhythm screen showed a possible irregular rhythm.',
 } as const;
 
 export type MessageKey = keyof typeof en;

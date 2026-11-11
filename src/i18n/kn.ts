@@ -274,7 +274,6 @@ export const kn: Messages = {
   'val.ringVsRef': 'ಉಂಗುರ {ring} · ಉಲ್ಲೇಖ {ref}',
   'val.within': '±{tol} {unit} ಒಳಗೆ',
   'val.outside': '±{tol} {unit} ಹೊರಗೆ',
-  'history.hrChart': 'ಸರಾಸರಿ ಹೃದಯ ಬಡಿತ',
 
 
   'c.live': 'ಲೈವ್',
@@ -387,4 +386,11 @@ export const kn: Messages = {
   'diag.lastPacket': 'ಕೊನೆಯ ಪ್ಯಾಕೆಟ್ (16 ಬೈಟ್, little-endian)',
   'diag.firmware': 'ಫರ್ಮ್‌ವೇರ್ ಪರಿಶೀಲನೆಗಾಗಿ. ಸಂಖ್ಯೆಗಳು ಕೊನೆಯ ನಿಮಿಷದವು; ಬ್ಯಾಟರಿ ಬಳಕೆಗೆ 5 ನಿಮಿಷದ ಇತಿಹಾಸ ಬೇಕು.',
   'diag.traceAria': 'ಕೊನೆಯ ನಿಮಿಷದ ಸಿಗ್ನಲ್ ವಿಶ್ವಾಸ; ಚುಕ್ಕೆ ರೇಖೆ 80 ರ ಓದುವಿಕೆ ಮಿತಿ',
+
+  'history.trendMore': 'ಎರಡು ಅವಧಿಗಳ ನಂತರ ಪ್ರವೃತ್ತಿಗಳು ಕಾಣಿಸುತ್ತವೆ.',
+  'history.trendAria': 'ಪ್ರತಿ ಅವಧಿಯ {metric}',
+  'history.trendDrift': 'ನಿಮ್ಮ ಆಧಾರಕ್ಕೆ ಹೋಲಿಸಿದರೆ ಚರ್ಮದ ತಾಪಮಾನ',
+  'history.baselineWait': 'ನಿಮ್ಮ ಮೊದಲ 3 ಅವಧಿಗಳು ಆಧಾರವನ್ನು ನಿಗದಿಪಡಿಸಿದ ನಂತರ ತಾಪಮಾನ ಬದಲಾವಣೆ ಕಾಣಿಸುತ್ತದೆ.',
+  'history.trendRhythm': 'ಲಯ · RMSSD ms',
+  'history.flaggedDot': 'ಕೆಂಪು ಚುಕ್ಕೆ: ಆ ಅವಧಿಯ ಲಯ ಪರಿಶೀಲನೆ ಅನಿಯಮಿತ ಲಯ ಇರಬಹುದೆಂದು ತೋರಿಸಿತು.',
 };

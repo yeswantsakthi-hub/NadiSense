@@ -274,7 +274,6 @@ export const ml: Messages = {
   'val.ringVsRef': 'മോതിരം {ring} · റഫറൻസ് {ref}',
   'val.within': '±{tol} {unit}-നുള്ളിൽ',
   'val.outside': '±{tol} {unit}-ന് പുറത്ത്',
-  'history.hrChart': 'ശരാശരി ഹൃദയമിടിപ്പ്',
 
 
   'c.live': 'ലൈവ്',
@@ -387,4 +386,11 @@ export const ml: Messages = {
   'diag.lastPacket': 'അവസാന പാക്കറ്റ് (16 ബൈറ്റ്, little-endian)',
   'diag.firmware': 'ഫേംവെയർ പരിശോധനയ്ക്ക്. സംഖ്യകൾ അവസാന മിനിറ്റിലേത്; ബാറ്ററി ഉപയോഗത്തിന് 5 മിനിറ്റ് ചരിത്രം വേണം.',
   'diag.traceAria': 'അവസാന മിനിറ്റിലെ സിഗ്നൽ വിശ്വാസ്യത; കുത്തുവര 80 ലെ റീഡിംഗ് പരിധി',
+
+  'history.trendMore': 'രണ്ട് സെഷനുകൾക്ക് ശേഷം പ്രവണതകൾ കാണാം.',
+  'history.trendAria': 'ഓരോ സെഷനിലെയും {metric}',
+  'history.trendDrift': 'നിങ്ങളുടെ അടിസ്ഥാനവുമായി താരതമ്യം ചെയ്ത ചർമ്മ താപനില',
+  'history.baselineWait': 'നിങ്ങളുടെ ആദ്യ 3 സെഷനുകൾ അടിസ്ഥാനം നിശ്ചയിച്ച ശേഷം താപനില മാറ്റം കാണാം.',
+  'history.trendRhythm': 'താളം · RMSSD ms',
+  'history.flaggedDot': 'ചുവന്ന കുത്ത്: ആ സെഷനിലെ താള പരിശോധന ക്രമരഹിത താളം ആകാമെന്ന് കാണിച്ചു.',
 };

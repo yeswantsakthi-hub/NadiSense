@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useAuthStore } from '../auth/authStore';
-import { localDay, rollupByDay, type DayRow } from '../cloud/model';
+import { localDay, rollupByDay } from '../cloud/model';
 import { DayTable } from '../components/DayTable';
 import { Panel, Tag } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
+import { sessionTrend } from '../dsp/trends';
 import { useI18n } from '../i18n';
 import { useSessions } from '../store/db';
 import { useSensorStore } from '../store/sensorStore';
 
 type Range = '7' | '30';
 const DAY_MS = 86_400_000;
+// Charts load on demand so the app starts fast.
+const Trends = lazy(() => import('../components/Trends'));
 
 /** Daily history from sessions stored on this phone. Works offline and without an account. */
 export function History() {
@@ -21,6 +24,7 @@ export function History() {
   const sessions = useSessions(kind === 'sim' ? 'mock' : 'ble');
   const since = localDay(Date.now() - (Number(range) - 1) * DAY_MS);
   const rows = rollupByDay(sessions.filter((s) => s.day >= since));
+  const points = sessionTrend(sessions, new Date(`${since}T00:00:00`).getTime());
 
   return (
     <div className="mx-auto max-w-3xl space-y-3 pt-2">
@@ -40,7 +44,11 @@ export function History() {
             onChange={setRange}
           />
         </div>
-        {rows.some((r) => r.hrAvg !== null) && <HrBars rows={rows} />}
+        {points.length > 0 && (
+          <Suspense fallback={<div className="mt-5 h-36" />}>
+            <Trends points={points} />
+          </Suspense>
+        )}
         <div className="mt-4">
           {rows.length ? <DayTable rows={rows} /> : <p className="text-sm text-muted">{t('history.noneLocal')}</p>}
         </div>
@@ -52,38 +60,5 @@ export function History() {
         </a>
       )}
     </div>
-  );
-}
-
-/** Mean heart rate per day as soft bars, newest on the right. */
-function HrBars({ rows }: { rows: DayRow[] }) {
-  const { t, date, lang } = useI18n();
-  const short = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short' });
-  const days = [...rows].reverse().slice(-14);
-  const values = days.map((d) => d.hrAvg).filter((v): v is number => v !== null);
-  const lo = Math.min(...values) - 8;
-  const hi = Math.max(...values) + 4;
-  return (
-    <figure className="mt-5">
-      <figcaption className="label mb-3">{t('history.hrChart')}</figcaption>
-      <div className="flex h-36 items-end gap-2" role="list">
-        {days.map((d) => {
-          const h = d.hrAvg === null ? 0 : (d.hrAvg - lo) / (hi - lo);
-          return (
-            <div key={d.day} role="listitem" className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
-              <span className="font-mono text-[11px] text-label">{d.hrAvg ?? ''}</span>
-              <div className="flex h-24 w-full items-end">
-                <div
-                  className="mx-auto w-full max-w-10 rounded-t-[2px] bg-signal/70"
-                  style={{ height: `${Math.max(6, h * 100)}%` }}
-                  aria-label={`${date(d.day)}: ${d.hrAvg ?? '––'} bpm`}
-                />
-              </div>
-              <span className="truncate text-[10px] text-muted">{short.format(new Date(`${d.day}T12:00:00`))}</span>
-            </div>
-          );
-        })}
-      </div>
-    </figure>
   );
 }

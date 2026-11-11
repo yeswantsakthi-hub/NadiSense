@@ -274,7 +274,6 @@ export const te: Messages = {
   'val.ringVsRef': 'ఉంగరం {ring} · సూచన {ref}',
   'val.within': '±{tol} {unit} లోపల',
   'val.outside': '±{tol} {unit} బయట',
-  'history.hrChart': 'సగటు హృదయ స్పందన',
 
 
   'c.live': 'లైవ్',
@@ -387,4 +386,11 @@ export const te: Messages = {
   'diag.lastPacket': 'చివరి ప్యాకెట్ (16 బైట్లు, little-endian)',
   'diag.firmware': 'ఫర్మ్‌వేర్ తనిఖీ కోసం. సంఖ్యలు చివరి నిమిషానివి; బ్యాటరీ వినియోగానికి 5 నిమిషాల చరిత్ర కావాలి.',
   'diag.traceAria': 'చివరి నిమిషం సిగ్నల్ నమ్మకం; చుక్కల గీత 80 వద్ద రీడింగ్ పరిమితి',
+
+  'history.trendMore': 'రెండు సెషన్ల తర్వాత ధోరణులు కనిపిస్తాయి.',
+  'history.trendAria': 'ప్రతి సెషన్‌లో {metric}',
+  'history.trendDrift': 'మీ ఆధారంతో పోలిస్తే చర్మ ఉష్ణోగ్రత',
+  'history.baselineWait': 'మీ మొదటి 3 సెషన్లు ఆధారాన్ని నిర్ణయించిన తర్వాత ఉష్ణోగ్రత మార్పు కనిపిస్తుంది.',
+  'history.trendRhythm': 'లయ · RMSSD ms',
+  'history.flaggedDot': 'ఎరుపు చుక్క: ఆ సెషన్ లయ తనిఖీలో అక్రమ లయ ఉండవచ్చని చూపింది.',
 };

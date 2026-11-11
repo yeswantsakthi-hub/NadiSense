@@ -274,7 +274,6 @@ export const mr: Messages = {
   'val.ringVsRef': 'अंगठी {ring} · संदर्भ {ref}',
   'val.within': '±{tol} {unit} आत',
   'val.outside': '±{tol} {unit} बाहेर',
-  'history.hrChart': 'सरासरी हृदय गती',
 
 
   'c.live': 'लाइव्ह',
@@ -387,4 +386,11 @@ export const mr: Messages = {
   'diag.lastPacket': 'शेवटचे पॅकेट (16 बाइट, little-endian)',
   'diag.firmware': 'फर्मवेअर तपासणीसाठी. आकडे शेवटच्या मिनिटाचे; बॅटरी वापरासाठी 5 मिनिटांचा इतिहास लागतो.',
   'diag.traceAria': 'शेवटच्या मिनिटाचा सिग्नल विश्वास; डॅश रेषा 80 वरील वाचन मर्यादा',
+
+  'history.trendMore': 'दोन सत्रांनंतर कल दिसतील.',
+  'history.trendAria': 'प्रत्येक सत्राचा {metric}',
+  'history.trendDrift': 'तुमच्या आधाराच्या तुलनेत त्वचेचे तापमान',
+  'history.baselineWait': 'तुमच्या पहिल्या 3 सत्रांनी आधार ठरवल्यानंतर तापमान बदल दिसेल.',
+  'history.trendRhythm': 'लय · RMSSD ms',
+  'history.flaggedDot': 'लाल बिंदू: त्या सत्राच्या लय तपासणीत संभाव्य अनियमित लय दिसली.',
 };
