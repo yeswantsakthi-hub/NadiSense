@@ -7,15 +7,12 @@ import {
   type Firestore,
 } from 'firebase/firestore';
 
-/** Web config from the Firebase console (Project settings → Your apps). Not secret, but kept out of git. */
-const config = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+import { firebaseConfig as config, firebaseConfigured } from './config';
 
-export const firebaseConfigured = Object.values(config).every((v) => typeof v === 'string' && v.length > 0);
+/**
+ * Only loaded on demand (see authStore and cloud/api): people using the app without an account
+ * never download Firebase.
+ */
 
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;

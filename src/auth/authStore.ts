@@ -1,26 +1,13 @@
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  updateProfile,
-  type User,
-} from 'firebase/auth';
 import { create } from 'zustand';
-import { resetCloudStore, watchUserDoc } from '../cloud/cloudStore';
 import { useI18nStore, type MessageKey } from '../i18n';
 import { useSensorStore } from '../store/sensorStore';
 import { authErrorKey } from './authErrors';
-import { firebaseAuth, firebaseConfigured } from './firebase';
+import type { FirebaseAccount } from './authImpl';
+import { firebaseConfigured } from './config';
 
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn' | 'unconfigured' | 'guest';
 
-export interface Account {
-  uid: string;
-  email: string;
-  name: string;
-}
+export type Account = FirebaseAccount;
 
 interface AuthState {
   status: AuthStatus;
@@ -53,63 +40,56 @@ function rememberGuest(on: boolean): void {
   }
 }
 
-const toAccount = (u: User): Account => ({ uid: u.uid, email: u.email ?? '', name: u.displayName ?? '' });
+/**
+ * Loads the Firebase half of sign-in on first use and starts following the signed-in account.
+ * Guests never call this until they choose to sign in, so they never download Firebase.
+ */
+async function firebase() {
+  const impl = await import('./authImpl');
+  impl.listen((account) => {
+    if (account) useAuthStore.setState({ status: 'signedIn', account });
+    else useAuthStore.setState({ status: guestChosen() ? 'guest' : 'signedOut', account: null });
+  });
+  return impl;
+}
 
-/** Firebase sends reset emails in the app's current language. */
-function syncEmailLanguage(): void {
-  const auth = firebaseAuth();
-  if (auth) auth.languageCode = useI18nStore.getState().lang;
+/** Runs a Firebase call, turning failures into a message key. */
+async function attempt(run: (impl: Awaited<ReturnType<typeof firebase>>) => Promise<void>): Promise<MessageKey | null> {
+  if (!firebaseConfigured) return 'err.generic';
+  try {
+    await run(await firebase());
+    return null;
+  } catch (e) {
+    return authErrorKey(e);
+  }
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   status: guestChosen() ? 'guest' : firebaseConfigured ? 'loading' : 'unconfigured',
   account: null,
 
-  async signIn(email, password) {
-    const auth = firebaseAuth();
-    if (!auth) return 'err.generic';
-    try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      return null;
-    } catch (e) {
-      return authErrorKey(e);
-    }
-  },
+  signIn: (email, password) => attempt((f) => f.signIn(email.trim(), password)),
 
-  async signUp(name, email, password) {
-    const auth = firebaseAuth();
-    if (!auth) return 'err.generic';
-    try {
-      const { user } = await createUserWithEmailAndPassword(auth, email.trim(), password);
-      await updateProfile(user, { displayName: name.trim() });
-      // onAuthStateChanged fired before the name was set; publish it now.
-      set({ status: 'signedIn', account: toAccount(user) });
-      return null;
-    } catch (e) {
-      return authErrorKey(e);
-    }
-  },
+  signUp: (name, email, password) =>
+    attempt(async (f) => {
+      // The auth listener fired before the name was set; publish it now.
+      set({ status: 'signedIn', account: await f.signUp(name.trim(), email.trim(), password) });
+    }),
 
   async resetPassword(email) {
-    const auth = firebaseAuth();
-    if (!auth) return 'err.generic';
-    syncEmailLanguage();
-    try {
-      await sendPasswordResetEmail(auth, email.trim());
-      return null;
-    } catch (e) {
-      const key = authErrorKey(e);
-      // Don't reveal whether an account exists for this email.
-      return key === 'err.invalidCredential' ? null : key;
-    }
+    const key = await attempt((f) => f.resetPassword(email.trim(), useI18nStore.getState().lang));
+    // Don't reveal whether an account exists for this email.
+    return key === 'err.invalidCredential' ? null : key;
   },
 
   async signOut() {
     await useSensorStore.getState().disconnect();
     rememberGuest(false);
-    const auth = firebaseAuth();
-    if (auth?.currentUser) await firebaseSignOut(auth);
-    set({ status: auth ? 'signedOut' : 'unconfigured', account: null });
+    if (firebaseConfigured) {
+      const f = await firebase().catch(() => null);
+      await f?.signOutIfSignedIn();
+    }
+    set({ status: firebaseConfigured ? 'signedOut' : 'unconfigured', account: null });
   },
 
   continueAsGuest() {
@@ -118,15 +98,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-const auth = firebaseAuth();
-let stopUserDoc: (() => void) | null = null;
-if (auth) {
-  onAuthStateChanged(auth, (user) => {
-    stopUserDoc?.();
-    stopUserDoc = null;
-    resetCloudStore();
-    if (user) stopUserDoc = watchUserDoc(user.uid);
-    if (user) useAuthStore.setState({ status: 'signedIn', account: toAccount(user) });
-    else useAuthStore.setState({ status: guestChosen() ? 'guest' : 'signedOut', account: null });
-  });
+// Someone who isn't a guest may have a saved sign-in: load Firebase now to restore it.
+// Offline with no cached Firebase code, fall back to the sign-in screen.
+if (firebaseConfigured && !guestChosen()) {
+  firebase().catch(() => useAuthStore.setState({ status: 'signedOut' }));
 }
