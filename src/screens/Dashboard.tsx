@@ -248,7 +248,7 @@ function Dial({ hr, beat, dim }: { hr: number | null; beat: number; dim: boolean
       <svg viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 size-full" aria-hidden>
         <defs>
           <linearGradient id="dial-lit" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#ff9a5c" />
+            <stop offset="0" stopColor="#ff8a7a" />
             <stop offset="1" stopColor="#ff4d6d" />
           </linearGradient>
           <radialGradient id="dial-face">

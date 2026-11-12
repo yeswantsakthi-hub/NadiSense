@@ -7,11 +7,11 @@ export function LogoMark({ className = 'size-8' }: { className?: string }) {
     <svg aria-hidden viewBox="0 0 40 40" className={className}>
       <defs>
         <linearGradient id="nadi-mark" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffc27a" />
-          <stop offset="1" stopColor="#ff8a2a" />
+          <stop offset="0" stopColor="#ff6b72" />
+          <stop offset="1" stopColor="#d91f2c" />
         </linearGradient>
       </defs>
-      <rect width="40" height="40" rx="11" fill="#14171c" />
+      <rect width="40" height="40" rx="11" fill="#0e0e10" />
       <rect x="0.5" y="0.5" width="39" height="39" rx="10.5" fill="none" stroke="rgba(255,255,255,0.08)" />
       <circle cx="21" cy="20" r="10.5" fill="none" stroke="url(#nadi-mark)" strokeWidth="2.6" />
       <path

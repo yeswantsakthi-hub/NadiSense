@@ -201,13 +201,13 @@ const TAB_ICON: Record<string, (p: { className?: string }) => ReactNode> = {
   '/settings': GearIcon,
 };
 
-/** Phone navigation: standard bottom bar; the active tab is saffron. */
+/** Phone navigation: standard bottom bar; the active tab is red. */
 function TabBar({ route }: { route: Route }) {
   const { t } = useI18n();
   return (
     <nav
       aria-label={t('nav.main')}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-[#0d0f12]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-[#0a0a0b]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
     >
       <ul className="mx-auto flex max-w-xl">
         {NAV.map(({ route: r, label }) => {

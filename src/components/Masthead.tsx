@@ -22,7 +22,7 @@ export function Masthead({ title, subtitle, active }: { title?: ReactNode; subti
     <header>
       <BrandBar />
       <div className="surface relative mt-2 overflow-hidden rounded-3xl">
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(420px_220px_at_50%_78%,rgba(255,154,60,0.22),transparent_70%)]" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(420px_220px_at_50%_78%,rgba(242,58,69,0.20),transparent_70%)]" />
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/50 to-transparent" />
         <div className="relative px-6 pt-6">
           <h1 className="text-[26px] leading-[1.15] font-semibold tracking-[-0.02em] text-balance">{title ?? t('app.tagline')}</h1>

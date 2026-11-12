@@ -77,15 +77,15 @@ src/cloud/         optional Firestore backup + doctor links
   CSV export (samples and accuracy table) through the share sheet.
 
 ## Design direction (premium medical instrument, dark)
-- Dark only. Tokens in `src/index.css`: ink page `#08090b` with a faint warm glow at the top;
-  raised graphite surfaces (`.surface`: `#111317`, hairline `rgba(255,255,255,.07)`, top highlight,
+- Dark only. Tokens in `src/index.css`: black page `#050506` with a faint red glow at the top;
+  raised graphite surfaces (`.surface`: `#101113`, hairline `rgba(255,255,255,.07)`, top highlight,
   soft depth) with `rounded-2xl` cards and `rounded-3xl` heroes. Text `#eef0f3` / `#9aa3b2` / `#6b7380`.
-- Colour means something: saffron `#ff9a3c` (`brand`) = brand and primary action (`.btn-primary`,
-  active tab, selection); green `#3ddc97` (`signal`) = live / trusted; red `#ff4d5e` (`alert`) =
+- Colour means something: red `#f23a45` (`brand`, white text on buttons) = brand and primary action (`.btn-primary`,
+  active tab, selection); green `#3ddc97` (`signal`) = live / trusted; brighter red `#ff4d5e` (`alert`) =
   screening flags only (filled `<Tag tone="alert">` with ⚠); amber = hold still; coral heart,
   cyan SpO₂, gold temperature, violet rhythm.
-- Type: IBM Plex Sans (+ Plex Sans Devanagari, Noto for other scripts); IBM Plex Mono for the small
-  uppercase `.label`s, units and timestamps. Big figures are semibold with tabular numerals.
+- Type: IBM Plex Sans (+ Plex Sans Devanagari, Noto for other scripts). Small `.label`s are plain
+  sentence case; IBM Plex Mono only for raw data. Big figures are semibold with tabular numerals.
 - Brand: `components/Logo.tsx` (ring + pulse mark, "Nadi**Sense**" wordmark). No emoji, no generic
   stock icons; line icons in `components/icons.tsx`.
 - Pulse (`Dashboard.tsx`): hero card with status pill, the heart-rate dial (ticks lit to the HR,
@@ -95,7 +95,7 @@ src/cloud/         optional Firestore backup + doctor links
 - Sign-in and pairing: wordmark bar, then a hero card (large headline, ring on a lit stage, the
   four v1 measurements as chips).
 - Shell: sticky blurred header (wordmark, text tabs on desktop, link/battery pill, clock);
-  floating rounded tab bar on phones with a saffron active pill. Secondary screens have a large
+  standard bottom tab bar on phones, active tab in brand red. Secondary screens have a large
   page title and sit in a max-w-3xl column. Motion is subtle and off under prefers-reduced-motion.
 
 ## Working rules for Claude Code
