@@ -56,8 +56,8 @@
   --color-amber: var(--amber);
   --color-alert: var(--alert);
   --color-select: var(--select);
-  --font-sans: "IBM Plex Sans", "IBM Plex Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada",
-    "Noto Sans Malayalam", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Anek Latin", "Anek Devanagari", "Anek Tamil", "Anek Telugu", "Anek Kannada", "Anek Malayalam",
+    "Anek Bangla", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 

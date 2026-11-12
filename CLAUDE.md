@@ -84,8 +84,9 @@ src/cloud/         optional Firestore backup + doctor links
   active tab, selection); green `#3ddc97` (`signal`) = live / trusted; brighter red `#ff4d5e` (`alert`) =
   screening flags only (filled `<Tag tone="alert">` with ⚠); amber = hold still; coral heart,
   cyan SpO₂, gold temperature, violet rhythm.
-- Type: IBM Plex Sans (+ Plex Sans Devanagari, Noto for other scripts). Small `.label`s are plain
-  sentence case; IBM Plex Mono only for raw data. Big figures are semibold with tabular numerals.
+- Type: the Anek family (Ek Type) for every script: Anek Latin, Devanagari, Tamil, Telugu, Kannada,
+  Malayalam, Bangla. Small `.label`s are plain sentence case; IBM Plex Mono only for raw data. Big
+  figures are semibold with tabular numerals.
 - Brand: `components/Logo.tsx` (ring + pulse mark, "Nadi**Sense**" wordmark). No emoji, no generic
   stock icons; line icons in `components/icons.tsx`.
 - Pulse (`Dashboard.tsx`): hero card with status pill, the heart-rate dial (ticks lit to the HR,
