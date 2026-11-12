@@ -77,9 +77,10 @@ src/cloud/         optional Firestore backup + doctor links
   CSV export (samples and accuracy table) through the share sheet.
 
 ## Design direction (premium medical instrument, dark)
-- Dark only. Tokens in `src/index.css`: black page `#050506` with a faint red glow at the top;
-  raised graphite surfaces (`.surface`: `#101113`, hairline `rgba(255,255,255,.07)`, top highlight,
-  soft depth) with `rounded-2xl` cards and `rounded-3xl` heroes. Text `#eef0f3` / `#9aa3b2` / `#6b7380`.
+- Dark only, flat. Tokens in `src/index.css`: black page `#050506`, no glows; cards are flat panels
+  (`.surface`: `#101113` with a hairline `rgba(255,255,255,.07)`, no gradient or shadow). Corners are
+  small (radius scale tightened in `@theme`). No tinted icon tiles, no decorative chips; prefer plain
+  lists with dividers over boxes inside boxes. Text `#eef0f3` / `#9aa3b2` / `#6b7380`.
 - Colour means something: red `#f23a45` (`brand`, white text on buttons) = brand and primary action (`.btn-primary`,
   active tab, selection); green `#3ddc97` (`signal`) = live / trusted; brighter red `#ff4d5e` (`alert`) =
   screening flags only (filled `<Tag tone="alert">` with ⚠); amber = hold still; coral heart,
@@ -93,8 +94,8 @@ src/cloud/         optional Firestore backup + doctor links
   heart pops per beat), the filled live waveform, and the reading gate as three check pills →
   SpO₂ / temperature-drift / rhythm cards with 10-minute sparklines → side column: rhythm analysis
   bars against the flag limits, event timeline, validation shortcut, disclaimer.
-- Sign-in and pairing: wordmark bar, then a hero card (large headline, ring on a lit stage, the
-  four v1 measurements as chips).
+- Sign-in and pairing: wordmark bar, then a plain large headline, the ring, and the
+  four v1 measurements as one line of text; numbered steps, flat red button.
 - Shell: sticky blurred header (wordmark, text tabs on desktop, link/battery pill, clock);
   standard bottom tab bar on phones, active tab in brand red. Secondary screens have a large
   page title and sit in a max-w-3xl column. Motion is subtle and off under prefers-reduced-motion.

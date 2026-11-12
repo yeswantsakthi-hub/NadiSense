@@ -22,7 +22,7 @@ export function Segmented<T extends string>({ legend, hideLegend, value, options
             <label
               key={o.value}
               className={`flex-1 cursor-pointer rounded-lg px-2 py-2 text-center text-[13px] font-medium transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-select ${
-                selected ? 'bg-panel-3 text-fg shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_3px_rgba(0,0,0,0.5)]' : 'text-label hover:text-fg'
+                selected ? 'bg-panel-3 text-fg' : 'text-label hover:text-fg'
               }`}
             >
               <input

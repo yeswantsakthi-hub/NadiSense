@@ -59,24 +59,17 @@ export function Connect() {
         subtitle={t('pair.subtitle')}
       />
 
-      <div className="mt-3 surface rounded-2xl px-3.5 pt-1 pb-1">
-      <ol className="divide-y divide-line">
-        {steps.map(({ icon: Icon, title, hint }, i) => (
-          <li key={title} className="flex items-start gap-3 py-3">
-            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-brand/12 text-brand">
-              <Icon className="size-[18px]" />
-            </span>
+      <ol className="mt-2 divide-y divide-line">
+        {steps.map(({ title, hint }, i) => (
+          <li key={title} className="flex items-baseline gap-4 py-3.5">
+            <span className="tabular w-4 shrink-0 text-[15px] font-semibold text-brand">{i + 1}</span>
             <span className="min-w-0">
-              <span className="block text-sm font-medium">
-                <span className="sr-only">{i + 1}. </span>
-                {t(title)}
-              </span>
-              <span className="block text-xs leading-relaxed text-muted">{t(hint)}</span>
+              <span className="block text-[15px] font-medium">{t(title)}</span>
+              <span className="mt-0.5 block text-[13px] leading-relaxed text-label">{t(hint)}</span>
             </span>
           </li>
         ))}
       </ol>
-      </div>
 
       {askConsent && (
         <div className="mt-4">
