@@ -256,7 +256,6 @@ function Dial({ hr, beat, dim }: { hr: number | null; beat: number; dim: boolean
             <stop offset="0.75" stopColor="rgba(255,93,108,0)" />
           </radialGradient>
         </defs>
-        {!dim && <circle cx={c} cy={c} r={95} fill="url(#dial-face)" />}
         <circle cx={c} cy={c} r={90} fill="none" stroke="rgba(255,255,255,0.05)" />
         {Array.from({ length: ticks }, (_, i) => {
           const a = angle(i / (ticks - 1));
@@ -308,12 +307,9 @@ function VitalCard(props: {
   const Icon = props.icon;
   return (
     <article className="surface flex min-w-0 flex-col rounded-2xl p-3.5 sm:p-4">
-      <header className="flex items-center gap-2.5">
-        <span
-          className="grid size-8 shrink-0 place-items-center rounded-xl"
-          style={{ background: `color-mix(in srgb, ${props.color} 15%, transparent)`, color: props.color }}
-        >
-          <Icon className="size-[18px]" />
+      <header className="flex items-center gap-2">
+        <span className="shrink-0" style={{ color: props.color }}>
+          <Icon className="size-5" />
         </span>
         <h3 className="min-w-0 truncate text-[13.5px] font-medium text-label">{props.name}</h3>
       </header>
@@ -363,9 +359,7 @@ function RhythmCard({ rhythm }: { rhythm: RhythmResult }) {
   return (
     <article className={`surface col-span-2 flex min-w-0 flex-col rounded-2xl p-3.5 sm:col-span-1 sm:p-4 ${flagged ? 'ring-1 ring-alert/55' : ''}`}>
       <header className="flex items-center gap-2.5">
-        <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-rhythm/15 text-rhythm">
-          <WaveIcon className="size-[18px]" />
-        </span>
+        <WaveIcon className="size-5 shrink-0 text-rhythm" />
         <h3 className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-label">{t('vital.rhythm')}</h3>
       </header>
       {rhythm.status === 'collecting' ? (
@@ -505,9 +499,7 @@ function ValidationContext() {
   const s = last ? summarize(last) : null;
   return (
     <a href="#/validate" className="surface group flex items-center gap-3 rounded-2xl p-4 transition-colors hover:bg-panel-2">
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-brand/12 text-brand">
-        <CheckIcon className="size-[18px]" />
-      </span>
+      <CheckIcon className="size-5 shrink-0 text-brand" />
       <span className="min-w-0 flex-1">
         <span className="label block">{t('c.validation')}</span>
         <span className="mt-0.5 block truncate text-[13px] text-label group-hover:text-fg">
