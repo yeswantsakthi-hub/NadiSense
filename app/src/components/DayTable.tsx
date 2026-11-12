@@ -6,8 +6,8 @@ const dash = '––';
 /** One row per day: minutes worn, mean heart rate, SpO₂, skin temperature, rhythm flags. */
 export function DayTable({ rows }: { rows: DayRow[] }) {
   const { t, date } = useI18n();
-  const th = 'label py-2 pr-3 text-right font-semibold';
-  const td = 'py-2 pr-3 text-right font-mono';
+  const th = 'label py-2.5 pr-3 text-right last:pr-0';
+  const td = 'tabular py-3 pr-3 text-right last:pr-0';
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[340px] text-sm">
@@ -36,7 +36,7 @@ export function DayTable({ rows }: { rows: DayRow[] }) {
         <tbody className="divide-y divide-line">
           {rows.map((r) => (
             <tr key={r.day}>
-              <th scope="row" className="py-2 pr-3 text-left font-medium whitespace-nowrap">
+              <th scope="row" className="py-3 pr-3 text-left font-medium whitespace-nowrap">
                 {date(r.day)}
               </th>
               <td className={td}>{r.minutes}</td>

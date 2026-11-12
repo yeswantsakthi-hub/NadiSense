@@ -396,4 +396,6 @@ export const hi: Messages = {
   'diag.cTimestamps': 'अंगूठी की घड़ी हमेशा आगे बढ़ती है',
   'diag.cKeepaliveSeq': 'खाली अपडेट धड़कन गिनती नहीं बदलते',
   'diag.cRanges': 'हृदय रीडिंग संभव सीमा में हैं',
+
+  'c.titleSettle': 'सिग्नल स्थिर हो रहा है — रीडिंग रुकी है',
 };

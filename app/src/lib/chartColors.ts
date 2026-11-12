@@ -12,5 +12,5 @@ export const CHART = {
   rhythm: '#a78bfa',
   spo2: '#3ec6ff',
   hr: '#ff5d6c',
-  brand: '#ff9a3c',
+  brand: '#f23a45',
 } as const;

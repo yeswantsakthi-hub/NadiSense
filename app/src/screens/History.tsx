@@ -2,7 +2,8 @@ import { lazy, Suspense, useState } from 'react';
 import { useAuthStore } from '../auth/authStore';
 import { localDay, rollupByDay } from '../cloud/model';
 import { DayTable } from '../components/DayTable';
-import { Panel, Tag } from '../components/Panel';
+import { ChartIcon } from '../components/icons';
+import { Tag } from '../components/Panel';
 import { Segmented } from '../components/Segmented';
 import { sessionTrend } from '../dsp/trends';
 import { useI18n } from '../i18n';
@@ -27,12 +28,9 @@ export function History() {
   const points = sessionTrend(sessions, new Date(`${since}T00:00:00`).getTime());
 
   return (
-    <div className="mx-auto max-w-3xl space-y-3 pt-2">
-      <Panel
-        label={t('history.title')}
-        aside={<Tag tone="label">{kind === 'sim' ? t('link.sim') : t('link.ringShort')}</Tag>}
-      >
-        <div className="max-w-xs">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="w-full max-w-[15rem]">
           <Segmented<Range>
             legend={t('history.title')}
             hideLegend
@@ -44,16 +42,30 @@ export function History() {
             onChange={setRange}
           />
         </div>
-        {points.length > 0 && (
-          <Suspense fallback={<div className="mt-5 h-36" />}>
-            <Trends points={points} />
-          </Suspense>
-        )}
-        <div className="mt-4">
-          {rows.length ? <DayTable rows={rows} /> : <p className="text-sm text-muted">{t('history.noneLocal')}</p>}
-        </div>
-        <p className="mt-3 text-xs text-label">{t('history.onDevice')}</p>
-      </Panel>
+        <Tag tone="label">{kind === 'sim' ? t('link.sim') : t('link.ringShort')}</Tag>
+      </div>
+      {rows.length === 0 ? (
+        <section className="surface rounded-2xl px-5 py-10 text-center">
+          <span aria-hidden className="mx-auto grid size-12 place-items-center rounded-full bg-white/5 text-label">
+            <ChartIcon className="size-6" />
+          </span>
+          <p className="mx-auto mt-4 max-w-xs text-[15px] text-label">{t('history.noneLocal')}</p>
+        </section>
+      ) : (
+        <>
+          {points.length > 0 && (
+            <section className="surface rounded-2xl px-5 pt-1 pb-5">
+              <Suspense fallback={<div className="mt-5 h-36" />}>
+                <Trends points={points} />
+              </Suspense>
+            </section>
+          )}
+          <section className="surface rounded-2xl px-5 py-3">
+            <DayTable rows={rows} />
+          </section>
+        </>
+      )}
+      <p className="px-1 text-[12.5px] text-muted">{t('history.onDevice')}</p>
       {account && (
         <a href="#/report" className="block text-center text-sm text-label underline underline-offset-4 hover:text-fg">
           {t('report.title')} →

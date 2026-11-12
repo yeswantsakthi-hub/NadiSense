@@ -2,23 +2,23 @@
 
 /*
  * NadiSense "instrument" design: deep ink background, layered graphite surfaces with a faint top
- * highlight, saffron brand, and colour that always means something:
- *   saffron = brand / primary action, green = live & trusted, red = screening flag only,
+ * highlight, red brand on black, and colour that always means something:
+ *   red = brand / primary action, green = live & trusted, filled red with a warning sign = screening flag,
  *   amber = hold still / change, cyan = SpO₂, coral = heart, violet = rhythm, gold = temperature.
  */
 :root {
-  --bg: #08090b;
-  --panel: #111317;
-  --panel-2: #171a1f;
-  --panel-3: #1d2127;
+  --bg: #050506;
+  --panel: #101113;
+  --panel-2: #16171a;
+  --panel-3: #1c1d21;
   --line: rgba(255, 255, 255, 0.07);
   --line-strong: rgba(255, 255, 255, 0.13);
   --fg: #eef0f3;
   --label: #9aa3b2;
   --muted: #6b7380;
-  --brand: #ff9a3c;
-  --brand-2: #ffb86b;
-  --brand-ink: #1a0f02;
+  --brand: #f23a45;
+  --brand-2: #ff6b72;
+  --brand-ink: #ffffff;
   --signal: #3ddc97;
   --hr: #ff5d6c;
   --spo2: #3ec6ff;
@@ -72,10 +72,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   min-height: 100dvh;
-  /* A faint warm glow at the top gives the page depth without decoration. */
+  /* A faint red glow at the top gives the page depth without decoration. */
   background-image:
-    radial-gradient(1200px 520px at 50% -220px, rgba(255, 154, 60, 0.09), transparent 70%),
-    radial-gradient(900px 400px at 100% 0, rgba(62, 198, 255, 0.04), transparent 70%);
+    radial-gradient(1200px 520px at 50% -220px, rgba(242, 58, 69, 0.08), transparent 70%);
   background-repeat: no-repeat;
 }
 
@@ -109,11 +108,11 @@ html:not([lang="en"]) [class*="tracking-"]:not(.keep-tracking) {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+  background: linear-gradient(180deg, #ec3541, #cf1f2c);
   color: var(--brand-ink);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 6px 20px -8px rgba(255, 154, 60, 0.6);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 6px 20px -8px rgba(226, 32, 46, 0.55);
 }
 .btn-primary:hover:not(:disabled) {
   filter: brightness(1.05);

@@ -396,4 +396,6 @@ export const bn: Messages = {
   'diag.cTimestamps': 'আংটির ঘড়ি সবসময় সামনে চলে',
   'diag.cKeepaliveSeq': 'খালি আপডেট স্পন্দন গণনা বদলায় না',
   'diag.cRanges': 'হৃদ রিডিং সম্ভাব্য সীমায় আছে',
+
+  'c.titleSettle': 'সিগন্যাল স্থির হচ্ছে — রিডিং থেমে আছে',
 };
